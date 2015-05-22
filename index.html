@@ -84,7 +84,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="緣起">緣起</h3><p>因為多人進行開發的時候會有版本控管問題，因此大多人會使用一些版本控制工具，時下最熱門的當然屬 git 為主流<br>有時候因為我們改了些東西而別人也改了同樣的東西導致有些衝突在，最後亂成一團的時候一發不可收拾，於是乎我們會想乾脆 reset 至現在 server 上面的最新版本重來，這個時候我們可以用下面這兩行來進行 reset</p>
-<h3 id="直接指令下去就不多解釋了">直接指令下去就不多解釋了</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> fetch --all  </span><br><span class="line"><span class="variable">$git</span> reset --hard origin/master</span><br></pre></td></tr></table></figure>
+<h3 id="直接指令下去就不多解釋了">直接指令下去就不多解釋了</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch --all  </span><br><span class="line">$ git reset --hard origin/master</span><br></pre></td></tr></table></figure>
 <p>這個時候再重新 git pull 就大功告成了</p>
 
       
