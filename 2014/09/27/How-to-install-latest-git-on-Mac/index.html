@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>How to install the latest git on mac | SOMEHOW</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="緣起因為長期使用 mac 所以經常仰賴 homebrew 來補足 mac 本身內建套件的不足，一直以來也得到很多便利性。但自從開始大量嘗試玩新東西之後，對於很多套件的版本問題開始重視，然而 apple 本身提供的套件其實相當的過時，此篇文章記錄一下如何使用 homebrew 安裝的套件來取代原本內建於電腦的相同套件，本文以 git 為例，其他套件如 vim 也能夠使用相同的作法來操作。
+首先先確認">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to install the latest git on mac">
+<meta property="og:url" content="http://blog.lpchen.me/2014/09/27/How-to-install-latest-git-on-Mac/index.html">
+<meta property="og:site_name" content="SOMEHOW">
+<meta property="og:description" content="緣起因為長期使用 mac 所以經常仰賴 homebrew 來補足 mac 本身內建套件的不足，一直以來也得到很多便利性。但自從開始大量嘗試玩新東西之後，對於很多套件的版本問題開始重視，然而 apple 本身提供的套件其實相當的過時，此篇文章記錄一下如何使用 homebrew 安裝的套件來取代原本內建於電腦的相同套件，本文以 git 為例，其他套件如 vim 也能夠使用相同的作法來操作。
+首先先確認">
+<meta property="og:updated_time" content="2014-09-27T16:25:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="How to install the latest git on mac">
+<meta name="twitter:description" content="緣起因為長期使用 mac 所以經常仰賴 homebrew 來補足 mac 本身內建套件的不足，一直以來也得到很多便利性。但自從開始大量嘗試玩新東西之後，對於很多套件的版本問題開始重視，然而 apple 本身提供的套件其實相當的過時，此篇文章記錄一下如何使用 homebrew 安裝的套件來取代原本內建於電腦的相同套件，本文以 git 為例，其他套件如 vim 也能夠使用相同的作法來操作。
+首先先確認">
+  
+    <link rel="alternative" href="/atom.xml" title="SOMEHOW" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">SOMEHOW</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.lpchen.me"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-How-to-install-latest-git-on-Mac" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/09/27/How-to-install-latest-git-on-Mac/" class="article-date">
+  <time datetime="2014-09-26T18:07:56.000Z" itemprop="datePublished">2014-09-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      How to install the latest git on mac
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="緣起">緣起</h3><p>因為長期使用 mac 所以經常仰賴 <a href="http://brew.sh/" target="_blank" rel="external">homebrew</a> 來補足 mac 本身內建套件的不足，一直以來也得到很多便利性。<br>但自從開始大量嘗試玩新東西之後，對於很多套件的版本問題開始重視，然而 apple 本身提供的套件其實相當的過時，此篇文章記錄一下如何使用 homebrew 安裝的套件來取代原本內建於電腦的相同套件，本文以 git 為例，其他套件如 vim 也能夠使用相同的作法來操作。</p>
+<h3 id="首先先確認一下目前電腦中_git_的版本">首先先確認一下目前電腦中 git 的版本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git --version</span><br><span class="line">git version <span class="number">1.9</span>.<span class="number">3</span> (Apple Git-<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="可以使用以下指令看到目前_git_位在內建的資料夾底下(原生的檔案大多都在_/usr/bin/_底下)">可以使用以下指令看到目前 git 位在內建的資料夾底下(原生的檔案大多都在 /usr/bin/ 底下)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">which</span> git</span><br><span class="line">/usr/bin/git</span><br></pre></td></tr></table></figure>
+<h3 id="利用_homebrew_安裝_git，並且將內建的_git_進行更名（這樣系統在內建的資料夾找不到_git_會自動轉往_homebrew_的_/usr/local/bin/_底下找）">利用 homebrew 安裝 git，並且將內建的 git 進行更名（這樣系統在內建的資料夾找不到 git 會自動轉往 homebrew 的 /usr/local/bin/ 底下找）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install git</span><br><span class="line">$ sudo mv /usr/bin/git /usr/bin/git48</span><br></pre></td></tr></table></figure>
+<h3 id="這邊可以確認_git_目前連結到的位置已經變更，版本也已經更新">這邊可以確認 git 目前連結到的位置已經變更，版本也已經更新</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">which</span> git</span><br><span class="line">/usr/<span class="built_in">local</span>/bin/git</span><br><span class="line"></span><br><span class="line">$ git --version</span><br><span class="line">git version <span class="number">2.1</span>.<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h3 id="後記">後記</h3><p>如果想要使用舊版的朋友可以直接打改過的檔名（在這邊就是 git48）依然可以使用內建的版本。<br>如果想要還原的話可以把指令反過來執行如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mv /usr/bin/git48 /usr/bin/git</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.lpchen.me/2014/09/27/How-to-install-latest-git-on-Mac/" data-id="ci9z7bpf4000epizpxzxbpvlt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2014/10/03/Enable-localhost-on-mac/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Enable localhost on mac
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/09/24/How-to-deploy-github-pages-with-hexo/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">How to deploy github pages with hexo</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages/">github pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hostname/">hostname</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myisam/">myisam</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/recovery/">recovery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-server/">web server</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/github-pages/" style="font-size: 10px;">github pages</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hostname/" style="font-size: 10px;">hostname</a> <a href="/tags/mac/" style="font-size: 20px;">mac</a> <a href="/tags/myisam/" style="font-size: 10px;">myisam</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/recovery/" style="font-size: 10px;">recovery</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/web-server/" style="font-size: 10px;">web server</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/05/22/git-pull-強制設定至-origin-master-branch/">git pull 強制設定至 origin/master branch</a>
+          </li>
+        
+          <li>
+            <a href="/2015/05/22/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2014/11/15/Repair-myisam-table-by-myisamchk/">Repair myisam table by myisamchk</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/22/Update-date-on-Ubuntu/">Update date on Ubuntu</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/03/Enable-localhost-on-mac/">Enable localhost on mac</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 Jayson LP Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
