@@ -83,11 +83,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="緣起">緣起</h3><p>最近為了發揮 laravel 5.1 完整的功能，而在研究裡面包好的各種阿里布達套件，弄著弄著弄到了 <a href="https://phpunit.de/" target="_blank" rel="external">phpunit</a> 但在安裝 phpunit 遇到了一個問題，就是 mac 不知道跟 php 有仇還是怎樣，於是乎很多人會想到了使用 homebrew 來作安裝，但無奈的是 homebrew 也沒有把 php 納入</p>
+        <h3 id="緣起">緣起</h3><p>最近為了發揮 laravel 5.1 完整的功能，而在研究裡面包好的各種阿里布達套件，弄著弄著弄到了 <a href="https://phpunit.de/" target="_blank" rel="external">phpunit</a> 但在安裝 phpunit 遇到了一個問題，就是 mac 不知道跟 php 有仇還是怎樣，幾乎各種版本 cli 都更新了就是 php 還停留在 5.5 不知道是哪招(老闆聽說 php7 都已經 RC2 啦～)，導致於新版 phpunit 無法執行(目前穩定版需要配合 php 5.6)，於是乎很多人會想到了使用 homebrew 來作安裝，但無奈的是 homebrew 也沒有把 php 納入，所以要安裝的話必須另外用一些方法。</p>
 <h3 id="Installation">Installation</h3><p>在安裝的部分可以參考 <a href="https://github.com/Homebrew/homebrew-php" target="_blank" rel="external">homebrew-php</a> 的說明<br>這裡使用的是 homebrew 的隱藏指令 tap，據悉是用來安裝擴充套件的</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ brew tap homebrew/dupes</span><br><span class="line">$ brew tap homebrew/versions</span><br><span class="line">$ brew tap homebrew/homebrew-php</span><br></pre></td></tr></table></figure>
 <p>前置做完之後就可以進行安裝</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install php56</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 安裝 php5.<span class="number">6</span> , 如果你想安裝 <span class="number">7.0</span> 也可以改成 php70</span><br><span class="line">$ brew install php56</span><br></pre></td></tr></table></figure>
 <p>裝好之後應該就搞定啦！</p>
 <h3 id="後記">後記</h3><p>這裡有一點很詭異的地方是，Mac OSX 10.11(EI Capitan)裡面的 whereis 根本是錯的，不管你怎麼設定，他幫你找到的位置永遠是 /usr/bin/*</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ whereis php</span><br><span class="line">/usr/bin/php</span><br><span class="line"></span><br><span class="line">$ php --version</span><br><span class="line">PHP <span class="number">5.6</span>.<span class="number">14</span> (cli)</span><br><span class="line"></span><br><span class="line">$ /usr/bin/php --version</span><br><span class="line">PHP <span class="number">5.5</span>.<span class="number">27</span> (cli)</span><br></pre></td></tr></table></figure>
@@ -96,7 +96,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/" data-id="cifgp2cx9000d8zzpdyry04pu" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/" data-id="cifgphsp1000digzptfudab9q" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/phpunit/">phpunit</a></li></ul>
@@ -136,7 +136,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/08/31/How-to-find-the-path-of-device-on-your-mac/" data-id="cifgp2cxg000p8zzpkx6pn9i4" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2015/08/31/How-to-find-the-path-of-device-on-your-mac/" data-id="cifgphsp9000pigzpkobutss5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li></ul>
@@ -177,7 +177,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/05/22/git-pull-強制設定至-origin-master-branch/" data-id="cifgp2cw400008zzpf3waphzw" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2015/05/22/git-pull-強制設定至-origin-master-branch/" data-id="cifgphsn70000igzpn5cdtnzw" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
@@ -221,7 +221,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2014/11/15/Repair-myisam-table-by-myisamchk/" data-id="cifgp2cx700068zzprf7k6ykp" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2014/11/15/Repair-myisam-table-by-myisamchk/" data-id="cifgphsoy0006igzp6luth74c" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/myisam/">myisam</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/recovery/">recovery</a></li></ul>
@@ -261,7 +261,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2014/10/22/Update-date-on-Ubuntu/" data-id="cifgp2cx300038zzpzse4szie" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2014/10/22/Update-date-on-Ubuntu/" data-id="cifgphsol0003igzppeh6ryms" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -303,7 +303,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2014/10/03/Enable-localhost-on-mac/" data-id="cifgp2cxr000x8zzpns9b1viq" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2014/10/03/Enable-localhost-on-mac/" data-id="cifgphspi000xigzpfyur8q2j" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hostname/">hostname</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web-server/">web server</a></li></ul>
@@ -347,7 +347,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2014/09/27/How-to-install-latest-git-on-Mac/" data-id="cifgp2cxd000m8zzpb9o9t0r8" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2014/09/27/How-to-install-latest-git-on-Mac/" data-id="cifgphsp5000migzpjv7s0qi5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li></ul>
@@ -399,7 +399,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2014/09/24/How-to-deploy-github-pages-with-hexo/" data-id="cifgp2cxk000r8zzp6hr8wad0" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2014/09/24/How-to-deploy-github-pages-with-hexo/" data-id="cifgphspc000rigzpkp94jyl7" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/github-pages/">github pages</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li></ul>
