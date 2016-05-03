@@ -61,48 +61,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-Enable-localhost-on-mac" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2014/10/03/Enable-localhost-on-mac/" class="article-date">
-  <time datetime="2014-10-02T18:43:59.000Z" itemprop="datePublished">Oct 3 2014</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/10/03/Enable-localhost-on-mac/">Enable localhost on mac</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="緣起">緣起</h3><p>localhost 對於有在做任何網頁開發的朋友一定不陌生，但最近突然發現一個一直以來被我忽略掉的問題，那就是在 mac 上面的時候我竟然只能使用 127.0.0.1 來當網址，而不能使用 localhost，這想當然爾是因為 hostname 沒有設定將 localhost 對應到 127.0.0.1，所以找了一下設定的方法，分享一下。</p>
-<h3 id="直接指令下去就不多解釋了">直接指令下去就不多解釋了</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /private/etc/hosts</span><br></pre></td></tr></table></figure>
-<p>找到裡面有一行是<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#127.0.0.1 localhost</span></span><br></pre></td></tr></table></figure></p>
-<p>把註解拿掉存檔離開就大功告成了</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2014/10/03/Enable-localhost-on-mac/" data-id="cinrhbucc0001hrzplukajtla" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hostname/">hostname</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web-server/">web server</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-How-to-install-latest-git-on-Mac" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2014/09/27/How-to-install-latest-git-on-Mac/" class="article-date">
@@ -232,7 +190,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -252,15 +210,15 @@
           </li>
         
           <li>
-            <a href="/2016/05/03/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2015/11/19/如何取得昨天的日期/">如何取得昨天的日期</a>
           </li>
         
           <li>
             <a href="/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/">How to install Gitlab on Ubuntu 14.04 LTS</a>
+          </li>
+        
+          <li>
+            <a href="/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/">How to upgrade PHP version on your mac</a>
           </li>
         
       </ul>
