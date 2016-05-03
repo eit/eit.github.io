@@ -3,21 +3,17 @@
 <head>
   <meta charset="utf-8">
   
-  <title>How to install the latest git on mac | SOMEHOW</title>
+  <title>Archives | SOMEHOW</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="緣起因為長期使用 mac 所以經常仰賴 homebrew 來補足 mac 本身內建套件的不足，一直以來也得到很多便利性。但自從開始大量嘗試玩新東西之後，對於很多套件的版本問題開始重視，然而 apple 本身提供的套件其實相當的過時，此篇文章記錄一下如何使用 homebrew 安裝的套件來取代原本內建於電腦的相同套件，本文以 git 為例，其他套件如 vim 也能夠使用相同的作法來操作。
-首先先確認">
-<meta property="og:type" content="article">
-<meta property="og:title" content="How to install the latest git on mac">
-<meta property="og:url" content="http://blog.lpchen.me/2014/09/27/How-to-install-latest-git-on-Mac/index.html">
+  <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SOMEHOW">
+<meta property="og:url" content="http://blog.lpchen.me/archives/page/2/index.html">
 <meta property="og:site_name" content="SOMEHOW">
-<meta property="og:description" content="緣起因為長期使用 mac 所以經常仰賴 homebrew 來補足 mac 本身內建套件的不足，一直以來也得到很多便利性。但自從開始大量嘗試玩新東西之後，對於很多套件的版本問題開始重視，然而 apple 本身提供的套件其實相當的過時，此篇文章記錄一下如何使用 homebrew 安裝的套件來取代原本內建於電腦的相同套件，本文以 git 為例，其他套件如 vim 也能夠使用相同的作法來操作。
-首先先確認">
-<meta property="og:updated_time" content="2014-09-27T16:25:25.000Z">
+<meta property="og:description">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="How to install the latest git on mac">
-<meta name="twitter:description" content="緣起因為長期使用 mac 所以經常仰賴 homebrew 來補足 mac 本身內建套件的不足，一直以來也得到很多便利性。但自從開始大量嘗試玩新東西之後，對於很多套件的版本問題開始重視，然而 apple 本身提供的套件其實相當的過時，此篇文章記錄一下如何使用 homebrew 安裝的套件來取代原本內建於電腦的相同套件，本文以 git 為例，其他套件如 vim 也能夠使用相同的作法來操作。
-首先先確認">
+<meta name="twitter:title" content="SOMEHOW">
+<meta name="twitter:description">
   
     <link rel="alternative" href="/atom.xml" title="SOMEHOW" type="application/atom+xml">
   
@@ -63,7 +59,51 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-How-to-install-latest-git-on-Mac" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main">
+  
+    <article id="post-Enable-localhost-on-mac" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/10/03/Enable-localhost-on-mac/" class="article-date">
+  <time datetime="2014-10-02T18:43:59.000Z" itemprop="datePublished">Oct 3 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/10/03/Enable-localhost-on-mac/">Enable localhost on mac</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="緣起">緣起</h3><p>localhost 對於有在做任何網頁開發的朋友一定不陌生，但最近突然發現一個一直以來被我忽略掉的問題，那就是在 mac 上面的時候我竟然只能使用 127.0.0.1 來當網址，而不能使用 localhost，這想當然爾是因為 hostname 沒有設定將 localhost 對應到 127.0.0.1，所以找了一下設定的方法，分享一下。</p>
+<h3 id="直接指令下去就不多解釋了">直接指令下去就不多解釋了</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /private/etc/hosts</span><br></pre></td></tr></table></figure>
+<p>找到裡面有一行是<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#127.0.0.1 localhost</span></span><br></pre></td></tr></table></figure></p>
+<p>把註解拿掉存檔離開就大功告成了</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.lpchen.me/2014/10/03/Enable-localhost-on-mac/" data-id="cinrhbucc0001hrzplukajtla" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hostname/">hostname</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web-server/">web server</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-How-to-install-latest-git-on-Mac" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2014/09/27/How-to-install-latest-git-on-Mac/" class="article-date">
   <time datetime="2014-09-26T18:07:56.000Z" itemprop="datePublished">Sep 27 2014</time>
@@ -76,8 +116,8 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      How to install the latest git on mac
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/09/27/How-to-install-latest-git-on-Mac/">How to install the latest git on mac</a>
     </h1>
   
 
@@ -103,29 +143,67 @@
     </footer>
   </div>
   
-    
-<nav id="article-nav">
-  
-    <a href="/2014/10/03/Enable-localhost-on-mac/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Enable localhost on mac
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2014/09/24/How-to-deploy-github-pages-with-hexo/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">How to deploy github pages with hexo</div>
-    </a>
-  
-</nav>
+</article>
 
+
+  
+    <article id="post-How-to-deploy-github-pages-with-hexo" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/09/24/How-to-deploy-github-pages-with-hexo/" class="article-date">
+  <time datetime="2014-09-24T08:47:35.000Z" itemprop="datePublished">Sep 24 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/09/24/How-to-deploy-github-pages-with-hexo/">How to deploy github pages with hexo</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="緣起">緣起</h3><p>身為一位自以為專業的技客，自然要有一個自己的 github 帳號<br>然後有了帳號以後下一步至少要有一個 github pages 的 blog<br>於是花了點時間摸了一下如何利用 hexo 這個套件來部屬，未免忘記在這邊記錄一下。</p>
+<h3 id="前置作業">前置作業</h3><p>先去你的 github 開一個新的 repo<br>名稱要是你的 <username>.github.io，其他都預設即可</username></p>
+<h3 id="Update_homebrew_and_install_node_(and_npm)">Update homebrew and install node (and npm)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install node</span><br></pre></td></tr></table></figure>
+<h3 id="Install_hexo_by_npm">Install hexo by npm</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo</span><br></pre></td></tr></table></figure>
+<h3 id="Initialize_a_folder_by_hexo">Initialize a folder by hexo</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ <span class="built_in">cd</span> &lt;folder&gt;</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+<p>這個時候應該會看到資料夾底下多了一堆東西，其中有一個檔案是 _config.yml</p>
+<p>打開它之後拉到最下面在 deploy 的位置改成下面這樣</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">    <span class="built_in">type</span>: github</span><br><span class="line">    repo: &lt;repo uri&gt; (可使用 ssh or https)</span><br><span class="line">    branch: master</span><br></pre></td></tr></table></figure>
+<h3 id="Deploy_your_pages">Deploy your pages</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>打開你的 <a href="http://username.github.io" target="_blank" rel="external">http://username.github.io</a> 應該就會看到一切已經佈署完成了</p>
+<h3 id="後記">後記</h3><p>之後要編寫文章可以使用以下指令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new &lt;title name&gt;</span><br></pre></td></tr></table></figure>
+<p>會在 source/_post/ 出現一個檔名為 <title name="">.md 的檔案，請直接對該檔案進行編修<br>這是 markdown 格式的檔案，撰寫方式可以參考 <a href="http://markdown.tw/" target="_blank" rel="external">markdown.tw</a></title></p>
+<p>更新並且發佈如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate <span class="_">-d</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.lpchen.me/2014/09/24/How-to-deploy-github-pages-with-hexo/" data-id="cinrhbucl0003hrzpvntvd2ra" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/github-pages/">github pages</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li></ul>
+
+    </footer>
+  </div>
   
 </article>
 
+
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/archives/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
+    </nav>
+  
 </section>
         
           <aside id="sidebar">

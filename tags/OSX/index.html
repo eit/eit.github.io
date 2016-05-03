@@ -3,21 +3,17 @@
 <head>
   <meta charset="utf-8">
   
-  <title>How to find the path of device on your mac | SOMEHOW</title>
+  <title>Tag: OSX | SOMEHOW</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="緣起當你在終端機想要找尋你所插在電腦的裝置的真實路徑的時候你可能無從下手，okay 現在把下面這個指令勇敢地敲下去
-1$ ls -1 /dev/tty.*">
-<meta property="og:type" content="article">
-<meta property="og:title" content="How to find the path of device on your mac">
-<meta property="og:url" content="http://blog.lpchen.me/2015/08/31/How-to-find-the-path-of-device-on-your-mac/index.html">
+  <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SOMEHOW">
+<meta property="og:url" content="http://blog.lpchen.me/tags/OSX/index.html">
 <meta property="og:site_name" content="SOMEHOW">
-<meta property="og:description" content="緣起當你在終端機想要找尋你所插在電腦的裝置的真實路徑的時候你可能無從下手，okay 現在把下面這個指令勇敢地敲下去
-1$ ls -1 /dev/tty.*">
-<meta property="og:updated_time" content="2015-08-31T06:49:10.000Z">
+<meta property="og:description">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="How to find the path of device on your mac">
-<meta name="twitter:description" content="緣起當你在終端機想要找尋你所插在電腦的裝置的真實路徑的時候你可能無從下手，okay 現在把下面這個指令勇敢地敲下去
-1$ ls -1 /dev/tty.*">
+<meta name="twitter:title" content="SOMEHOW">
+<meta name="twitter:description">
   
     <link rel="alternative" href="/atom.xml" title="SOMEHOW" type="application/atom+xml">
   
@@ -63,10 +59,12 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-How-to-find-the-path-of-device-on-your-mac" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main">
+  
+    <article id="post-How-to-build-nginx-on-localhost-in-Mac-OSX" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/08/31/How-to-find-the-path-of-device-on-your-mac/" class="article-date">
-  <time datetime="2015-08-31T06:44:27.000Z" itemprop="datePublished">Aug 31 2015</time>
+    <a href="/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/" class="article-date">
+  <time datetime="2016-05-03T08:34:55.000Z" itemprop="datePublished">May 3 2016</time>
 </a>
     
   </div>
@@ -76,8 +74,8 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      How to find the path of device on your mac
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/">How to build nginx on localhost in Mac OSX</a>
     </h1>
   
 
@@ -85,43 +83,34 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="緣起">緣起</h3><p>當你在終端機想要找尋你所插在電腦的裝置的真實路徑的時候<br>你可能無從下手，okay 現在把下面這個指令勇敢地敲下去</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls -1 /dev/tty.*</span><br></pre></td></tr></table></figure>
+        <h3 id="緣起">緣起</h3><p>談到 web server 大家第一個想到的大概是老大哥 apache，而且 mac osx 裡面其實已經內建了，方便性不用多說。<br>但近年來 nginx 不論是效能上或是體積上基本上都已經取代 apache 的地位，當然就成為大家的新寵，頂多在使用上有一點點的不方便，這篇文章記錄一下在 mac osx 上面安裝 nginx 的步驟。</p>
+<h3 id="前置作業">前置作業</h3><p>首先你要將 homebrew 裝起來，使用 mac 同時又有在做開發的人應該都有裝吧？<br>好吧，沒有的話先去 <a href="http://brew.sh/" target="_blank" rel="external">homebrew</a> 網站看看。</p>
+<h3 id="安裝與設置">安裝與設置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install nginx</span><br></pre></td></tr></table></figure>
+<p>裝好的 nginx 會在路徑 /usr/local/etc/nginx/<br>所謂的設定檔也在這 /usr/local/etc/nginx/nginx.conf<br>打開之後大致上跟一般的 nginx 沒什麼兩樣</p>
+<p>但是最需要注意的就是在 FastCGI pass 那段<br>這裡先放上我的給大家參考一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">    fastcgi_index  index.php;</span><br><span class="line">    fastcgi_param  SCRIPT_FILENAME <span class="variable">$document_root</span><span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">    <span class="comment">#fastcgi_param SCRIPT_FILENAME /scripts$fastcgi_script_name;</span></span><br><span class="line">    include        /usr/<span class="built_in">local</span>/etc/nginx/fastcgi_params;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>註解掉的第四行是原本預設的內容，必須改成第三行才能運作，不然你會跑不起來然後在 log 裡面看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fastcgi sent in stderr: &quot;primary script unknown&quot;</span><br></pre></td></tr></table></figure></p>
+<p>既然說到 log，順便提一下 log 的位置在 /usr/local/var/log/nginx/ 裡面<br>預設網頁目錄在 /usr/local/nginx/html</p>
+<h3 id="運行與_nginx_指令">運行與 nginx 指令</h3><p>最後這邊簡單列一下可能比較會用到的 nginx 相關指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sudo nginx // 啟動 nginx</span><br><span class="line">$ sudo nginx -s reload // 重新載入設定</span><br><span class="line">$ sudo nginx -s restart // 重新啟動 nginx</span><br><span class="line">$ sudo php-fpm // 啟動 php-fpm</span><br></pre></td></tr></table></figure>
+<p>Enjoy it!</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/08/31/How-to-find-the-path-of-device-on-your-mac/" data-id="cinrhbuco0004hrzpdlaxalf6" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/" data-id="cinrhbue70012hrzpyaqdj09m" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OSX/">OSX</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li></ul>
 
     </footer>
   </div>
   
-    
-<nav id="article-nav">
-  
-    <a href="/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          How to upgrade PHP version on your mac
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2015/05/22/git-pull-強制設定至-origin-master-branch/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">git pull 強制設定至 origin/master branch</div>
-    </a>
-  
-</nav>
-
-  
 </article>
 
+
+  
+  
 </section>
         
           <aside id="sidebar">

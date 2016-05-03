@@ -21,7 +21,7 @@
     <link rel="icon" href="/favicon.png">
   
   <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
   
 
 </head>
@@ -61,112 +61,228 @@
       <div class="outer">
         <section id="main">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2014" class="archive-year">2014</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2014/11/15/Repair-myisam-table-by-myisamchk/" class="archive-article-date">
-  <time datetime="2014-11-15T14:25:25.000Z" itemprop="datePublished">Nov 15</time>
+    <article id="post-Repair-myisam-table-by-myisamchk" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/11/15/Repair-myisam-table-by-myisamchk/" class="article-date">
+  <time datetime="2014-11-15T14:25:25.000Z" itemprop="datePublished">Nov 15 2014</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
     <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/11/15/Repair-myisam-table-by-myisamchk/">Repair myisam table by myisamchk</a>
+      <a class="article-title" href="/2014/11/15/Repair-myisam-table-by-myisamchk/">Repair myisam table by myisamchk</a>
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2014/10/22/Update-date-on-Ubuntu/" class="archive-article-date">
-  <time datetime="2014-10-22T06:47:35.000Z" itemprop="datePublished">Oct 22</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
+        <h3 id="緣起">緣起</h3><p>最近遇到了一個因為在 db 運作時 磁碟容量寫滿了，然後 db 直接 crash 後自動重開而且失敗，造成大量存取中的 table 毀損，稍微研究了一下如何把那些壞掉的 table 修復起來，以下做個分享</p>
+<h3 id="首先先用以下指令檢查壞掉的情況">首先先用以下指令檢查壞掉的情況</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ myisamchk &lt;table_name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="若要修復的話加上參數_-r">若要修復的話加上參數 -r</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ myisamchk -r &lt;table_name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="若要修的數量太多太大可以再加上_-q_(快速模式)">若要修的數量太多太大可以再加上 -q (快速模式)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ myisamchk -r -q &lt;table_name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="若修復過程遇到問題可以改成_-o_(安全模式)，但是更慢">若修復過程遇到問題可以改成 -o (安全模式)，但是更慢</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ myisamchk -o &lt;table_name&gt;</span><br></pre></td></tr></table></figure>
+<p>全部修完之後可以再做一次 chk，另外如果要進行 mysqldump 遇到 LOCK TABLES 的情形可以使用—skip-lock-tables<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mysqldump -uroot -p<span class="variable">$PASSWORD</span> -q --skip-lock-tables &lt;db_name&gt; &gt; xxxx.sql</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.lpchen.me/2014/11/15/Repair-myisam-table-by-myisamchk/" data-id="cinrhbuds000uhrzpaejuuc35" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/myisam/">myisam</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/recovery/">recovery</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Update-date-on-Ubuntu" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/10/22/Update-date-on-Ubuntu/" class="article-date">
+  <time datetime="2014-10-22T06:47:35.000Z" itemprop="datePublished">Oct 22 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
     <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/10/22/Update-date-on-Ubuntu/">Update date on Ubuntu</a>
+      <a class="article-title" href="/2014/10/22/Update-date-on-Ubuntu/">Update date on Ubuntu</a>
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2014/10/03/Enable-localhost-on-mac/" class="archive-article-date">
-  <time datetime="2014-10-02T18:43:59.000Z" itemprop="datePublished">Oct 3</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
+        <h3 id="緣起">緣起</h3><p>有時候或許會發現 OS 作業系統的時間不準的情況，如果是在 ubuntu 上面，其實只需要兩個指令就能夠更新設定</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ntpdate time.stdtime.gov.tw // 更新系統時間</span><br><span class="line">$ sudo hwclock -w // 將新的時間寫入 blos</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.lpchen.me/2014/10/22/Update-date-on-Ubuntu/" data-id="cinrhbudw000whrzpkklf7hca" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Enable-localhost-on-mac" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/10/03/Enable-localhost-on-mac/" class="article-date">
+  <time datetime="2014-10-02T18:43:59.000Z" itemprop="datePublished">Oct 3 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
     <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/10/03/Enable-localhost-on-mac/">Enable localhost on mac</a>
+      <a class="article-title" href="/2014/10/03/Enable-localhost-on-mac/">Enable localhost on mac</a>
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2014/09/27/How-to-install-latest-git-on-Mac/" class="archive-article-date">
-  <time datetime="2014-09-26T18:07:56.000Z" itemprop="datePublished">Sep 27</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
+        <h3 id="緣起">緣起</h3><p>localhost 對於有在做任何網頁開發的朋友一定不陌生，但最近突然發現一個一直以來被我忽略掉的問題，那就是在 mac 上面的時候我竟然只能使用 127.0.0.1 來當網址，而不能使用 localhost，這想當然爾是因為 hostname 沒有設定將 localhost 對應到 127.0.0.1，所以找了一下設定的方法，分享一下。</p>
+<h3 id="直接指令下去就不多解釋了">直接指令下去就不多解釋了</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /private/etc/hosts</span><br></pre></td></tr></table></figure>
+<p>找到裡面有一行是<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#127.0.0.1 localhost</span></span><br></pre></td></tr></table></figure></p>
+<p>把註解拿掉存檔離開就大功告成了</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.lpchen.me/2014/10/03/Enable-localhost-on-mac/" data-id="cinrhbucc0001hrzplukajtla" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hostname/">hostname</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web-server/">web server</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-How-to-install-latest-git-on-Mac" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/09/27/How-to-install-latest-git-on-Mac/" class="article-date">
+  <time datetime="2014-09-26T18:07:56.000Z" itemprop="datePublished">Sep 27 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
     <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/09/27/How-to-install-latest-git-on-Mac/">How to install the latest git on mac</a>
+      <a class="article-title" href="/2014/09/27/How-to-install-latest-git-on-Mac/">How to install the latest git on mac</a>
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2014/09/24/How-to-deploy-github-pages-with-hexo/" class="archive-article-date">
-  <time datetime="2014-09-24T08:47:35.000Z" itemprop="datePublished">Sep 24</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
+        <h3 id="緣起">緣起</h3><p>因為長期使用 mac 所以經常仰賴 <a href="http://brew.sh/" target="_blank" rel="external">homebrew</a> 來補足 mac 本身內建套件的不足，一直以來也得到很多便利性。<br>但自從開始大量嘗試玩新東西之後，對於很多套件的版本問題開始重視，然而 apple 本身提供的套件其實相當的過時，此篇文章記錄一下如何使用 homebrew 安裝的套件來取代原本內建於電腦的相同套件，本文以 git 為例，其他套件如 vim 也能夠使用相同的作法來操作。</p>
+<h3 id="首先先確認一下目前電腦中_git_的版本">首先先確認一下目前電腦中 git 的版本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git --version</span><br><span class="line">git version 1.9.3 (Apple Git-50)</span><br></pre></td></tr></table></figure>
+<h3 id="可以使用以下指令看到目前_git_位在內建的資料夾底下(原生的檔案大多都在_/usr/bin/_底下)">可以使用以下指令看到目前 git 位在內建的資料夾底下(原生的檔案大多都在 /usr/bin/ 底下)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">which</span> git</span><br><span class="line">/usr/bin/git</span><br></pre></td></tr></table></figure>
+<h3 id="利用_homebrew_安裝_git，並且將內建的_git_進行更名（這樣系統在內建的資料夾找不到_git_會自動轉往_homebrew_的_/usr/local/bin/_底下找）">利用 homebrew 安裝 git，並且將內建的 git 進行更名（這樣系統在內建的資料夾找不到 git 會自動轉往 homebrew 的 /usr/local/bin/ 底下找）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install git</span><br><span class="line">$ sudo mv /usr/bin/git /usr/bin/git48</span><br></pre></td></tr></table></figure>
+<h3 id="這邊可以確認_git_目前連結到的位置已經變更，版本也已經更新">這邊可以確認 git 目前連結到的位置已經變更，版本也已經更新</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">which</span> git</span><br><span class="line">/usr/<span class="built_in">local</span>/bin/git</span><br><span class="line"></span><br><span class="line">$ git --version</span><br><span class="line">git version 2.1.1</span><br></pre></td></tr></table></figure>
+<h3 id="後記">後記</h3><p>如果想要使用舊版的朋友可以直接打改過的檔名（在這邊就是 git48）依然可以使用內建的版本。<br>如果想要還原的話可以把指令反過來執行如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mv /usr/bin/git48 /usr/bin/git</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.lpchen.me/2014/09/27/How-to-install-latest-git-on-Mac/" data-id="cinrhbucv0008hrzpiyl1zknt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-How-to-deploy-github-pages-with-hexo" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/09/24/How-to-deploy-github-pages-with-hexo/" class="article-date">
+  <time datetime="2014-09-24T08:47:35.000Z" itemprop="datePublished">Sep 24 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
     <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/09/24/How-to-deploy-github-pages-with-hexo/">How to deploy github pages with hexo</a>
+      <a class="article-title" href="/2014/09/24/How-to-deploy-github-pages-with-hexo/">How to deploy github pages with hexo</a>
     </h1>
   
 
-    </header>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="緣起">緣起</h3><p>身為一位自以為專業的技客，自然要有一個自己的 github 帳號<br>然後有了帳號以後下一步至少要有一個 github pages 的 blog<br>於是花了點時間摸了一下如何利用 hexo 這個套件來部屬，未免忘記在這邊記錄一下。</p>
+<h3 id="前置作業">前置作業</h3><p>先去你的 github 開一個新的 repo<br>名稱要是你的 <username>.github.io，其他都預設即可</username></p>
+<h3 id="Update_homebrew_and_install_node_(and_npm)">Update homebrew and install node (and npm)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install node</span><br></pre></td></tr></table></figure>
+<h3 id="Install_hexo_by_npm">Install hexo by npm</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo</span><br></pre></td></tr></table></figure>
+<h3 id="Initialize_a_folder_by_hexo">Initialize a folder by hexo</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ <span class="built_in">cd</span> &lt;folder&gt;</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+<p>這個時候應該會看到資料夾底下多了一堆東西，其中有一個檔案是 _config.yml</p>
+<p>打開它之後拉到最下面在 deploy 的位置改成下面這樣</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">    <span class="built_in">type</span>: github</span><br><span class="line">    repo: &lt;repo uri&gt; (可使用 ssh or https)</span><br><span class="line">    branch: master</span><br></pre></td></tr></table></figure>
+<h3 id="Deploy_your_pages">Deploy your pages</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>打開你的 <a href="http://username.github.io" target="_blank" rel="external">http://username.github.io</a> 應該就會看到一切已經佈署完成了</p>
+<h3 id="後記">後記</h3><p>之後要編寫文章可以使用以下指令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new &lt;title name&gt;</span><br></pre></td></tr></table></figure>
+<p>會在 source/_post/ 出現一個檔名為 <title name="">.md 的檔案，請直接對該檔案進行編修<br>這是 markdown 格式的檔案，撰寫方式可以參考 <a href="http://markdown.tw/" target="_blank" rel="external">markdown.tw</a></title></p>
+<p>更新並且發佈如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate <span class="_">-d</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.lpchen.me/2014/09/24/How-to-deploy-github-pages-with-hexo/" data-id="cinrhbucl0003hrzpvntvd2ra" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/github-pages/">github pages</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li></ul>
+
+    </footer>
   </div>
+  
 </article>
+
+
   
-  
-    </div></section>
   
 </section>
         
@@ -178,7 +294,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages/">github pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/">gitlab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hostname/">hostname</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myisam/">myisam</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpunit/">phpunit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/recovery/">recovery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-server/">web server</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSX/">OSX</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages/">github pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/">gitlab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hostname/">hostname</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myisam/">myisam</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpunit/">phpunit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/recovery/">recovery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-server/">web server</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -187,7 +303,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/EI-Capitan/" style="font-size: 10px;">EI Capitan</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/github-pages/" style="font-size: 10px;">github pages</a> <a href="/tags/gitlab/" style="font-size: 10px;">gitlab</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hostname/" style="font-size: 10px;">hostname</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mac/" style="font-size: 20px;">mac</a> <a href="/tags/myisam/" style="font-size: 10px;">myisam</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/phpunit/" style="font-size: 10px;">phpunit</a> <a href="/tags/recovery/" style="font-size: 10px;">recovery</a> <a href="/tags/ubuntu/" style="font-size: 16.67px;">ubuntu</a> <a href="/tags/web-server/" style="font-size: 10px;">web server</a>
+      <a href="/tags/EI-Capitan/" style="font-size: 10px;">EI Capitan</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/github-pages/" style="font-size: 10px;">github pages</a> <a href="/tags/gitlab/" style="font-size: 10px;">gitlab</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/hostname/" style="font-size: 10px;">hostname</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/mac/" style="font-size: 20px;">mac</a> <a href="/tags/myisam/" style="font-size: 10px;">myisam</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/phpunit/" style="font-size: 10px;">phpunit</a> <a href="/tags/recovery/" style="font-size: 10px;">recovery</a> <a href="/tags/ubuntu/" style="font-size: 16.67px;">ubuntu</a> <a href="/tags/web-server/" style="font-size: 10px;">web server</a>
     </div>
   </div>
 
@@ -196,7 +312,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -208,23 +324,23 @@
       <ul>
         
           <li>
+            <a href="/2016/05/03/Fix-hexo-with-Error-Module-version-mismatch/">Fix hexo with Error: Module version mismatch.</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/">How to build nginx on localhost in Mac OSX</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
             <a href="/2015/11/19/如何取得昨天的日期/">如何取得昨天的日期</a>
           </li>
         
           <li>
             <a href="/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/">How to install Gitlab on Ubuntu 14.04 LTS</a>
-          </li>
-        
-          <li>
-            <a href="/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/">How to upgrade PHP version on your mac</a>
-          </li>
-        
-          <li>
-            <a href="/2015/08/31/How-to-find-the-path-of-device-on-your-mac/">How to find the path of device on your mac</a>
-          </li>
-        
-          <li>
-            <a href="/2015/05/22/git-pull-強制設定至-origin-master-branch/">git pull 強制設定至 origin/master branch</a>
           </li>
         
       </ul>
@@ -239,7 +355,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2015 Jayson LP Chen<br>
+      &copy; 2016 Jayson LP Chen<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
@@ -257,11 +373,11 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
 
 
-<script src="/js/script.js" type="text/javascript"></script>
+<script src="/js/script.js"></script>
 
   </div>
 </body>
