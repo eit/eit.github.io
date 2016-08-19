@@ -3,21 +3,42 @@
 <head>
   <meta charset="utf-8">
   
-  <title>git pull 強制設定至 origin/master branch | SOMEHOW</title>
+  <title>How to mitigate Slow HTTP Dos Attack on Apache 2.4 in Ubuntu | SOMEHOW</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="緣起因為多人進行開發的時候會有版本控管問題，因此大多人會使用一些版本控制工具，時下最熱門的當然屬 git 為主流有時候因為我們改了些東西而別人也改了同樣的東西導致有些衝突在，最後亂成一團的時候一發不可收拾，於是乎我們會想乾脆 reset 至現在 server 上面的最新版本重來，這個時候我們可以用下面這兩行來進行 reset
-直接指令下去就不多解釋了12$ git fetch --all  $ g">
+  <meta name="description" content="緣起最近接到一個任務，是要把對外網站的一些安全漏洞補起來，而其中我拿到兩個 issue 要解：  
+
+disable website directory listing
+mitigate Slow HTTP Dos Attack
+
+拜請 Google 大神之後大致上看起來應該是不太難主要參考了這兩篇：
+
+How do I disable directory browsing
+Apache 如何防護">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git pull 強制設定至 origin/master branch">
-<meta property="og:url" content="http://blog.lpchen.me/2015/05/22/git-pull-強制設定至-origin-master-branch/index.html">
+<meta property="og:title" content="How to mitigate Slow HTTP Dos Attack on Apache 2.4 in Ubuntu">
+<meta property="og:url" content="http://blog.lpchen.me/2016/08/19/How-to-mitigate-Slow-HTTP-Dos-Attack-on-Apache-2-4-in-Ubuntu/index.html">
 <meta property="og:site_name" content="SOMEHOW">
-<meta property="og:description" content="緣起因為多人進行開發的時候會有版本控管問題，因此大多人會使用一些版本控制工具，時下最熱門的當然屬 git 為主流有時候因為我們改了些東西而別人也改了同樣的東西導致有些衝突在，最後亂成一團的時候一發不可收拾，於是乎我們會想乾脆 reset 至現在 server 上面的最新版本重來，這個時候我們可以用下面這兩行來進行 reset
-直接指令下去就不多解釋了12$ git fetch --all  $ g">
-<meta property="og:updated_time" content="2015-05-22T06:04:41.000Z">
+<meta property="og:description" content="緣起最近接到一個任務，是要把對外網站的一些安全漏洞補起來，而其中我拿到兩個 issue 要解：  
+
+disable website directory listing
+mitigate Slow HTTP Dos Attack
+
+拜請 Google 大神之後大致上看起來應該是不太難主要參考了這兩篇：
+
+How do I disable directory browsing
+Apache 如何防護">
+<meta property="og:updated_time" content="2016-08-19T15:28:45.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="git pull 強制設定至 origin/master branch">
-<meta name="twitter:description" content="緣起因為多人進行開發的時候會有版本控管問題，因此大多人會使用一些版本控制工具，時下最熱門的當然屬 git 為主流有時候因為我們改了些東西而別人也改了同樣的東西導致有些衝突在，最後亂成一團的時候一發不可收拾，於是乎我們會想乾脆 reset 至現在 server 上面的最新版本重來，這個時候我們可以用下面這兩行來進行 reset
-直接指令下去就不多解釋了12$ git fetch --all  $ g">
+<meta name="twitter:title" content="How to mitigate Slow HTTP Dos Attack on Apache 2.4 in Ubuntu">
+<meta name="twitter:description" content="緣起最近接到一個任務，是要把對外網站的一些安全漏洞補起來，而其中我拿到兩個 issue 要解：  
+
+disable website directory listing
+mitigate Slow HTTP Dos Attack
+
+拜請 Google 大神之後大致上看起來應該是不太難主要參考了這兩篇：
+
+How do I disable directory browsing
+Apache 如何防護">
   
     <link rel="alternative" href="/atom.xml" title="SOMEHOW" type="application/atom+xml">
   
@@ -63,10 +84,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-git-pull-強制設定至-origin-master-branch" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-How-to-mitigate-Slow-HTTP-Dos-Attack-on-Apache-2-4-in-Ubuntu" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/05/22/git-pull-強制設定至-origin-master-branch/" class="article-date">
-  <time datetime="2015-05-22T05:58:00.000Z" itemprop="datePublished">May 22 2015</time>
+    <a href="/2016/08/19/How-to-mitigate-Slow-HTTP-Dos-Attack-on-Apache-2-4-in-Ubuntu/" class="article-date">
+  <time datetime="2016-08-19T13:15:24.000Z" itemprop="datePublished">Aug 19 2016</time>
 </a>
     
   </div>
@@ -77,7 +98,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      git pull 強制設定至 origin/master branch
+      How to mitigate Slow HTTP Dos Attack on Apache 2.4 in Ubuntu
     </h1>
   
 
@@ -85,17 +106,48 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="緣起">緣起</h3><p>因為多人進行開發的時候會有版本控管問題，因此大多人會使用一些版本控制工具，時下最熱門的當然屬 git 為主流<br>有時候因為我們改了些東西而別人也改了同樣的東西導致有些衝突在，最後亂成一團的時候一發不可收拾，於是乎我們會想乾脆 reset 至現在 server 上面的最新版本重來，這個時候我們可以用下面這兩行來進行 reset</p>
-<h3 id="直接指令下去就不多解釋了">直接指令下去就不多解釋了</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch --all  </span><br><span class="line">$ git reset --hard origin/master</span><br></pre></td></tr></table></figure>
-<p>這個時候再重新 git pull 就大功告成了</p>
+        <h3 id="緣起">緣起</h3><p>最近接到一個任務，是要把對外網站的一些安全漏洞補起來，而其中我拿到兩個 issue 要解：  </p>
+<ol>
+<li>disable website directory listing</li>
+<li>mitigate Slow HTTP Dos Attack</li>
+</ol>
+<p>拜請 Google 大神之後大致上看起來應該是不太難<br>主要參考了這兩篇：</p>
+<ol>
+<li><a href="http://stackoverflow.com/questions/2530372/how-do-i-disable-directory-browsing" target="_blank" rel="external">How do I disable directory browsing</a></li>
+<li><a href="http://ssorc.tw/5744" target="_blank" rel="external">Apache 如何防護 Slow HTTP DOS 攻擊</a></li>
+</ol>
+<h3 id="實作第一個問題">實作第一個問題</h3><p>基本上在 Apache 的環境下面就是兩個做法最普遍</p>
+<ol>
+<li><p>在 .htaccess 裡面加上</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Options -Indexes</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 virtualhost 資訊裡拿掉 Indexes</p>
+</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># before</span></span><br><span class="line">&lt;Directory /var/www/&gt;</span><br><span class="line">        Options Indexes FollowSymLinks</span><br><span class="line">        AllowOverride None</span><br><span class="line">        Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># after</span></span><br><span class="line">&lt;Directory /var/www/&gt;</span><br><span class="line">        Options FollowSymLinks</span><br><span class="line">        AllowOverride None</span><br><span class="line">        Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure>
+<p>然後重啟 Apache 就搞定了</p>
+<h3 id="實作第二個問題">實作第二個問題</h3><p>在上面的文章裡面提供了三種方法</p>
+<ol>
+<li>mod_reqtimeout</li>
+<li>mod_qos</li>
+<li>mod_security</li>
+</ol>
+<p>這三種我都試了一輪<br>1 最簡單<br>在 virtualhost 裡面直接加上去就行了<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;IfModule mod_reqtimeout.c&gt;</span><br><span class="line">  RequestReadTimeout header=20-40,M<span class="keyword">in</span>Rate=500 body=20-40,M<span class="keyword">in</span>Rate=500</span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure></p>
+<p>2 mod_qos 在 Apache 2.4 已經不支援了，所以不用玩了</p>
+<p>3 的部分功能最多，做起來也最麻煩</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install libapache2-mod-security2</span><br></pre></td></tr></table></figure>
+<p>（如果你在這邊沒有遇到其他問題的話，事情其實也不難搞定，但是我在這邊遇到一連串問題搞了我非常多時間，解決的過程因為文獻被我搞丟了，所以請大家自求多福了XD）</p>
+<p>弄好之後一樣把下面加進去 virtualhost 設定檔裡面重啟 Apache 就搞定</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;IfModule mod_security2.c&gt;</span><br><span class="line">SecRule RESPONSE_STATUS <span class="string">"@streq 408"</span> <span class="string">"phase:5,t:none,nolog,pass, setvar:ip.slow_dos_counter=+1, expirevar:ip.slow_dos_counter=60, id:'1234123456'"</span></span><br><span class="line"></span><br><span class="line">SecRule IP:SLOW_DOS_COUNTER <span class="string">"@gt 5"</span> <span class="string">"phase:1,t:none,log,drop, msg:'Client Connection Dropped due to high number of slow DoS alerts', id:'1234123457'"</span></span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="備註">備註</h3><p>最後附上一個測試 slow http dos attack 的工具<br><a href="https://github.com/shekyan/slowhttptest" target="_blank" rel="external">SlowHTTPTest</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/05/22/git-pull-強制設定至-origin-master-branch/" data-id="cis1wvjt8000et0vvp99j2p0p" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2016/08/19/How-to-mitigate-Slow-HTTP-Dos-Attack-on-Apache-2-4-in-Ubuntu/" data-id="cis1wvjs20003t0vv1e0sf28c" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apache2-4/">apache2.4</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/security/">security</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
 
     </footer>
   </div>
@@ -103,19 +155,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2015/08/31/How-to-find-the-path-of-device-on-your-mac/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          How to find the path of device on your mac
-        
-      </div>
-    </a>
   
-  
-    <a href="/2014/11/15/Repair-myisam-table-by-myisamchk/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2016/05/03/Fix-hexo-with-Error-Module-version-mismatch/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Repair myisam table by myisamchk</div>
+      <div class="article-nav-title">Fix hexo with Error: Module version mismatch.</div>
     </a>
   
 </nav>
