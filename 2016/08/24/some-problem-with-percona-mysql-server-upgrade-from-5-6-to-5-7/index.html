@@ -15,7 +15,7 @@
 <meta property="og:description" content="緣起mysql 5.7 在功能與性能上都比 5.6 出色不少，但基於 percona 一直沒有更新的情況下我也沒有貿然升級，隨著前陣子 percona 釋出了 5.7 剛好最近又有了要使用 mysql 的機會，就想藉由這次機會順便升級 5.7
 過程在 OS 上面這台使用的是 Ubuntu 14.04，使用下面指令就能完成升級
 123sudo service mysql stopsudo apt-g">
-<meta property="og:updated_time" content="2016-08-24T10:58:14.000Z">
+<meta property="og:updated_time" content="2016-08-24T11:17:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="some problem with percona-mysql-server upgrade from 5.6 to 5.7">
 <meta name="twitter:description" content="緣起mysql 5.7 在功能與性能上都比 5.6 出色不少，但基於 percona 一直沒有更新的情況下我也沒有貿然升級，隨著前陣子 percona 釋出了 5.7 剛好最近又有了要使用 mysql 的機會，就想藉由這次機會順便升級 5.7
@@ -93,7 +93,11 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo service mysql stop</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install percona-server-server-5.7</span><br></pre></td></tr></table></figure>
 <p>等到跑完之後重啟 mysql 即可…</p>
 <p>但是大家都知道事情通常都不會這麼順利，所以我在這邊發生了 mysql 啟動不了的悲劇ＧＧ</p>
-<h3 id="問題解決">問題解決</h3><p>先去 /etc/mysql/my.cnf 裡面確定一下</p>
+<h3 id="問題解決">問題解決</h3><p>因為重啟的時候有看到如下的訊息<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">no directory logging <span class="keyword">in</span> with home=/ mysql</span><br></pre></td></tr></table></figure></p>
+<p>於是先使用這樣的做法<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod <span class="_">-d</span> /var/lib/mysql/ mysql <span class="comment">#這裡舉例使用預設路徑，有改路徑的記得跟著改</span></span><br></pre></td></tr></table></figure></p>
+<p>上面的作法等同於去修改 /etc/passwd 裡面 mysql 這個 user 的第六項資料，大致上是設定 mysql 這個 user 的家目錄的意思<br>想了解更多也可以參看一下這篇<a href="https://iyaozhen.com/ubuntu-upgrade-mysql-to-5-7.html" target="_blank" rel="external">Ubuntu 平滑升级 MySQL 到 5.7</a></p>
+<p>再重啟訊息不見了，但是依然失敗</p>
+<p>再去 /etc/mysql/my.cnf 裡面確定一下</p>
 <ol>
 <li>datadir = (資料路徑)</li>
 <li>log_error= /var/log/mysql/error.log (log 有正確被寫入到預設位置)</li>
@@ -101,6 +105,7 @@
 <p>檢查一下 log 之後發現錯誤訊息是<br>‘innodb_buffer_pool_populate’ 這個參數找不到</p>
 <p>Google 查一下找到下面這篇說明<br><a href="https://www.percona.com/doc/percona-server/5.7/changed_in_57.html" target="_blank" rel="external">Changed in Percona Server 5.7</a><br>innodb_buffer_pool_populate server option and numa_interleave mysql_safe.sh option have been replaced by innodb_numa_interleave server option. Note that flush_caches option still remains.</p>
 <p>於是乎把 innodb_buffer_pool_populate 取代成 innodb_numa_interleave 重啟 mysql 就成功啟動了，謝天謝地。</p>
+<h3 id="後記">後記</h3><p>最後執行一下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mysql_upgrade -u root -p <span class="comment">#更新一下數據</span></span><br></pre></td></tr></table></figure></p>
 
       
     </div>
