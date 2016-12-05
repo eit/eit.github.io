@@ -105,7 +105,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2016/08/24/some-problem-with-percona-mysql-server-upgrade-from-5-6-to-5-7/" data-id="cis8sevef000ib6vvs7x6jy41" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2016/08/24/some-problem-with-percona-mysql-server-upgrade-from-5-6-to-5-7/" data-id="ciwc9mmuc000flevvx1zakp0u" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/percona/">percona</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -177,7 +177,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2016/08/19/How-to-mitigate-Slow-HTTP-Dos-Attack-on-Apache-2-4-in-Ubuntu/" data-id="cis8sevds0007b6vv4gq5gypr" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2016/08/19/How-to-mitigate-Slow-HTTP-Dos-Attack-on-Apache-2-4-in-Ubuntu/" data-id="ciwc9mmtu0009levvm7saiwo0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apache2-4/">apache2.4</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/security/">security</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -222,7 +222,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/11/19/如何取得昨天的日期/" data-id="cis8seveh000kb6vvt6bc0wqw" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2015/11/19/如何取得昨天的日期/" data-id="ciwc9mmv0000mlevvilmmie8s" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -263,7 +263,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl restart</span><br></pre></td></tr></table></figure>
 <p>當然，也可以重跑特定服務就好，例如只想單純重跑 nginx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl restart nginx</span><br></pre></td></tr></table></figure></p>
 <h3 id="如何從備份還原_GitLab_資料">如何從備份還原 GitLab 資料</h3><p>這邊是假設備份檔放在 /net/gitlab_backup，檔名是 ${timestamp}_gitlab_backup.tar</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rake gitlab:backup:restore RAILS_ENV=production gitlab:backup:restore BACKUP=/net/gitlab_backup/$&#123;timestamp&#125;_gitlab_backup.tar</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-rake gitlab:backup:restore RAILS_ENV=production gitlab:backup:restore BACKUP=/net/gitlab_backup/$&#123;timestamp&#125;_gitlab_backup.tar</span><br><span class="line">or</span><br><span class="line">sudo gitlab-rake gitlab:backup:restore BACKUP=$&#123;timestamp&#125; force=yes</span><br></pre></td></tr></table></figure>
 <h3 id="如何更新_GitLab_版本">如何更新 GitLab 版本</h3><p>假設要從舊版封裝升到 GitLab 新版本（請注意，未來可能會有些版本需要額外的手動介入，更新前最好還是看一下官方文件並且先備份）</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sudo wget &lt;檔案連結&gt;</span><br><span class="line">$ sudo gitlab-ctl stop unicorn</span><br><span class="line">$ sudo gitlab-ctl stop sidekiq</span><br><span class="line">$ sudo dpkg -i &lt;檔案名稱&gt;</span><br><span class="line">$ sudo gitlab-ctl reconfigure</span><br><span class="line">$ sudo gitlab-ctl start</span><br></pre></td></tr></table></figure>
 <h3 id="備註">備註</h3><p>其他設定可以參考一下原文</p>
@@ -271,7 +271,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/" data-id="cis8sevdl0004b6vv7ubtypv1" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/" data-id="ciwc9mmtr0008levvood1e2n4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab/">gitlab</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -311,7 +311,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2014/10/22/Update-date-on-Ubuntu/" data-id="cis8seve6000bb6vvfgeb6hg7" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2014/10/22/Update-date-on-Ubuntu/" data-id="ciwc9mmut000hlevvqnh6tnoj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>

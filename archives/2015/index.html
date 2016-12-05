@@ -94,7 +94,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/11/19/如何取得昨天的日期/" data-id="cis8seveh000kb6vvt6bc0wqw" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2015/11/19/如何取得昨天的日期/" data-id="ciwc9mmv0000mlevvilmmie8s" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -135,7 +135,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl restart</span><br></pre></td></tr></table></figure>
 <p>當然，也可以重跑特定服務就好，例如只想單純重跑 nginx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl restart nginx</span><br></pre></td></tr></table></figure></p>
 <h3 id="如何從備份還原_GitLab_資料">如何從備份還原 GitLab 資料</h3><p>這邊是假設備份檔放在 /net/gitlab_backup，檔名是 ${timestamp}_gitlab_backup.tar</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rake gitlab:backup:restore RAILS_ENV=production gitlab:backup:restore BACKUP=/net/gitlab_backup/$&#123;timestamp&#125;_gitlab_backup.tar</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-rake gitlab:backup:restore RAILS_ENV=production gitlab:backup:restore BACKUP=/net/gitlab_backup/$&#123;timestamp&#125;_gitlab_backup.tar</span><br><span class="line">or</span><br><span class="line">sudo gitlab-rake gitlab:backup:restore BACKUP=$&#123;timestamp&#125; force=yes</span><br></pre></td></tr></table></figure>
 <h3 id="如何更新_GitLab_版本">如何更新 GitLab 版本</h3><p>假設要從舊版封裝升到 GitLab 新版本（請注意，未來可能會有些版本需要額外的手動介入，更新前最好還是看一下官方文件並且先備份）</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sudo wget &lt;檔案連結&gt;</span><br><span class="line">$ sudo gitlab-ctl stop unicorn</span><br><span class="line">$ sudo gitlab-ctl stop sidekiq</span><br><span class="line">$ sudo dpkg -i &lt;檔案名稱&gt;</span><br><span class="line">$ sudo gitlab-ctl reconfigure</span><br><span class="line">$ sudo gitlab-ctl start</span><br></pre></td></tr></table></figure>
 <h3 id="備註">備註</h3><p>其他設定可以參考一下原文</p>
@@ -143,7 +143,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/" data-id="cis8sevdl0004b6vv7ubtypv1" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/" data-id="ciwc9mmtr0008levvood1e2n4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab/">gitlab</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -191,7 +191,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/" data-id="cis8sevdu0008b6vvl5iqzn64" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/" data-id="ciwc9mmtx000blevvui61fe1z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/phpunit/">phpunit</a></li></ul>
@@ -231,7 +231,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/08/31/How-to-find-the-path-of-device-on-your-mac/" data-id="cis8sevdd0001b6vvmkneud83" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2015/08/31/How-to-find-the-path-of-device-on-your-mac/" data-id="ciwc9mmtn0006levvrzo5886x" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li></ul>
@@ -272,7 +272,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/05/22/git-pull-強制設定至-origin-master-branch/" data-id="cis8sevec000fb6vva83xetnq" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2015/05/22/git-pull-強制設定至-origin-master-branch/" data-id="ciwc9mmux000jlevvrguxrv42" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
