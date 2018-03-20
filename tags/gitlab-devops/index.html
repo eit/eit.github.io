@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives: 2015/8 | SOMEHOW</title>
+  <title>Tag: gitlab-devops | SOMEHOW</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="SOMEHOW">
-<meta property="og:url" content="http://blog.lpchen.me/archives/2015/08/index.html">
+<meta property="og:url" content="http://blog.lpchen.me/tags/gitlab-devops/index.html">
 <meta property="og:site_name" content="SOMEHOW">
 <meta property="og:description">
 <meta name="twitter:card" content="summary">
@@ -61,10 +61,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-How-to-find-the-path-of-device-on-your-mac" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Fixed-gitlab-CI-via-ssh-executor-error" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/08/31/How-to-find-the-path-of-device-on-your-mac/" class="article-date">
-  <time datetime="2015-08-31T06:44:27.000Z" itemprop="datePublished">Aug 31 2015</time>
+    <a href="/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/" class="article-date">
+  <time datetime="2018-03-20T06:49:04.000Z" itemprop="datePublished">Mar 20 2018</time>
 </a>
     
   </div>
@@ -75,7 +75,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/31/How-to-find-the-path-of-device-on-your-mac/">How to find the path of device on your mac</a>
+      <a class="article-title" href="/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/">Fixed gitlab CI via ssh executor error</a>
     </h1>
   
 
@@ -83,16 +83,26 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="緣起">緣起</h3><p>當你在終端機想要找尋你所插在電腦的裝置的真實路徑的時候<br>你可能無從下手，okay 現在把下面這個指令勇敢地敲下去</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls -1 /dev/tty.*</span><br></pre></td></tr></table></figure>
+        <h3 id="緣起">緣起</h3><p>用 gitlab ci 也是一段時間，如果只是要進行一些簡單 test or deploy 之類的工作，用這個會比其他外部工具平台簡單一點，但是在版本不斷推進的同時會遇到了底下的問題</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Running with gitlab-runner 10.5.0 (xxxxxxxx)</span><br><span class="line">  on ssh-xxxxxxxx (xxxxxxxxx)</span><br><span class="line">Using SSH executor...</span><br><span class="line">Running on xxxxxxxxxx via xxxxxxxxxx...</span><br><span class="line">ERROR: Job failed: Process exited with: 1. Reason was:  ()</span><br></pre></td></tr></table></figure>
+<p>看了很多文章，早期有一部分建議降版本到 gitlab-runner v1.8.6，的確是可以順利運行，但是到了 gitlab v10 之後似乎又炸裂了，於是這次好好想來解決一番。</p>
+<h3 id="解決方法">解決方法</h3><p>直接進入結論<br>用以下這行就可以解決</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chsh username /bin/bash</span><br></pre></td></tr></table></figure>
+<p>就是讓這個 gitlab-runner 登入的帳號，預設要改成 bash (zsh 確定不行，其餘沒試過)</p>
+<p>到這邊以為事件就這樣結束了，不過節外總會生枝</p>
+<h3 id="事件二">事件二</h3><p>pipeline job 畫面又跑出這個東西</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fatal: unable to access &apos;https://gitlab-ci-token:xxxxxxxxxxxxxxxxxxxx@git.example.com/group/project.git/&apos;: SSL certificate problem: self signed certificate</span><br><span class="line">ERROR: Job failed: exit code 1</span><br></pre></td></tr></table></figure>
+<p>SSL certificate failing 似乎是 gitlab-runner 和 gitlab 到了某版之後出現的 bug，大致上建議的做法是先關掉 SSL 的驗證，等版本修復之後再打開了，解決方法是在 config.toml 裡面 runners 裡面加上這行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">environment = [&quot;GIT_SSL_NO_VERIFY=true&quot;]</span><br><span class="line">or</span><br><span class="line">environment = [&quot;GIT_SSL_NO_VERIFY=1&quot;]</span><br></pre></td></tr></table></figure>
+<p>All set…</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/08/31/How-to-find-the-path-of-device-on-your-mac/" data-id="cjezbk4su0007gxvvfy4e6jov" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/" data-id="cjezbk4sf0001gxvvtg32lj15" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab/">gitlab</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab-ci/">gitlab-ci</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab-devops/">gitlab-devops</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab-runner/">gitlab-runner</a></li></ul>
 
     </footer>
   </div>
