@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives: 2016/5 | SOMEHOW</title>
+  <title>Tag: sshkey | SOMEHOW</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="SOMEHOW">
-<meta property="og:url" content="http://blog.lpchen.me/archives/2016/05/index.html">
+<meta property="og:url" content="http://blog.lpchen.me/tags/sshkey/index.html">
 <meta property="og:site_name" content="SOMEHOW">
 <meta property="og:description">
 <meta name="twitter:card" content="summary">
@@ -61,10 +61,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-Fix-hexo-with-Error-Module-version-mismatch" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-在-Linux-系統使用-ssh-key-登入" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/05/03/Fix-hexo-with-Error-Module-version-mismatch/" class="article-date">
-  <time datetime="2016-05-03T13:15:08.000Z" itemprop="datePublished">May 3 2016</time>
+    <a href="/2018/06/05/在-Linux-系統使用-ssh-key-登入/" class="article-date">
+  <time datetime="2018-06-05T07:12:17.000Z" itemprop="datePublished">Jun 5 2018</time>
 </a>
     
   </div>
@@ -75,7 +75,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/03/Fix-hexo-with-Error-Module-version-mismatch/">Fix hexo with Error: Module version mismatch.</a>
+      <a class="article-title" href="/2018/06/05/在-Linux-系統使用-ssh-key-登入/">在 Linux 系統使用 ssh key 登入</a>
     </h1>
   
 
@@ -83,66 +83,20 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="緣起">緣起</h3><p>更新了 hexo 之後一執行就噴下面這三行訊息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Error: Module version mismatch. Expected 46, got 14.]</span><br><span class="line">&#123; [Error: Cannot find module &apos;./build/default/DTraceProviderBindings&apos;] code: &apos;MODULE_NOT_FOUND&apos; &#125;</span><br><span class="line">&#123; [Error: Cannot find module &apos;./build/Debug/DTraceProviderBindings&apos;] code: &apos;MODULE_NOT_FOUND&apos; &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="解決方法">解決方法</h3><p>用以下這兩行就可以解決<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo --no-optional</span><br><span class="line">$ npm install --unsafe-perm --verbose -g hexo</span><br></pre></td></tr></table></figure></p>
+        <h3 id="Intro">Intro</h3><p>我們登入遠端伺服器每次都要打密碼其實又麻煩又不安全，有人提倡常常換密碼可以解決，但…這個在實質上的有用程度在這裡就不好說了。</p>
+<h3 id="Usage">Usage</h3><p>言歸正傳，這邊要介紹一下如何使用 ssh key 來登入遠端伺服器</p>
+<p>通常我們會透過指令產生 ssh key<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure></p>
+<p>產生出來的 key 通常會在<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure></p>
+<p>只要把我們的 key 加入到伺服器的下面這個檔案裡面就能達成用 key 登入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure></p>
+<p>所以我們可以用這個指令直接把 local 端的 ssh key 加進去 server 端的登入名單裡面<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub | ssh [user]@[server-host] <span class="string">"cat &gt;&gt; ~/.ssh/authorized_keys"</span></span><br></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2016/05/03/Fix-hexo-with-Error-Module-version-mismatch/" data-id="cji1d4jv10004sdvvynzh2f3v" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/06/05/在-Linux-系統使用-ssh-key-登入/" data-id="cji1d4jvf000lsdvv59xjo7x2" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-How-to-build-nginx-on-localhost-in-Mac-OSX" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/" class="article-date">
-  <time datetime="2016-05-03T08:34:55.000Z" itemprop="datePublished">May 3 2016</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/">How to build nginx on localhost in Mac OSX</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="緣起">緣起</h3><p>談到 web server 大家第一個想到的大概是老大哥 apache，而且 mac osx 裡面其實已經內建了，方便性不用多說。<br>但近年來 nginx 不論是效能上或是體積上基本上都已經取代 apache 的地位，當然就成為大家的新寵，頂多在使用上有一點點的不方便，這篇文章記錄一下在 mac osx 上面安裝 nginx 的步驟。</p>
-<h3 id="前置作業">前置作業</h3><p>首先你要將 homebrew 裝起來，使用 mac 同時又有在做開發的人應該都有裝吧？<br>好吧，沒有的話先去 <a href="http://brew.sh/" target="_blank" rel="external">homebrew</a> 網站看看。</p>
-<h3 id="安裝與設置">安裝與設置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install nginx</span><br></pre></td></tr></table></figure>
-<p>裝好的 nginx 會在路徑 /usr/local/etc/nginx/<br>所謂的設定檔也在這 /usr/local/etc/nginx/nginx.conf<br>打開之後大致上跟一般的 nginx 沒什麼兩樣</p>
-<p>但是最需要注意的就是在 FastCGI pass 那段<br>這裡先放上我的給大家參考一下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">    fastcgi_index  index.php;</span><br><span class="line">    fastcgi_param  SCRIPT_FILENAME <span class="variable">$document_root</span><span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">    <span class="comment">#fastcgi_param SCRIPT_FILENAME /scripts$fastcgi_script_name;</span></span><br><span class="line">    include        /usr/<span class="built_in">local</span>/etc/nginx/fastcgi_params;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>註解掉的第四行是原本預設的內容，必須改成第三行才能運作，不然你會跑不起來然後在 log 裡面看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fastcgi sent in stderr: &quot;primary script unknown&quot;</span><br></pre></td></tr></table></figure></p>
-<p>既然說到 log，順便提一下 log 的位置在 /usr/local/var/log/nginx/ 裡面<br>預設網頁目錄在 /usr/local/nginx/html</p>
-<h3 id="運行與_nginx_指令">運行與 nginx 指令</h3><p>最後這邊簡單列一下可能比較會用到的 nginx 相關指令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sudo nginx // 啟動 nginx</span><br><span class="line">$ sudo nginx -s reload // 重新載入設定</span><br><span class="line">$ sudo nginx -s restart // 重新啟動 nginx</span><br><span class="line">$ sudo php-fpm // 啟動 php-fpm</span><br></pre></td></tr></table></figure>
-<p>Enjoy it!</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/" data-id="cji1d4juw0001sdvvhfjhuwch" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OSX/">OSX</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/key/">key</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ssh/">ssh</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sshkey/">sshkey</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
 
     </footer>
   </div>
