@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives: 2015/10 | SOMEHOW</title>
+  <title>Tag: pg-promise | SOMEHOW</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="SOMEHOW">
-<meta property="og:url" content="http://blog.lpchen.me/archives/2015/10/index.html">
+<meta property="og:url" content="http://blog.lpchen.me/tags/pg-promise/index.html">
 <meta property="og:site_name" content="SOMEHOW">
 <meta property="og:description">
 <meta name="twitter:card" content="summary">
@@ -61,10 +61,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-How-to-install-Gitlab-on-Ubuntu-14-04-LTS" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-How-to-do-multi-row-insert-with-postgres-by-nodejs" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/" class="article-date">
-  <time datetime="2015-10-14T03:38:24.000Z" itemprop="datePublished">Oct 14 2015</time>
+    <a href="/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" class="article-date">
+  <time datetime="2018-08-13T17:03:22.000Z" itemprop="datePublished">Aug 14 2018</time>
 </a>
     
   </div>
@@ -75,7 +75,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/">How to install Gitlab on Ubuntu 14.04 LTS</a>
+      <a class="article-title" href="/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/">How to do multi-row insert with postgres by nodejs</a>
     </h1>
   
 
@@ -83,73 +83,29 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="緣起">緣起</h3><p>其實使用 <a href="https://about.gitlab.com/" target="_blank" rel="external">GitLab</a> 也是有好一段時間了，但是早期的 GitLab 安裝麻煩又囉唆，使用起來也常常聽說有不穩定的問題，但發展也好一段時間了。<br>目前在規模上面也是到達一定程度，而且已經被包成一個 deb 檔案，所以只要一個 dpkg -i 就可以把所有需要的套件裝完，簡便性大增。<br>在 7.9.2 之後 GitLab 也進行版本切割，一般人會用到的比較多應該還是社群版(CE版)，這邊來稍微紀錄一下我的整個安裝過程。</p>
-<p>而這篇主要是參考了 Gaod 大神的大作<br><a href="http://blog.hychen.org/archives/2014/05/13/165/gitlab-on-ubuntu-12-04-lts/" target="_blank" rel="external">GitLab on Ubuntu 12.04 LTS，在 Ubuntu 12.04 上安裝 GitLab</a></p>
-<h3 id="Installation">Installation</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo wget &lt;檔案連結url&gt; # 連結在 https://www.gitlab.com/downloads/</span><br><span class="line">sudo dpkg -i &lt;檔案名稱&gt;</span><br><span class="line">sudo apt-get install python-docutils</span><br></pre></td></tr></table></figure>
-<h3 id="如何重跑_GitLab_服務">如何重跑 GitLab 服務</h3><p>假設要重跑 GitLab 相關的所有服務</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl restart</span><br></pre></td></tr></table></figure>
-<p>當然，也可以重跑特定服務就好，例如只想單純重跑 nginx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl restart nginx</span><br></pre></td></tr></table></figure></p>
-<h3 id="如何從備份還原_GitLab_資料">如何從備份還原 GitLab 資料</h3><p>這邊是假設備份檔放在 /net/gitlab_backup，檔名是 ${timestamp}_gitlab_backup.tar</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-rake gitlab:backup:restore RAILS_ENV=production gitlab:backup:restore BACKUP=/net/gitlab_backup/$&#123;timestamp&#125;_gitlab_backup.tar</span><br><span class="line">or</span><br><span class="line">sudo gitlab-rake gitlab:backup:restore BACKUP=$&#123;timestamp&#125; force=yes</span><br></pre></td></tr></table></figure>
-<h3 id="如何更新_GitLab_版本">如何更新 GitLab 版本</h3><p>假設要從舊版封裝升到 GitLab 新版本（請注意，未來可能會有些版本需要額外的手動介入，更新前最好還是看一下官方文件並且先備份）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sudo wget &lt;檔案連結&gt;</span><br><span class="line">$ sudo gitlab-ctl stop unicorn</span><br><span class="line">$ sudo gitlab-ctl stop sidekiq</span><br><span class="line">$ sudo dpkg -i &lt;檔案名稱&gt;</span><br><span class="line">$ sudo gitlab-ctl reconfigure</span><br><span class="line">$ sudo gitlab-ctl start</span><br></pre></td></tr></table></figure>
-<h3 id="備註">備註</h3><p>其他設定可以參考一下原文</p>
+        <h3 id="緣起">緣起</h3><p>最近有一個案子必須先透過 API 取得資料後把資料經過重組塞進 local database<br>環境上使用的是 nodejs + postgres</p>
+<h3 id="過程">過程</h3><p>經過了兩次重構之後整理一下最後的做法</p>
+<ol>
+<li><p>Using <a href="https://github.com/request/request-promise" target="_blank" rel="external">request-promise</a> lib</p>
+</li>
+<li><p>Using <a href="https://github.com/vitaly-t/pg-promise" target="_blank" rel="external">pg-promise</a> lib</p>
+</li>
+</ol>
+<p>作者本人有在 <a href="https://stackoverflow.com/questions/37300997/multi-row-insert-with-pg-promise" target="_blank" rel="external">stackoverflow</a> 提供一段範例可以參考<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pgp = <span class="built_in">require</span>(<span class="string">'pg-promise'</span>)(&#123;</span><br><span class="line">    <span class="comment">/* initialization options */</span></span><br><span class="line">    capSQL: <span class="literal">true</span> <span class="comment">// capitalize all generated SQL</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">const</span> db = pgp(<span class="comment">/*connection*/</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// our set of columns, to be created only once, and then shared/reused,</span></span><br><span class="line"><span class="comment">// to let it cache up its formatting templates for high performance:</span></span><br><span class="line"><span class="keyword">const</span> cs = <span class="keyword">new</span> pgp.helpers.ColumnSet([<span class="string">'col_a'</span>, <span class="string">'col_b'</span>], &#123;table: <span class="string">'tmp'</span>&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// data input values:</span></span><br><span class="line"><span class="keyword">const</span> values = [&#123;col_a: <span class="string">'a1'</span>, col_b: <span class="string">'b1'</span>&#125;, &#123;col_a: <span class="string">'a2'</span>, col_b: <span class="string">'b2'</span>&#125;];</span><br><span class="line"></span><br><span class="line"><span class="comment">// generating a multi-row insert query:</span></span><br><span class="line"><span class="keyword">const</span> query = pgp.helpers.insert(values, cs);</span><br><span class="line"><span class="comment">//=&gt; INSERT INTO "tmp"("col_a","col_b") VALUES('a1','b1'),('a2','b2')</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// executing the query:</span></span><br><span class="line">db.none(query)</span><br><span class="line">    .then(data =&gt; &#123;</span><br><span class="line">        <span class="comment">// success;</span></span><br><span class="line">    &#125;)</span><br><span class="line">    .catch(error =&gt; &#123;</span><br><span class="line">        <span class="comment">// error;</span></span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map#Using_map_to_reformat_objects_in_an_array" target="_blank" rel="external">Using map to reformat objects in an array</a></li>
+</ol>
+<p>這篇裡面的範例也可以參考一下，當然 var 在 es7 裡面已經被棄用，但以 map 來做集合操作仍然是相當實用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> kvArray = [&#123;key: <span class="number">1</span>, value: <span class="number">10</span>&#125;, </span><br><span class="line">               &#123;key: <span class="number">2</span>, value: <span class="number">20</span>&#125;, </span><br><span class="line">               &#123;key: <span class="number">3</span>, value: <span class="number">30</span>&#125;];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> reformattedArray = kvArray.map(obj =&gt;&#123; </span><br><span class="line">   <span class="keyword">var</span> rObj = &#123;&#125;;</span><br><span class="line">   rObj[obj.key] = obj.value;</span><br><span class="line">   <span class="keyword">return</span> rObj;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// reformattedArray is now [&#123;1: 10&#125;, &#123;2: 20&#125;, &#123;3: 30&#125;], </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// kvArray is still: </span></span><br><span class="line"><span class="comment">// [&#123;key: 1, value: 10&#125;, </span></span><br><span class="line"><span class="comment">//  &#123;key: 2, value: 20&#125;, </span></span><br><span class="line"><span class="comment">//  &#123;key: 3, value: 30&#125;]</span></span><br></pre></td></tr></table></figure>
+<h3 id="One_more_thing">One more thing</h3><p>程式結束記得補上<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pgp.end()</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/" data-id="cjksjzb7v000ad03ict15bt7u" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" data-id="cjksjzb7t0007d03iwh84movp" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab/">gitlab</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-How-to-upgrade-PHP-version-on-your-mac" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/" class="article-date">
-  <time datetime="2015-10-07T03:44:12.000Z" itemprop="datePublished">Oct 7 2015</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/">How to upgrade PHP version on your mac</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="緣起">緣起</h3><p>最近為了發揮 laravel 5.1 完整的功能，而在研究裡面包好的各種阿里布達套件，弄著弄著弄到了 <a href="https://phpunit.de/" target="_blank" rel="external">phpunit</a> 但在安裝 phpunit 遇到了一個問題，就是 mac 不知道跟 php 有仇還是怎樣，幾乎各種版本 cli 都更新了就是 php 還停留在 5.5 不知道是哪招(老闆聽說 php7 都已經 RC2 啦～)，導致於新版 phpunit 無法執行(目前穩定版需要配合 php 5.6)，於是乎很多人會想到了使用 homebrew 來作安裝，但無奈的是 homebrew 也沒有把 php 納入，所以要安裝的話必須另外用一些方法。</p>
-<h3 id="Installation">Installation</h3><p>在安裝的部分可以參考 <a href="https://github.com/Homebrew/homebrew-php" target="_blank" rel="external">homebrew-php</a> 的說明<br>這裡使用的是 homebrew 的隱藏指令 tap，據悉是用來安裝擴充套件的</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ brew tap homebrew/dupes</span><br><span class="line">$ brew tap homebrew/versions</span><br><span class="line">$ brew tap homebrew/homebrew-php</span><br></pre></td></tr></table></figure>
-<p>前置做完之後就可以進行安裝</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 安裝 php5.6 , 如果你想安裝 7.0 也可以改成 php70</span><br><span class="line">$ brew install php56</span><br></pre></td></tr></table></figure>
-<p>裝好之後應該就搞定啦！</p>
-<h3 id="後記">後記</h3><p>這裡有一點很詭異的地方是，Mac OSX 10.11(EI Capitan)裡面的 whereis 根本是錯的，不管你怎麼設定，他幫你找到的位置永遠是 /usr/bin/*</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ whereis php</span><br><span class="line">/usr/bin/php</span><br><span class="line"></span><br><span class="line">$ php --version</span><br><span class="line">PHP 5.6.14 (cli)</span><br><span class="line"></span><br><span class="line">$ /usr/bin/php --version</span><br><span class="line">PHP 5.5.27 (cli)</span><br></pre></td></tr></table></figure>
-<p>可見 whereis 在現在這版本根本壞了<br>下次更新不知道會不會修回來</p>
-<p>另外關於隱藏指令可以稍微參考一下這篇<br><a href="http://icyleaf.com/2014/01/homebrew-hidden-commands/" target="_blank" rel="external">隱藏指令</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/" data-id="cjksjzb89001gd03iqz1dc5f9" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/phpunit/">phpunit</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/express/">express</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pg-promise/">pg-promise</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/postgres/">postgres</a></li></ul>
 
     </footer>
   </div>
