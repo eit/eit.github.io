@@ -61,6 +61,48 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Error-after-upgrading-pip-cannot-import-name-main" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/" class="article-date">
+  <time datetime="2018-08-15T04:03:36.000Z" itemprop="datePublished">Aug 15 2018</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/">Error after upgrading pip: cannot import name main</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="前情提要">前情提要</h3><p>平常都習慣 mac 上面做事，這幾天在某台新的 ubuntu 上面裝 pgcli 的時候遇到一個問題<br>用 pip 裝完 pgcli 之後跳出一個提示，意思是說你現在這個 pip v8.1.1 已經過時囉，現在最新的是 v18，建議你快點更新喔，後面還送你一串更新用的指令<br>用它送的指令更新下去…直接幫你把你的 pip 送上西天，會噴以下的訊息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"/usr/bin/pip"</span>, line 9, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    from pip import main</span><br><span class="line">ImportError: cannot import name <span class="string">'main'</span></span><br></pre></td></tr></table></figure>
+<h3 id="解法">解法</h3><p>查了一輪大致上是因為新版的 pip v18，只支援 python3，python2 只能更新到 v9 的樣子<br>這真的蠢到我醉了，自己跳訊息出來炸掉自己是哪招…</p>
+<p>以下一行解決</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo python -m pip uninstall pip &amp;&amp; sudo apt install python3-pip --reinstall</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.lpchen.me/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/" data-id="cjkumg28q00001avv0k6qb00u" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pip/">pip</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pip3/">pip3</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python3/">python3</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-How-to-do-multi-row-insert-with-postgres-by-nodejs" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" class="article-date">
@@ -102,7 +144,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" data-id="cjksjzb7t0007d03iwh84movp" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" data-id="cjkumg29800071avv7aybe3cz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/express/">express</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pg-promise/">pg-promise</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/postgres/">postgres</a></li></ul>
@@ -146,7 +188,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/06/05/在-Linux-系統使用-ssh-key-登入/" data-id="cjksjzb8f001pd03ihtz0m5xp" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/06/05/在-Linux-系統使用-ssh-key-登入/" data-id="cjkumg2a0000p1avvxvdqgrn8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/key/">key</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ssh/">ssh</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sshkey/">sshkey</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -189,7 +231,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/03/28/在-ubuntu-中找出大檔案/" data-id="cjksjzb8g001sd03ibj2qz8za" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/03/28/在-ubuntu-中找出大檔案/" data-id="cjkumg2by002w1avvydaabgto" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -239,7 +281,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/" data-id="cjksjzb7q0003d03iso6uh1ah" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/" data-id="cjkumg29400041avvfrw6sz8g" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab/">gitlab</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab-ci/">gitlab-ci</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab-devops/">gitlab-devops</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab-runner/">gitlab-runner</a></li></ul>
@@ -295,7 +337,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2016/08/24/some-problem-with-percona-mysql-server-upgrade-from-5-6-to-5-7/" data-id="cjksjzb8e001nd03ic41q8mv0" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2016/08/24/some-problem-with-percona-mysql-server-upgrade-from-5-6-to-5-7/" data-id="cjkumg2c2002z1avvwlk52ciy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/percona/">percona</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -367,7 +409,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2016/08/19/How-to-mitigate-Slow-HTTP-Dos-Attack-on-Apache-2-4-in-Ubuntu/" data-id="cjksjzb89001fd03inil2k17i" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2016/08/19/How-to-mitigate-Slow-HTTP-Dos-Attack-on-Apache-2-4-in-Ubuntu/" data-id="cjkumg29y000n1avv6jzw8qts" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apache2-4/">apache2.4</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/security/">security</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -408,7 +450,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2016/05/03/Fix-hexo-with-Error-Module-version-mismatch/" data-id="cjksjzb7n0001d03ihx86vpy3" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2016/05/03/Fix-hexo-with-Error-Module-version-mismatch/" data-id="cjkumg29600061avvrmi7j1dv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
@@ -457,7 +499,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/" data-id="cjksjzb7r0004d03iqhk6m44w" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/" data-id="cjkumg29200031avvjh7yqgde" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OSX/">OSX</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li></ul>
@@ -502,59 +544,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/11/19/如何取得昨天的日期/" data-id="cjksjzb8h001ud03ihoqfttn3" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2015/11/19/如何取得昨天的日期/" data-id="cjkumg2c0002x1avvp7leu5i6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-How-to-install-Gitlab-on-Ubuntu-14-04-LTS" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/" class="article-date">
-  <time datetime="2015-10-14T03:38:24.000Z" itemprop="datePublished">Oct 14 2015</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/">How to install Gitlab on Ubuntu 14.04 LTS</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="緣起">緣起</h3><p>其實使用 <a href="https://about.gitlab.com/" target="_blank" rel="external">GitLab</a> 也是有好一段時間了，但是早期的 GitLab 安裝麻煩又囉唆，使用起來也常常聽說有不穩定的問題，但發展也好一段時間了。<br>目前在規模上面也是到達一定程度，而且已經被包成一個 deb 檔案，所以只要一個 dpkg -i 就可以把所有需要的套件裝完，簡便性大增。<br>在 7.9.2 之後 GitLab 也進行版本切割，一般人會用到的比較多應該還是社群版(CE版)，這邊來稍微紀錄一下我的整個安裝過程。</p>
-<p>而這篇主要是參考了 Gaod 大神的大作<br><a href="http://blog.hychen.org/archives/2014/05/13/165/gitlab-on-ubuntu-12-04-lts/" target="_blank" rel="external">GitLab on Ubuntu 12.04 LTS，在 Ubuntu 12.04 上安裝 GitLab</a></p>
-<h3 id="Installation">Installation</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo wget &lt;檔案連結url&gt; # 連結在 https://www.gitlab.com/downloads/</span><br><span class="line">sudo dpkg -i &lt;檔案名稱&gt;</span><br><span class="line">sudo apt-get install python-docutils</span><br></pre></td></tr></table></figure>
-<h3 id="如何重跑_GitLab_服務">如何重跑 GitLab 服務</h3><p>假設要重跑 GitLab 相關的所有服務</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl restart</span><br></pre></td></tr></table></figure>
-<p>當然，也可以重跑特定服務就好，例如只想單純重跑 nginx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl restart nginx</span><br></pre></td></tr></table></figure></p>
-<h3 id="如何從備份還原_GitLab_資料">如何從備份還原 GitLab 資料</h3><p>這邊是假設備份檔放在 /net/gitlab_backup，檔名是 ${timestamp}_gitlab_backup.tar</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-rake gitlab:backup:restore RAILS_ENV=production gitlab:backup:restore BACKUP=/net/gitlab_backup/$&#123;timestamp&#125;_gitlab_backup.tar</span><br><span class="line">or</span><br><span class="line">sudo gitlab-rake gitlab:backup:restore BACKUP=$&#123;timestamp&#125; force=yes</span><br></pre></td></tr></table></figure>
-<h3 id="如何更新_GitLab_版本">如何更新 GitLab 版本</h3><p>假設要從舊版封裝升到 GitLab 新版本（請注意，未來可能會有些版本需要額外的手動介入，更新前最好還是看一下官方文件並且先備份）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sudo wget &lt;檔案連結&gt;</span><br><span class="line">$ sudo gitlab-ctl stop unicorn</span><br><span class="line">$ sudo gitlab-ctl stop sidekiq</span><br><span class="line">$ sudo dpkg -i &lt;檔案名稱&gt;</span><br><span class="line">$ sudo gitlab-ctl reconfigure</span><br><span class="line">$ sudo gitlab-ctl start</span><br></pre></td></tr></table></figure>
-<h3 id="備註">備註</h3><p>其他設定可以參考一下原文</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/" data-id="cjksjzb7v000ad03ict15bt7u" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab/">gitlab</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
 
     </footer>
   </div>
@@ -578,7 +571,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSX/">OSX</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache2-4/">apache2.4</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/express/">express</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages/">github pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/">gitlab</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-ci/">gitlab-ci</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-devops/">gitlab-devops</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-runner/">gitlab-runner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hostname/">hostname</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/key/">key</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myisam/">myisam</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/percona/">percona</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pg-promise/">pg-promise</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpunit/">phpunit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgres/">postgres</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/recovery/">recovery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/security/">security</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/">ssh</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sshkey/">sshkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-server/">web server</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSX/">OSX</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache2-4/">apache2.4</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/express/">express</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages/">github pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/">gitlab</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-ci/">gitlab-ci</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-devops/">gitlab-devops</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-runner/">gitlab-runner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hostname/">hostname</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/key/">key</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myisam/">myisam</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/percona/">percona</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pg-promise/">pg-promise</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpunit/">phpunit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip/">pip</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip3/">pip3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgres/">postgres</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python3/">python3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/recovery/">recovery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/security/">security</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/">ssh</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sshkey/">sshkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-server/">web server</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -587,7 +580,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/EI-Capitan/" style="font-size: 10px;">EI Capitan</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/apache2-4/" style="font-size: 10px;">apache2.4</a> <a href="/tags/express/" style="font-size: 10px;">express</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/github-pages/" style="font-size: 10px;">github pages</a> <a href="/tags/gitlab/" style="font-size: 13.33px;">gitlab</a> <a href="/tags/gitlab-ci/" style="font-size: 10px;">gitlab-ci</a> <a href="/tags/gitlab-devops/" style="font-size: 10px;">gitlab-devops</a> <a href="/tags/gitlab-runner/" style="font-size: 10px;">gitlab-runner</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/hostname/" style="font-size: 10px;">hostname</a> <a href="/tags/key/" style="font-size: 10px;">key</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/mac/" style="font-size: 16.67px;">mac</a> <a href="/tags/myisam/" style="font-size: 10px;">myisam</a> <a href="/tags/mysql/" style="font-size: 13.33px;">mysql</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/tags/percona/" style="font-size: 10px;">percona</a> <a href="/tags/pg-promise/" style="font-size: 10px;">pg-promise</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/phpunit/" style="font-size: 10px;">phpunit</a> <a href="/tags/postgres/" style="font-size: 10px;">postgres</a> <a href="/tags/recovery/" style="font-size: 10px;">recovery</a> <a href="/tags/security/" style="font-size: 10px;">security</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/sshkey/" style="font-size: 10px;">sshkey</a> <a href="/tags/ubuntu/" style="font-size: 20px;">ubuntu</a> <a href="/tags/web-server/" style="font-size: 10px;">web server</a>
+      <a href="/tags/EI-Capitan/" style="font-size: 10px;">EI Capitan</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/apache2-4/" style="font-size: 10px;">apache2.4</a> <a href="/tags/express/" style="font-size: 10px;">express</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/github-pages/" style="font-size: 10px;">github pages</a> <a href="/tags/gitlab/" style="font-size: 13.33px;">gitlab</a> <a href="/tags/gitlab-ci/" style="font-size: 10px;">gitlab-ci</a> <a href="/tags/gitlab-devops/" style="font-size: 10px;">gitlab-devops</a> <a href="/tags/gitlab-runner/" style="font-size: 10px;">gitlab-runner</a> <a href="/tags/hexo/" style="font-size: 13.33px;">hexo</a> <a href="/tags/hostname/" style="font-size: 10px;">hostname</a> <a href="/tags/key/" style="font-size: 10px;">key</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/mac/" style="font-size: 16.67px;">mac</a> <a href="/tags/myisam/" style="font-size: 10px;">myisam</a> <a href="/tags/mysql/" style="font-size: 13.33px;">mysql</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/tags/percona/" style="font-size: 10px;">percona</a> <a href="/tags/pg-promise/" style="font-size: 10px;">pg-promise</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/phpunit/" style="font-size: 10px;">phpunit</a> <a href="/tags/pip/" style="font-size: 10px;">pip</a> <a href="/tags/pip3/" style="font-size: 10px;">pip3</a> <a href="/tags/postgres/" style="font-size: 10px;">postgres</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/python3/" style="font-size: 10px;">python3</a> <a href="/tags/recovery/" style="font-size: 10px;">recovery</a> <a href="/tags/security/" style="font-size: 10px;">security</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/sshkey/" style="font-size: 10px;">sshkey</a> <a href="/tags/ubuntu/" style="font-size: 20px;">ubuntu</a> <a href="/tags/web-server/" style="font-size: 10px;">web server</a>
     </div>
   </div>
 
@@ -596,7 +589,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -606,6 +599,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/">Error after upgrading pip: cannot import name main</a>
+          </li>
         
           <li>
             <a href="/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/">How to do multi-row insert with postgres by nodejs</a>
@@ -621,10 +618,6 @@
         
           <li>
             <a href="/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/">Fixed gitlab CI via ssh executor error</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/24/some-problem-with-percona-mysql-server-upgrade-from-5-6-to-5-7/">some problem with percona-mysql-server upgrade from 5.6 to 5.7</a>
           </li>
         
       </ul>

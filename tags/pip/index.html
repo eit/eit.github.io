@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: phpunit | SOMEHOW</title>
+  <title>Tag: pip | SOMEHOW</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="SOMEHOW">
-<meta property="og:url" content="http://blog.lpchen.me/tags/phpunit/index.html">
+<meta property="og:url" content="http://blog.lpchen.me/tags/pip/index.html">
 <meta property="og:site_name" content="SOMEHOW">
 <meta property="og:description">
 <meta name="twitter:card" content="summary">
@@ -61,10 +61,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-How-to-upgrade-PHP-version-on-your-mac" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Error-after-upgrading-pip-cannot-import-name-main" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/" class="article-date">
-  <time datetime="2015-10-07T03:44:12.000Z" itemprop="datePublished">Oct 7 2015</time>
+    <a href="/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/" class="article-date">
+  <time datetime="2018-08-15T04:03:36.000Z" itemprop="datePublished">Aug 15 2018</time>
 </a>
     
   </div>
@@ -75,7 +75,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/">How to upgrade PHP version on your mac</a>
+      <a class="article-title" href="/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/">Error after upgrading pip: cannot import name main</a>
     </h1>
   
 
@@ -83,24 +83,18 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="緣起">緣起</h3><p>最近為了發揮 laravel 5.1 完整的功能，而在研究裡面包好的各種阿里布達套件，弄著弄著弄到了 <a href="https://phpunit.de/" target="_blank" rel="external">phpunit</a> 但在安裝 phpunit 遇到了一個問題，就是 mac 不知道跟 php 有仇還是怎樣，幾乎各種版本 cli 都更新了就是 php 還停留在 5.5 不知道是哪招(老闆聽說 php7 都已經 RC2 啦～)，導致於新版 phpunit 無法執行(目前穩定版需要配合 php 5.6)，於是乎很多人會想到了使用 homebrew 來作安裝，但無奈的是 homebrew 也沒有把 php 納入，所以要安裝的話必須另外用一些方法。</p>
-<h3 id="Installation">Installation</h3><p>在安裝的部分可以參考 <a href="https://github.com/Homebrew/homebrew-php" target="_blank" rel="external">homebrew-php</a> 的說明<br>這裡使用的是 homebrew 的隱藏指令 tap，據悉是用來安裝擴充套件的</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ brew tap homebrew/dupes</span><br><span class="line">$ brew tap homebrew/versions</span><br><span class="line">$ brew tap homebrew/homebrew-php</span><br></pre></td></tr></table></figure>
-<p>前置做完之後就可以進行安裝</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 安裝 php5.6 , 如果你想安裝 7.0 也可以改成 php70</span><br><span class="line">$ brew install php56</span><br></pre></td></tr></table></figure>
-<p>裝好之後應該就搞定啦！</p>
-<h3 id="後記">後記</h3><p>這裡有一點很詭異的地方是，Mac OSX 10.11(EI Capitan)裡面的 whereis 根本是錯的，不管你怎麼設定，他幫你找到的位置永遠是 /usr/bin/*</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ whereis php</span><br><span class="line">/usr/bin/php</span><br><span class="line"></span><br><span class="line">$ php --version</span><br><span class="line">PHP 5.6.14 (cli)</span><br><span class="line"></span><br><span class="line">$ /usr/bin/php --version</span><br><span class="line">PHP 5.5.27 (cli)</span><br></pre></td></tr></table></figure>
-<p>可見 whereis 在現在這版本根本壞了<br>下次更新不知道會不會修回來</p>
-<p>另外關於隱藏指令可以稍微參考一下這篇<br><a href="http://icyleaf.com/2014/01/homebrew-hidden-commands/" target="_blank" rel="external">隱藏指令</a></p>
-
+        <h3 id="前情提要">前情提要</h3><p>平常都習慣 mac 上面做事，這幾天在某台新的 ubuntu 上面裝 pgcli 的時候遇到一個問題<br>用 pip 裝完 pgcli 之後跳出一個提示，意思是說你現在這個 pip v8.1.1 已經過時囉，現在最新的是 v18，建議你快點更新喔，後面還送你一串更新用的指令<br>用它送的指令更新下去…直接幫你把你的 pip 送上西天，會噴以下的訊息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"/usr/bin/pip"</span>, line 9, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    from pip import main</span><br><span class="line">ImportError: cannot import name <span class="string">'main'</span></span><br></pre></td></tr></table></figure>
+<h3 id="解法">解法</h3><p>查了一輪大致上是因為新版的 pip v18，只支援 python3，python2 只能更新到 v9 的樣子<br>這真的蠢到我醉了，自己跳訊息出來炸掉自己是哪招…</p>
+<p>以下一行解決</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo python -m pip uninstall pip &amp;&amp; sudo apt install python3-pip --reinstall</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/" data-id="cjkumg29k000e1avvjwraoafi" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/" data-id="cjkumg28q00001avv0k6qb00u" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/phpunit/">phpunit</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pip/">pip</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pip3/">pip3</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python3/">python3</a></li></ul>
 
     </footer>
   </div>
