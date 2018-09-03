@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives: 2018/8 | SOMEHOW</title>
+  <title>Archives: 2018/9 | SOMEHOW</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="SOMEHOW">
-<meta property="og:url" content="http://blog.lpchen.me/archives/2018/08/index.html">
+<meta property="og:url" content="http://blog.lpchen.me/archives/2018/09/index.html">
 <meta property="og:site_name" content="SOMEHOW">
 <meta property="og:description">
 <meta name="twitter:card" content="summary">
@@ -61,10 +61,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-Error-after-upgrading-pip-cannot-import-name-main" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-如何刪除-mac-大頭貼照片" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/" class="article-date">
-  <time datetime="2018-08-15T04:03:36.000Z" itemprop="datePublished">Aug 15 2018</time>
+    <a href="/2018/09/03/如何刪除-mac-大頭貼照片/" class="article-date">
+  <time datetime="2018-09-03T09:01:43.000Z" itemprop="datePublished">Sep 3 2018</time>
 </a>
     
   </div>
@@ -75,7 +75,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/">Error after upgrading pip: cannot import name main</a>
+      <a class="article-title" href="/2018/09/03/如何刪除-mac-大頭貼照片/">如何刪除 mac 大頭貼照片</a>
     </h1>
   
 
@@ -83,71 +83,22 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="前情提要">前情提要</h3><p>平常都習慣 mac 上面做事，這幾天在某台新的 ubuntu 上面裝 pgcli 的時候遇到一個問題<br>用 pip 裝完 pgcli 之後跳出一個提示，意思是說你現在這個 pip v8.1.1 已經過時囉，現在最新的是 v18，建議你快點更新喔，後面還送你一串更新用的指令<br>用它送的指令更新下去…直接幫你把你的 pip 送上西天，會噴以下的訊息</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"/usr/bin/pip"</span>, line 9, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    from pip import main</span><br><span class="line">ImportError: cannot import name <span class="string">'main'</span></span><br></pre></td></tr></table></figure>
-<h3 id="解法">解法</h3><p>查了一輪大致上是因為新版的 pip v18，只支援 python3，python2 只能更新到 v9 的樣子<br>這真的蠢到我醉了，自己跳訊息出來炸掉自己是哪招…</p>
-<p>以下一行解決</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo python -m pip uninstall pip &amp;&amp; sudo apt install python3-pip --reinstall</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/" data-id="cjlm2hb5k000667vvavzoe0cs" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pip/">pip</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pip3/">pip3</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python3/">python3</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-How-to-do-multi-row-insert-with-postgres-by-nodejs" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" class="article-date">
-  <time datetime="2018-08-13T17:03:22.000Z" itemprop="datePublished">Aug 14 2018</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/">How to do multi-row insert with postgres by nodejs</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="緣起">緣起</h3><p>最近有一個案子必須先透過 API 取得資料後把資料經過重組塞進 local database<br>環境上使用的是 nodejs + postgres</p>
-<h3 id="過程">過程</h3><p>經過了兩次重構之後整理一下最後的做法</p>
-<ol>
-<li><p>Using <a href="https://github.com/request/request-promise" target="_blank" rel="external">request-promise</a> lib</p>
-</li>
-<li><p>Using <a href="https://github.com/vitaly-t/pg-promise" target="_blank" rel="external">pg-promise</a> lib</p>
-</li>
-</ol>
-<p>作者本人有在 <a href="https://stackoverflow.com/questions/37300997/multi-row-insert-with-pg-promise" target="_blank" rel="external">stackoverflow</a> 提供一段範例可以參考<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pgp = <span class="built_in">require</span>(<span class="string">'pg-promise'</span>)(&#123;</span><br><span class="line">    <span class="comment">/* initialization options */</span></span><br><span class="line">    capSQL: <span class="literal">true</span> <span class="comment">// capitalize all generated SQL</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">const</span> db = pgp(<span class="comment">/*connection*/</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// our set of columns, to be created only once, and then shared/reused,</span></span><br><span class="line"><span class="comment">// to let it cache up its formatting templates for high performance:</span></span><br><span class="line"><span class="keyword">const</span> cs = <span class="keyword">new</span> pgp.helpers.ColumnSet([<span class="string">'col_a'</span>, <span class="string">'col_b'</span>], &#123;table: <span class="string">'tmp'</span>&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// data input values:</span></span><br><span class="line"><span class="keyword">const</span> values = [&#123;col_a: <span class="string">'a1'</span>, col_b: <span class="string">'b1'</span>&#125;, &#123;col_a: <span class="string">'a2'</span>, col_b: <span class="string">'b2'</span>&#125;];</span><br><span class="line"></span><br><span class="line"><span class="comment">// generating a multi-row insert query:</span></span><br><span class="line"><span class="keyword">const</span> query = pgp.helpers.insert(values, cs);</span><br><span class="line"><span class="comment">//=&gt; INSERT INTO "tmp"("col_a","col_b") VALUES('a1','b1'),('a2','b2')</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// executing the query:</span></span><br><span class="line">db.none(query)</span><br><span class="line">    .then(data =&gt; &#123;</span><br><span class="line">        <span class="comment">// success;</span></span><br><span class="line">    &#125;)</span><br><span class="line">    .catch(error =&gt; &#123;</span><br><span class="line">        <span class="comment">// error;</span></span><br></pre></td></tr></table></figure></p>
-<ol>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map#Using_map_to_reformat_objects_in_an_array" target="_blank" rel="external">Using map to reformat objects in an array</a></li>
-</ol>
-<p>這篇裡面的範例也可以參考一下，當然 var 在 es7 裡面已經被棄用，但以 map 來做集合操作仍然是相當實用</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> kvArray = [&#123;key: <span class="number">1</span>, value: <span class="number">10</span>&#125;, </span><br><span class="line">               &#123;key: <span class="number">2</span>, value: <span class="number">20</span>&#125;, </span><br><span class="line">               &#123;key: <span class="number">3</span>, value: <span class="number">30</span>&#125;];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> reformattedArray = kvArray.map(obj =&gt;&#123; </span><br><span class="line">   <span class="keyword">var</span> rObj = &#123;&#125;;</span><br><span class="line">   rObj[obj.key] = obj.value;</span><br><span class="line">   <span class="keyword">return</span> rObj;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// reformattedArray is now [&#123;1: 10&#125;, &#123;2: 20&#125;, &#123;3: 30&#125;], </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// kvArray is still: </span></span><br><span class="line"><span class="comment">// [&#123;key: 1, value: 10&#125;, </span></span><br><span class="line"><span class="comment">//  &#123;key: 2, value: 20&#125;, </span></span><br><span class="line"><span class="comment">//  &#123;key: 3, value: 30&#125;]</span></span><br></pre></td></tr></table></figure>
-<h3 id="One_more_thing">One more thing</h3><p>程式結束記得補上<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pgp.end()</span><br></pre></td></tr></table></figure></p>
+        <h3 id="緣起">緣起</h3><p>前幾天有位朋友來求救，使用多年的 mac 大頭貼裡面還有前女友照片怎麼辦啊～～<br>完全找不到地方刪除感覺會死人ＲＲＲＲＲＲ</p>
+<p>於是平常正經的本 blog 就來寫一篇這個好了</p>
+<h3 id="作法">作法</h3><p>因為 mac 會把你用過的大頭貼圖片暫存在一個位置，以方便你下次又要用用過的圖片當圖示</p>
+<p>通常系統會放在這個位置<br>~/Library/Containers/com.apple.ImageKit.RecentPictureService/Data/Library/Images/Recent Pictures/</p>
+<p>但是因為這是隱藏資料夾<br>所以除非你會使用 command line<br>不然還是乖乖打開 finder 好了</p>
+<p>打開後按下 cmd + shift + G<br>複製上面路徑貼上去 enter 就可以直達那個位置啦</p>
+<h3 id="後記">後記</h3><p>誠心建議各位還是找位不會計較你過去的女友比較好XD</p>
+<h3 id="The_One_More_Thing">The One More Thing</h3><p>刪完記得要清空垃圾桶…</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" data-id="cjlm2hb5p000867vvjoc9qfwz" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/09/03/如何刪除-mac-大頭貼照片/" data-id="cjlm2hb6r001t67vv592ppvl7" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/express/">express</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pg-promise/">pg-promise</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/postgres/">postgres</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/macosx/">macosx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前女友照片刪不掉/">前女友照片刪不掉</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/救命/">救命</a></li></ul>
 
     </footer>
   </div>
