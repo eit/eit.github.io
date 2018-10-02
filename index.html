@@ -61,6 +61,77 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Install-CUDA-10-0-with-cuDNN-7-3-1-on-Ubuntu-18-04-bionic" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/10/02/Install-CUDA-10-0-with-cuDNN-7-3-1-on-Ubuntu-18-04-bionic/" class="article-date">
+  <time datetime="2018-10-02T07:56:10.000Z" itemprop="datePublished">Oct 2 2018</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/10/02/Install-CUDA-10-0-with-cuDNN-7-3-1-on-Ubuntu-18-04-bionic/">Install CUDA 10.0 with cuDNN 7.3.1 on Ubuntu 18.04 bionic</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Introdution">Introdution</h3><p>This is helping you to install the latest CUDA 10.0 which released Sept. 2018 on Ubuntu 18.04 bionic</p>
+<h3 id="Step_by_step">Step by step</h3><p>At first you need a bionic ubuntu server and lets start it</p>
+<ol>
+<li>Install driver</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:graphics-drivers/ppa</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install nvidia-396</span><br></pre></td></tr></table></figure>
+<ol>
+<li>Install CUDA 10.0</li>
+</ol>
+<p><a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="external">Download here</a><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i <span class="string">'cuda10.0.deb'</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install cuda</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>Test CUDA</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/cuda/samples/1_Utilities/deviceQuery</span><br><span class="line">sudo make </span><br><span class="line">./deviceQuery</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Install cuDNN 7.3.1</p>
+</li>
+</ol>
+<p><a href="https://developer.nvidia.com/rdp/cudnn-download" target="_blank" rel="external">Download here</a><br>(You need to register if you don’t have account)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i <span class="string">'Your Runtime Library.deb'</span></span><br><span class="line">sudo dpkg -i <span class="string">'Your Developer Library.deb'</span></span><br><span class="line">sudo dpkg -i <span class="string">'Your Code Sample.deb'</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>Test cdDNN<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/src/cudnn_samples_v7/mnistCUDNN</span><br><span class="line">sudo make </span><br><span class="line">./mnistCuDNN</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>I got a error during “sudo make”</p>
+<ol>
+<li>One more thing<br>There is a bug in cdDNN package</li>
+</ol>
+<p>You have to edit this file<br>/usr/include/cudnn.h</p>
+<p>change this</p>
+<h1 id="include_“driver_types-h”">include “driver_types.h”</h1><p>to:</p>
+<h1 id="include_<driver_types-h>">include <driver_types.h></driver_types.h></h1><p>And now you can repeat step 5.</p>
+<p>All set!</p>
+<p>BTW<br>It works on pytorch 0.4.1 with stable/linux/py3.6/cuda9.2<br><a href="https://pytorch.org/get-started/locally/" target="_blank" rel="external">Download here</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip3 install http://download.pytorch.org/whl/cu92/torch-0.4.1-cp36-cp36m-linux_x86_64.whl</span><br><span class="line">pip3 install torchvision</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.lpchen.me/2018/10/02/Install-CUDA-10-0-with-cuDNN-7-3-1-on-Ubuntu-18-04-bionic/" data-id="cjmrhyyt9000t9yvvafjqt57o" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CUDA/">CUDA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/P100/">P100</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bionic/">bionic</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cuDNN/">cuDNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nvidia/">nvidia</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pytorch/">pytorch</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-如何刪除-mac-大頭貼照片" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/09/03/如何刪除-mac-大頭貼照片/" class="article-date">
@@ -95,7 +166,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/09/03/如何刪除-mac-大頭貼照片/" data-id="cjlm2hb6r001t67vv592ppvl7" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/09/03/如何刪除-mac-大頭貼照片/" data-id="cjmrhyyti00159yvv74jn3pix" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/macosx/">macosx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前女友照片刪不掉/">前女友照片刪不掉</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/救命/">救命</a></li></ul>
@@ -137,7 +208,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/" data-id="cjlm2hb5k000667vvavzoe0cs" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/" data-id="cjmrhyysz000k9yvv1gb0ecdf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pip/">pip</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pip3/">pip3</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python3/">python3</a></li></ul>
@@ -190,7 +261,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" data-id="cjlm2hb5p000867vvjoc9qfwz" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" data-id="cjmrhyyt5000p9yvvbjczng0z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/express/">express</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pg-promise/">pg-promise</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/postgres/">postgres</a></li></ul>
@@ -234,7 +305,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/06/05/在-Linux-系統使用-ssh-key-登入/" data-id="cjlm2hb6s001u67vv8e7qrsww" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/06/05/在-Linux-系統使用-ssh-key-登入/" data-id="cjmrhyytj00169yvvdej3s18i" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/key/">key</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ssh/">ssh</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sshkey/">sshkey</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -277,7 +348,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/03/28/在-ubuntu-中找出大檔案/" data-id="cjlm2hb6t001w67vvouakn3xg" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/03/28/在-ubuntu-中找出大檔案/" data-id="cjmrhyytl00199yvvqfgqux89" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -327,7 +398,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/" data-id="cjlm2hb5i000467vvxa73aedn" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/" data-id="cjmrhyytc000y9yvvvgck3c8s" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab/">gitlab</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab-ci/">gitlab-ci</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab-devops/">gitlab-devops</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab-runner/">gitlab-runner</a></li></ul>
@@ -383,7 +454,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2016/08/24/some-problem-with-percona-mysql-server-upgrade-from-5-6-to-5-7/" data-id="cjlm2hb6o001q67vvy88zre8j" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2016/08/24/some-problem-with-percona-mysql-server-upgrade-from-5-6-to-5-7/" data-id="cjmrhyyth00149yvvrnoy6yi9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/percona/">percona</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -455,7 +526,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2016/08/19/How-to-mitigate-Slow-HTTP-Dos-Attack-on-Apache-2-4-in-Ubuntu/" data-id="cjlm2hb6i001h67vvxulzgd5t" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2016/08/19/How-to-mitigate-Slow-HTTP-Dos-Attack-on-Apache-2-4-in-Ubuntu/" data-id="cjmrhyyt4000o9yvveyuw3az8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apache2-4/">apache2.4</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/security/">security</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
@@ -496,7 +567,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2016/05/03/Fix-hexo-with-Error-Module-version-mismatch/" data-id="cjlm2hb5h000367vvznx4xosf" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2016/05/03/Fix-hexo-with-Error-Module-version-mismatch/" data-id="cjmrhyyrj00009yvv4adazb8f" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
@@ -508,58 +579,9 @@
 
 
   
-    <article id="post-How-to-build-nginx-on-localhost-in-Mac-OSX" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/" class="article-date">
-  <time datetime="2016-05-03T08:34:55.000Z" itemprop="datePublished">May 3 2016</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/">How to build nginx on localhost in Mac OSX</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="緣起">緣起</h3><p>談到 web server 大家第一個想到的大概是老大哥 apache，而且 mac osx 裡面其實已經內建了，方便性不用多說。<br>但近年來 nginx 不論是效能上或是體積上基本上都已經取代 apache 的地位，當然就成為大家的新寵，頂多在使用上有一點點的不方便，這篇文章記錄一下在 mac osx 上面安裝 nginx 的步驟。</p>
-<h3 id="前置作業">前置作業</h3><p>首先你要將 homebrew 裝起來，使用 mac 同時又有在做開發的人應該都有裝吧？<br>好吧，沒有的話先去 <a href="http://brew.sh/" target="_blank" rel="external">homebrew</a> 網站看看。</p>
-<h3 id="安裝與設置">安裝與設置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install nginx</span><br></pre></td></tr></table></figure>
-<p>裝好的 nginx 會在路徑 /usr/local/etc/nginx/<br>所謂的設定檔也在這 /usr/local/etc/nginx/nginx.conf<br>打開之後大致上跟一般的 nginx 沒什麼兩樣</p>
-<p>但是最需要注意的就是在 FastCGI pass 那段<br>這裡先放上我的給大家參考一下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">    fastcgi_index  index.php;</span><br><span class="line">    fastcgi_param  SCRIPT_FILENAME <span class="variable">$document_root</span><span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">    <span class="comment">#fastcgi_param SCRIPT_FILENAME /scripts$fastcgi_script_name;</span></span><br><span class="line">    include        /usr/<span class="built_in">local</span>/etc/nginx/fastcgi_params;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>註解掉的第四行是原本預設的內容，必須改成第三行才能運作，不然你會跑不起來然後在 log 裡面看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fastcgi sent in stderr: &quot;primary script unknown&quot;</span><br></pre></td></tr></table></figure></p>
-<p>既然說到 log，順便提一下 log 的位置在 /usr/local/var/log/nginx/ 裡面<br>預設網頁目錄在 /usr/local/nginx/html</p>
-<h3 id="運行與_nginx_指令">運行與 nginx 指令</h3><p>最後這邊簡單列一下可能比較會用到的 nginx 相關指令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sudo nginx // 啟動 nginx</span><br><span class="line">$ sudo nginx -s reload // 重新載入設定</span><br><span class="line">$ sudo nginx -s restart // 重新啟動 nginx</span><br><span class="line">$ sudo php-fpm // 啟動 php-fpm</span><br></pre></td></tr></table></figure>
-<p>Enjoy it!</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/" data-id="cjlm2hb5c000167vvhaqrbw72" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OSX/">OSX</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 </section>
@@ -572,7 +594,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSX/">OSX</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache2-4/">apache2.4</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/express/">express</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages/">github pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/">gitlab</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-ci/">gitlab-ci</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-devops/">gitlab-devops</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-runner/">gitlab-runner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hostname/">hostname</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/key/">key</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macosx/">macosx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myisam/">myisam</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/percona/">percona</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pg-promise/">pg-promise</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpunit/">phpunit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip/">pip</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip3/">pip3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgres/">postgres</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python3/">python3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/recovery/">recovery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/security/">security</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/">ssh</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sshkey/">sshkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-server/">web server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前女友照片刪不掉/">前女友照片刪不掉</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/救命/">救命</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CUDA/">CUDA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSX/">OSX</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/P100/">P100</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache2-4/">apache2.4</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bionic/">bionic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cuDNN/">cuDNN</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/express/">express</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages/">github pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/">gitlab</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-ci/">gitlab-ci</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-devops/">gitlab-devops</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-runner/">gitlab-runner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hostname/">hostname</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/key/">key</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macosx/">macosx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myisam/">myisam</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nvidia/">nvidia</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/percona/">percona</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pg-promise/">pg-promise</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpunit/">phpunit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip/">pip</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip3/">pip3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgres/">postgres</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python3/">python3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytorch/">pytorch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/recovery/">recovery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/security/">security</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/">ssh</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sshkey/">sshkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-server/">web server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前女友照片刪不掉/">前女友照片刪不掉</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/救命/">救命</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -581,7 +603,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/EI-Capitan/" style="font-size: 10px;">EI Capitan</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/apache2-4/" style="font-size: 10px;">apache2.4</a> <a href="/tags/express/" style="font-size: 10px;">express</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/github-pages/" style="font-size: 10px;">github pages</a> <a href="/tags/gitlab/" style="font-size: 15px;">gitlab</a> <a href="/tags/gitlab-ci/" style="font-size: 10px;">gitlab-ci</a> <a href="/tags/gitlab-devops/" style="font-size: 10px;">gitlab-devops</a> <a href="/tags/gitlab-runner/" style="font-size: 10px;">gitlab-runner</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/hostname/" style="font-size: 10px;">hostname</a> <a href="/tags/key/" style="font-size: 10px;">key</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/mac/" style="font-size: 20px;">mac</a> <a href="/tags/macosx/" style="font-size: 10px;">macosx</a> <a href="/tags/myisam/" style="font-size: 10px;">myisam</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/tags/percona/" style="font-size: 10px;">percona</a> <a href="/tags/pg-promise/" style="font-size: 10px;">pg-promise</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/phpunit/" style="font-size: 10px;">phpunit</a> <a href="/tags/pip/" style="font-size: 10px;">pip</a> <a href="/tags/pip3/" style="font-size: 10px;">pip3</a> <a href="/tags/postgres/" style="font-size: 10px;">postgres</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/python3/" style="font-size: 10px;">python3</a> <a href="/tags/recovery/" style="font-size: 10px;">recovery</a> <a href="/tags/security/" style="font-size: 10px;">security</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/sshkey/" style="font-size: 10px;">sshkey</a> <a href="/tags/ubuntu/" style="font-size: 20px;">ubuntu</a> <a href="/tags/web-server/" style="font-size: 10px;">web server</a> <a href="/tags/前女友照片刪不掉/" style="font-size: 10px;">前女友照片刪不掉</a> <a href="/tags/救命/" style="font-size: 10px;">救命</a>
+      <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/EI-Capitan/" style="font-size: 10px;">EI Capitan</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/P100/" style="font-size: 10px;">P100</a> <a href="/tags/apache2-4/" style="font-size: 10px;">apache2.4</a> <a href="/tags/bionic/" style="font-size: 10px;">bionic</a> <a href="/tags/cuDNN/" style="font-size: 10px;">cuDNN</a> <a href="/tags/express/" style="font-size: 10px;">express</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/github-pages/" style="font-size: 10px;">github pages</a> <a href="/tags/gitlab/" style="font-size: 12.5px;">gitlab</a> <a href="/tags/gitlab-ci/" style="font-size: 10px;">gitlab-ci</a> <a href="/tags/gitlab-devops/" style="font-size: 10px;">gitlab-devops</a> <a href="/tags/gitlab-runner/" style="font-size: 10px;">gitlab-runner</a> <a href="/tags/hexo/" style="font-size: 12.5px;">hexo</a> <a href="/tags/hostname/" style="font-size: 10px;">hostname</a> <a href="/tags/key/" style="font-size: 10px;">key</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/mac/" style="font-size: 17.5px;">mac</a> <a href="/tags/macosx/" style="font-size: 10px;">macosx</a> <a href="/tags/myisam/" style="font-size: 10px;">myisam</a> <a href="/tags/mysql/" style="font-size: 12.5px;">mysql</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/tags/nvidia/" style="font-size: 10px;">nvidia</a> <a href="/tags/percona/" style="font-size: 10px;">percona</a> <a href="/tags/pg-promise/" style="font-size: 10px;">pg-promise</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/phpunit/" style="font-size: 10px;">phpunit</a> <a href="/tags/pip/" style="font-size: 10px;">pip</a> <a href="/tags/pip3/" style="font-size: 10px;">pip3</a> <a href="/tags/postgres/" style="font-size: 10px;">postgres</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/python3/" style="font-size: 10px;">python3</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/recovery/" style="font-size: 10px;">recovery</a> <a href="/tags/security/" style="font-size: 10px;">security</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/sshkey/" style="font-size: 10px;">sshkey</a> <a href="/tags/ubuntu/" style="font-size: 20px;">ubuntu</a> <a href="/tags/web-server/" style="font-size: 10px;">web server</a> <a href="/tags/前女友照片刪不掉/" style="font-size: 10px;">前女友照片刪不掉</a> <a href="/tags/救命/" style="font-size: 10px;">救命</a>
     </div>
   </div>
 
@@ -590,7 +612,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -600,6 +622,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/10/02/Install-CUDA-10-0-with-cuDNN-7-3-1-on-Ubuntu-18-04-bionic/">Install CUDA 10.0 with cuDNN 7.3.1 on Ubuntu 18.04 bionic</a>
+          </li>
         
           <li>
             <a href="/2018/09/03/如何刪除-mac-大頭貼照片/">如何刪除 mac 大頭貼照片</a>
@@ -615,10 +641,6 @@
         
           <li>
             <a href="/2018/06/05/在-Linux-系統使用-ssh-key-登入/">在 Linux 系統使用 ssh key 登入</a>
-          </li>
-        
-          <li>
-            <a href="/2018/03/28/在-ubuntu-中找出大檔案/">在 ubuntu 中找出大檔案</a>
           </li>
         
       </ul>
