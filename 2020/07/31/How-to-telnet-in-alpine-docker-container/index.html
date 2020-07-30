@@ -3,15 +3,16 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>Tag: gitlab-devops | SOMEHOW</title>
+  <title>How to telnet in alpine docker container | SOMEHOW</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="SOMEHOW">
-<meta property="og:url" content="http://blog.lpchen.me/tags/gitlab-devops/index.html">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="How to telnet in alpine docker container">
+<meta property="og:url" content="http://blog.lpchen.me/2020/07/31/How-to-telnet-in-alpine-docker-container/index.html">
 <meta property="og:site_name" content="SOMEHOW">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-07-30T16:35:09.215Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SOMEHOW">
+<meta name="twitter:title" content="How to telnet in alpine docker container">
   
     <link rel="alternative" href="/atom.xml" title="SOMEHOW" type="application/atom+xml">
   
@@ -57,12 +58,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-Fixed-gitlab-CI-via-ssh-executor-error" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-How-to-telnet-in-alpine-docker-container" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/" class="article-date">
-  <time datetime="2018-03-20T06:49:04.000Z" itemprop="datePublished">Mar 20 2018</time>
+    <a href="/2020/07/31/How-to-telnet-in-alpine-docker-container/" class="article-date">
+  <time datetime="2020-07-30T16:35:09.000Z" itemprop="datePublished">Jul 31 2020</time>
 </a>
     
   </div>
@@ -72,8 +71,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/">Fixed gitlab CI via ssh executor error</a>
+    <h1 class="article-title" itemprop="name">
+      How to telnet in alpine docker container
     </h1>
   
 
@@ -81,35 +80,30 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>用 gitlab ci 也是一段時間，如果只是要進行一些簡單 test or deploy 之類的工作，用這個會比其他外部工具平台簡單一點，但是在版本不斷推進的同時會遇到了底下的問題</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Running with gitlab-runner 10.5.0 (xxxxxxxx)</span><br><span class="line">  on ssh-xxxxxxxx (xxxxxxxxx)</span><br><span class="line">Using SSH executor...</span><br><span class="line">Running on xxxxxxxxxx via xxxxxxxxxx...</span><br><span class="line">ERROR: Job failed: Process exited with: 1. Reason was:  ()</span><br></pre></td></tr></table></figure>
-<p>看了很多文章，早期有一部分建議降版本到 gitlab-runner v1.8.6，的確是可以順利運行，但是到了 gitlab v10 之後似乎又炸裂了，於是這次好好想來解決一番。</p>
-<h3 id="解決方法"><a href="#解決方法" class="headerlink" title="解決方法"></a>解決方法</h3><p>直接進入結論<br>用以下這行就可以解決</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chsh username /bin/bash</span><br></pre></td></tr></table></figure>
-<p>就是讓這個 gitlab-runner 登入的帳號，預設要改成 bash (zsh 確定不行，其餘沒試過)</p>
-<p>到這邊以為事件就這樣結束了，不過節外總會生枝</p>
-<h3 id="事件二"><a href="#事件二" class="headerlink" title="事件二"></a>事件二</h3><p>pipeline job 畫面又跑出這個東西</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fatal: unable to access 'https://gitlab-ci-token:xxxxxxxxxxxxxxxxxxxx@git.example.com/group/project.git/': SSL certificate problem: self signed certificate</span><br><span class="line">ERROR: Job failed: exit code 1</span><br></pre></td></tr></table></figure>
-<p>SSL certificate failing 似乎是 gitlab-runner 和 gitlab 到了某版之後出現的 bug，大致上建議的做法是先關掉 SSL 的驗證，等版本修復之後再打開了，解決方法是在 config.toml 裡面 runners 裡面加上這行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">environment = ["GIT_SSL_NO_VERIFY=true"]</span><br><span class="line">or</span><br><span class="line">environment = ["GIT_SSL_NO_VERIFY=1"]</span><br></pre></td></tr></table></figure>
-<p>All set…</p>
-
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/" data-id="ckd913ef60007s0jhul9lrirq" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2020/07/31/How-to-telnet-in-alpine-docker-container/" data-id="ckd913efl000ks0jhnrg467mk" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab/">gitlab</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab-ci/">gitlab-ci</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab-devops/">gitlab-devops</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab-runner/">gitlab-runner</a></li></ul>
-
     </footer>
   </div>
   
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/07/19/Cannot-boot-after-restored-backup-images-in-Linode/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Cannot boot after restored backup images in Linode</div>
+    </a>
+  
+</nav>
+
+  
 </article>
 
-
-  
-  
 </section>
         
           <aside id="sidebar">
