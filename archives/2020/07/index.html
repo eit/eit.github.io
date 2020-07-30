@@ -83,7 +83,7 @@
       
         <h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>由於想要在 container 裡面測試此 container 與某服務連線有通，但通常 container 裡面的軟體都極度精簡，所以來記錄一下在 alpine 的容器裡面該怎麽操作</p>
 <h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>首先進入到容器內<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it &lt;CONTAINERID&gt; sh</span><br><span class="line">or</span><br><span class="line">$ docker-compose <span class="built_in">exec</span> &lt;containerName&gt; sh</span><br></pre></td></tr></table></figure></p>
-<p>進入到容器內後開始進行安裝和使用<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/app \<span class="comment"># apk update</span></span><br><span class="line">/app \<span class="comment"># apk add busybox-extras</span></span><br><span class="line">/app \<span class="comment"># busybox-extras telnet localhost 5432</span></span><br></pre></td></tr></table></figure></p>
+<p>進入到容器內後開始進行安裝和使用<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ apk update</span><br><span class="line">$ apk add busybox-extras</span><br><span class="line">$ busybox-extras telnet localhost 5432</span><br></pre></td></tr></table></figure></p>
 <p>收工</p>
 
       
