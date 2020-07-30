@@ -3,11 +3,11 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>Tag: wireguard | SOMEHOW</title>
+  <title>Tag: telnet | SOMEHOW</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="website">
 <meta property="og:title" content="SOMEHOW">
-<meta property="og:url" content="http://blog.lpchen.me/tags/wireguard/index.html">
+<meta property="og:url" content="http://blog.lpchen.me/tags/telnet/index.html">
 <meta property="og:site_name" content="SOMEHOW">
 <meta property="og:locale" content="default">
 <meta name="twitter:card" content="summary">
@@ -59,10 +59,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-Build-a-WireGuard-VPN-server-on-Linode" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-How-to-telnet-in-alpine-docker-container" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/07/23/Build-a-WireGuard-VPN-server-on-Linode/" class="article-date">
-  <time datetime="2019-07-23T10:25:16.000Z" itemprop="datePublished">Jul 23 2019</time>
+    <a href="/2020/07/31/How-to-telnet-in-alpine-docker-container/" class="article-date">
+  <time datetime="2020-07-30T16:35:09.000Z" itemprop="datePublished">Jul 31 2020</time>
 </a>
     
   </div>
@@ -73,7 +73,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/23/Build-a-WireGuard-VPN-server-on-Linode/">Build a WireGuard VPN server on Linode.</a>
+      <a class="article-title" href="/2020/07/31/How-to-telnet-in-alpine-docker-container/">How to telnet in alpine docker container</a>
     </h1>
   
 
@@ -81,41 +81,18 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:wireguard/wireguard</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install wireguard</span><br></pre></td></tr></table></figure>
-<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h3><ol>
-<li>確認 kernel 版本非客制<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uname --kernel-release</span><br><span class="line">// check your kernel name without linode</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>如果執行完上面指令看到有其他非正規字眼像是 xxxxxx-linde152 之類的，你必須去 linode boot settings 的後台設定裡面去把改成 GRUB 2，不然會造成 wireguard 無法確認 kernel 版本會安裝執行失敗<br><a href="https://github.com/StreisandEffect/streisand/issues/500#issuecomment-290158361" target="_blank" rel="noopener">參考這邊</a></p>
-<p>改完重開之後會像再執行一次會變成像這樣 4.15.0-54-generic</p>
-<ol start="2">
-<li>按照正常安裝流程</li>
-<li>Key Generation</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wg genkey | tee privatekey | wg pubkey &gt; publickey</span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>新建 server 端設定檔<br>在這個位置建立一個檔案 /etc/wireguard/wg0.conf</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[Interface]</span><br><span class="line">Address = 10.66.66.1/24  // 通道連上之後的內網 ipv4 ip</span><br><span class="line">Address = fd42:42:42::1/64  // 通道連上之後的內網 ipv6 ip</span><br><span class="line">SaveConfig = <span class="literal">true</span></span><br><span class="line">PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE; ip6tables -A FORWARD -i wg0 -j ACCEPT; ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE; ip6tables -D FORWARD -i wg0 -j ACCEPT; ip6tables -t nat -D POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">ListenPort = 51820  // vpn listen port</span><br><span class="line">PrivateKey = &lt;server private key&gt;  // 填上前一個步驟產生的 private key</span><br><span class="line"></span><br><span class="line">[Peer] // 設定可以連入的 client 資訊</span><br><span class="line">PublicKey = &lt;client public key&gt;</span><br><span class="line">AllowedIPs = 10.66.66.2/32, fd42:42:42::2/128  // client 會取到的 ip</span><br></pre></td></tr></table></figure>
-<ol start="5">
-<li>client 端設定檔</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[Interface]</span><br><span class="line">PrivateKey = &lt;client private key&gt;</span><br><span class="line">Address = 10.66.66.2/24, fd42:42:42::2/64</span><br><span class="line">DNS = 8.8.8.8, 1.1.1.1</span><br><span class="line"></span><br><span class="line">[Peer]</span><br><span class="line">PublicKey = &lt;server public key&gt;</span><br><span class="line">AllowedIPs = 0.0.0.0/0, ::/0</span><br><span class="line">Endpoint = &lt;server ip&gt;:&lt;listenPort&gt; // xxx.xxx.xxx.xxx:51820</span><br><span class="line">PersistentKeepalive = 25</span><br></pre></td></tr></table></figure>
-<ol start="6">
-<li>Set Up Firewall Rules</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw allow 22/tcp</span><br><span class="line">sudo ufw allow 51820/udp</span><br><span class="line">sudo ufw <span class="built_in">enable</span></span><br><span class="line"></span><br><span class="line">sudo ufw status verbose // <span class="keyword">for</span> <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
-<ol start="7">
-<li>Start the Wireguard Service</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wg-quick up wg0</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> wg-quick@wg0 //設定開機自動執行</span><br><span class="line">sudo wg show</span><br></pre></td></tr></table></figure>
+        <h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>由於想要在 container 裡面測試此 container 與某服務連線有通，但通常 container 裡面的軟體都極度精簡，所以來記錄一下在 alpine 的容器裡面該怎麽操作</p>
+<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>首先進入到容器內<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it &lt;CONTAINERID&gt; sh</span><br><span class="line">or</span><br><span class="line">$ docker-compose <span class="built_in">exec</span> &lt;containerName&gt; sh</span><br></pre></td></tr></table></figure></p>
+<p>進入到容器內後開始進行安裝和使用<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/app \<span class="comment"># apk update</span></span><br><span class="line">/app \<span class="comment"># apk add busybox-extras</span></span><br><span class="line">/app \<span class="comment"># busybox-extras telnet localhost 5432</span></span><br></pre></td></tr></table></figure></p>
+<p>收工</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2019/07/23/Build-a-WireGuard-VPN-server-on-Linode/" data-id="ckd913eey0001s0jhhrxf46as" class="article-share-link">Share</a>
+      <a data-url="http://blog.lpchen.me/2020/07/31/How-to-telnet-in-alpine-docker-container/" data-id="ckd913efl000ks0jhnrg467mk" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/client/">client</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linode/">linode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vpn/">vpn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wireguard/">wireguard</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/alpine/">alpine</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/telnet/">telnet</a></li></ul>
 
     </footer>
   </div>
