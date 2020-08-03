@@ -1,654 +1,588 @@
 <!DOCTYPE html>
-<html>
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="utf-8">
-  
-  <title>Archives | SOMEHOW</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<html lang="zh-tw">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.lpchen.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
   <meta property="og:type" content="website">
 <meta property="og:title" content="SOMEHOW">
 <meta property="og:url" content="http://blog.lpchen.me/archives/index.html">
 <meta property="og:site_name" content="SOMEHOW">
-<meta property="og:locale" content="default">
+<meta property="og:locale" content="zh-tw">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SOMEHOW">
-  
-    <link rel="alternative" href="/atom.xml" title="SOMEHOW" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="/css/style.css">
-  
 
-</head></html>
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">SOMEHOW</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.lpchen.me"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-How-to-telnet-in-alpine-docker-container" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/31/How-to-telnet-in-alpine-docker-container/" class="article-date">
-  <time datetime="2020-07-30T16:35:09.000Z" itemprop="datePublished">Jul 31 2020</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/31/How-to-telnet-in-alpine-docker-container/">How to telnet in alpine docker container</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>由於想要在 container 裡面測試此 container 與某服務連線有通，但通常 container 裡面的軟體都極度精簡，所以來記錄一下在 alpine 的容器裡面該怎麽操作</p>
-<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>首先進入到容器內<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it &lt;CONTAINERID&gt; sh</span><br><span class="line">or</span><br><span class="line">$ docker-compose <span class="built_in">exec</span> &lt;containerName&gt; sh</span><br></pre></td></tr></table></figure></p>
-<p>進入到容器內後開始進行安裝和使用<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ apk update</span><br><span class="line">$ apk add busybox-extras</span><br><span class="line">$ busybox-extras telnet localhost 5432</span><br></pre></td></tr></table></figure></p>
-<p>收工</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2020/07/31/How-to-telnet-in-alpine-docker-container/" data-id="ckd913efl000ks0jhnrg467mk" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/alpine/">alpine</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/telnet/">telnet</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
+<link rel="canonical" href="http://blog.lpchen.me/archives/">
 
 
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'zh-tw'
+  };
+</script>
+
+  <title>Archive | SOMEHOW</title>
   
-    <article id="post-Cannot-boot-after-restored-backup-images-in-Linode" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/19/Cannot-boot-after-restored-backup-images-in-Linode/" class="article-date">
-  <time datetime="2020-07-19T13:01:33.000Z" itemprop="datePublished">Jul 19 2020</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/19/Cannot-boot-after-restored-backup-images-in-Linode/">Cannot boot after restored backup images in Linode</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>前幾天 Linode 的 vps 忽然無法寫入硬碟，重開機之後直接找不到硬碟，出現 segmentation fault 之類的錯誤，於是開始了救援的任務。</p>
-<h3 id="嘗試步驟"><a href="#嘗試步驟" class="headerlink" title="嘗試步驟"></a>嘗試步驟</h3><p>一開始想說使用自動備份的 image 進行 restore 之後可能可以恢復正常，所以就先進行 restore，等了一陣後來開機後出現找不到硬碟的狀況，訊息如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALERT!  UUID=&lt;UUID&gt; does not exist. Dropping to !</span><br></pre></td></tr></table></figure>
-<p>看到這訊息多半是因為是 VM 的關係，硬碟的區塊改變了 uuid 也跟著變了，所以 /etc/fstab 裡面記錄的還是原來的 uuid 造成 mount 不上去的關係<br>查了一下之後找到了這篇 <a href="https://www.linode.com/community/questions/18789/i-cant-boot-from-my-restored-backup-seeing-uuid-does-not-exist" target="_blank" rel="noopener">點我</a>，剩下就照抄他的吧</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mount -o <span class="built_in">exec</span>,barrier=0 /dev/sda</span><br><span class="line"><span class="built_in">cd</span> /media/sda</span><br><span class="line">mount -t proc proc proc/</span><br><span class="line">mount -t sysfs sys sys/</span><br><span class="line">mount -o <span class="built_in">bind</span> /dev dev/</span><br><span class="line">mount -t devpts pts dev/pts/</span><br><span class="line">chroot /media/sda /bin/bash</span><br><span class="line">mdadm --detail --scan &gt;&gt; /etc/mdadm.conf</span><br><span class="line">update-initramfs -u</span><br><span class="line">update-grub</span><br></pre></td></tr></table></figure>
-<p>其中 mdadm 那行卡到，因為沒安裝過這個套件，所以多加了下面一個指令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install mdadm</span><br></pre></td></tr></table></figure>
-<p>操作完重開機就沒問題了！</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2020/07/19/Cannot-boot-after-restored-backup-images-in-Linode/" data-id="ckd913ef20003s0jhrbqcsld6" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/backup/">backup</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linode/">linode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rescue/">rescue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-174262542-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-174262542-1');
+      }
+    </script>
 
 
-  
-    <article id="post-How-to-rotate-docker-log-json-files" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/06/How-to-rotate-docker-log-json-files/" class="article-date">
-  <time datetime="2020-01-05T16:30:00.000Z" itemprop="datePublished">Jan 6 2020</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/06/How-to-rotate-docker-log-json-files/">How to rotate docker log json files</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>docker 在運作的時候會記錄每一筆 stdout 還有 stderr，寫在一個 log file 裡面，通常是長這樣<br>/var/lib/docker/containers/[container-id]/[container-id]-json.log<br>然後久了之後，這檔案會超級大，到某一天發現硬碟快爆了的時候你就會發現</p>
-<p>所以可以透過官方給的文件做一些 rotation 的設定<br><a href="https://docs.docker.com/config/containers/logging/configure/" target="_blank" rel="noopener">https://docs.docker.com/config/containers/logging/configure/</a></p>
-<h3 id="實際操作"><a href="#實際操作" class="headerlink" title="實際操作"></a>實際操作</h3><p>如果要手動刪除那個檔案可以用這個指令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo truncate -s 0 &lt;logfile&gt;</span><br></pre></td></tr></table></figure>
-<p>建立一個 /etc/docker/daemon.json<br>內容用以下即可</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"log-driver"</span>: <span class="string">"json-file"</span>,</span><br><span class="line">  <span class="attr">"log-opts"</span>: &#123;</span><br><span class="line">    <span class="attr">"max-size"</span>: <span class="string">"10m"</span>,</span><br><span class="line">    <span class="attr">"max-file"</span>: <span class="string">"10"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>重新吃一下設定檔還有重新啟動 docker service</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl daemon-reload</span><br><span class="line">$ systemctl restart docker</span><br></pre></td></tr></table></figure>
-<p>這樣應該就行了</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2020/01/06/How-to-rotate-docker-log-json-files/" data-id="ckd913efk000is0jhchgc2mz8" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/log/">log</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rotation/">rotation</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
 
 
-  
-    <article id="post-Install-Rust-language-on-your-mac" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/07/23/Install-Rust-language-on-your-mac/" class="article-date">
-  <time datetime="2019-07-23T10:33:48.000Z" itemprop="datePublished">Jul 23 2019</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/23/Install-Rust-language-on-your-mac/">Install Rust language on your mac.</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl https://sh.rustup.rs -sSf | sh</span><br><span class="line"></span><br><span class="line">sudo vim /private/etc/paths</span><br><span class="line">// add <span class="variable">$HOME</span>/.cargo/bin to a new line</span><br></pre></td></tr></table></figure>
-<h3 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cargo</span><br><span class="line">rustc</span><br><span class="line">rustup</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2019/07/23/Install-Rust-language-on-your-mac/" data-id="ckd913efz000ss0jhiemxgrz4" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cargo/">cargo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/macosx/">macosx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rust/">rust</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rustup/">rustup</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
 
 
-  
-    <article id="post-Build-a-WireGuard-VPN-server-on-Linode" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/07/23/Build-a-WireGuard-VPN-server-on-Linode/" class="article-date">
-  <time datetime="2019-07-23T10:25:16.000Z" itemprop="datePublished">Jul 23 2019</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/23/Build-a-WireGuard-VPN-server-on-Linode/">Build a WireGuard VPN server on Linode.</a>
-    </h1>
-  
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:wireguard/wireguard</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install wireguard</span><br></pre></td></tr></table></figure>
-<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h3><ol>
-<li>確認 kernel 版本非客制<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uname --kernel-release</span><br><span class="line">// check your kernel name without linode</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>如果執行完上面指令看到有其他非正規字眼像是 xxxxxx-linde152 之類的，你必須去 linode boot settings 的後台設定裡面去把改成 GRUB 2，不然會造成 wireguard 無法確認 kernel 版本會安裝執行失敗<br><a href="https://github.com/StreisandEffect/streisand/issues/500#issuecomment-290158361" target="_blank" rel="noopener">參考這邊</a></p>
-<p>改完重開之後會像再執行一次會變成像這樣 4.15.0-54-generic</p>
-<ol start="2">
-<li>按照正常安裝流程</li>
-<li>Key Generation</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wg genkey | tee privatekey | wg pubkey &gt; publickey</span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>新建 server 端設定檔<br>在這個位置建立一個檔案 /etc/wireguard/wg0.conf</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[Interface]</span><br><span class="line">Address = 10.66.66.1/24  // 通道連上之後的內網 ipv4 ip</span><br><span class="line">Address = fd42:42:42::1/64  // 通道連上之後的內網 ipv6 ip</span><br><span class="line">SaveConfig = <span class="literal">true</span></span><br><span class="line">PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE; ip6tables -A FORWARD -i wg0 -j ACCEPT; ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE; ip6tables -D FORWARD -i wg0 -j ACCEPT; ip6tables -t nat -D POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">ListenPort = 51820  // vpn listen port</span><br><span class="line">PrivateKey = &lt;server private key&gt;  // 填上前一個步驟產生的 private key</span><br><span class="line"></span><br><span class="line">[Peer] // 設定可以連入的 client 資訊</span><br><span class="line">PublicKey = &lt;client public key&gt;</span><br><span class="line">AllowedIPs = 10.66.66.2/32, fd42:42:42::2/128  // client 會取到的 ip</span><br></pre></td></tr></table></figure>
-<ol start="5">
-<li>client 端設定檔</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[Interface]</span><br><span class="line">PrivateKey = &lt;client private key&gt;</span><br><span class="line">Address = 10.66.66.2/24, fd42:42:42::2/64</span><br><span class="line">DNS = 8.8.8.8, 1.1.1.1</span><br><span class="line"></span><br><span class="line">[Peer]</span><br><span class="line">PublicKey = &lt;server public key&gt;</span><br><span class="line">AllowedIPs = 0.0.0.0/0, ::/0</span><br><span class="line">Endpoint = &lt;server ip&gt;:&lt;listenPort&gt; // xxx.xxx.xxx.xxx:51820</span><br><span class="line">PersistentKeepalive = 25</span><br></pre></td></tr></table></figure>
-<ol start="6">
-<li>Set Up Firewall Rules</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw allow 22/tcp</span><br><span class="line">sudo ufw allow 51820/udp</span><br><span class="line">sudo ufw <span class="built_in">enable</span></span><br><span class="line"></span><br><span class="line">sudo ufw status verbose // <span class="keyword">for</span> <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
-<ol start="7">
-<li>Start the Wireguard Service</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wg-quick up wg0</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> wg-quick@wg0 //設定開機自動執行</span><br><span class="line">sudo wg show</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2019/07/23/Build-a-WireGuard-VPN-server-on-Linode/" data-id="ckd913eey0001s0jhhrxf46as" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/client/">client</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linode/">linode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/server/">server</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vpn/">vpn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wireguard/">wireguard</a></li></ul>
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
 
-    </footer>
-  </div>
-  
-</article>
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
 
+</head>
 
-  
-    <article id="post-Install-CUDA-10-0-with-cuDNN-7-3-1-on-Ubuntu-18-04-bionic" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/10/02/Install-CUDA-10-0-with-cuDNN-7-3-1-on-Ubuntu-18-04-bionic/" class="article-date">
-  <time datetime="2018-10-02T07:56:10.000Z" itemprop="datePublished">Oct 2 2018</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/02/Install-CUDA-10-0-with-cuDNN-7-3-1-on-Ubuntu-18-04-bionic/">Install CUDA 10.0 with cuDNN 7.3.1 on Ubuntu 18.04 bionic</a>
-    </h1>
-  
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Introdution"><a href="#Introdution" class="headerlink" title="Introdution"></a>Introdution</h3><p>This is helping you to install the latest CUDA 10.0 which released Sept. 2018 on Ubuntu 18.04 bionic</p>
-<h3 id="Step-by-step"><a href="#Step-by-step" class="headerlink" title="Step by step"></a>Step by step</h3><p>At first you need a bionic ubuntu server and lets start it</p>
-<ol>
-<li><p>Install driver</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:graphics-drivers/ppa</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install nvidia-396</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Install CUDA 10.0<br><a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="noopener">Download here</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i <span class="string">'cuda10.0.deb'</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install cuda</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Test CUDA</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/cuda/samples/1_Utilities/deviceQuery</span><br><span class="line">sudo make </span><br><span class="line">./deviceQuery</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Install cuDNN 7.3.1<br><a href="https://developer.nvidia.com/rdp/cudnn-download" target="_blank" rel="noopener">Download here</a><br>(You need to register if you don’t have account)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i <span class="string">'Your Runtime Library.deb'</span></span><br><span class="line">sudo dpkg -i <span class="string">'Your Developer Library.deb'</span></span><br><span class="line">sudo dpkg -i <span class="string">'Your Code Sample.deb'</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Test cdDNN</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/src/cudnn_samples_v7/mnistCUDNN</span><br><span class="line">sudo make </span><br><span class="line">./mnistCuDNN</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>I got a error during “sudo make”</p>
-<ol start="6">
-<li>One more thing<br>There is a bug in cdDNN package</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/include/cudnn.h</span><br><span class="line"></span><br><span class="line">//change this</span><br><span class="line"><span class="comment">#include "driver_types.h"</span></span><br><span class="line"></span><br><span class="line">//to:</span><br><span class="line"><span class="comment">#include &lt;driver_types.h&gt;</span></span><br></pre></td></tr></table></figure>
-<p>And now you can repeat step 5.</p>
-<p>All set!</p>
-<p>BTW<br>It works on pytorch 0.4.1 with stable/linux/py3.6/cuda9.2<br><a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener">Download here</a><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip3 install http://download.pytorch.org/whl/cu92/torch-0.4.1-cp36-cp36m-linux_x86_64.whl</span><br><span class="line">pip3 install torchvision</span><br></pre></td></tr></table></figure></p>
-<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><p><a href="https://blog.csdn.net/junzia/article/details/80871145" target="_blank" rel="noopener">https://blog.csdn.net/junzia/article/details/80871145</a><br><a href="https://medium.com/@afun/ubuntu-16-04-%E5%AE%89%E8%A3%9D-cuda-cudnn-nvidia-driver-%E7%9A%84%E8%B8%A9%E9%9B%B7%E5%BF%83%E5%BE%97-%E9%9D%9E%E5%AE%89%E8%A3%9D%E6%AD%A5%E9%A9%9F%E8%A9%B3%E8%A7%A3-b13121d95025" target="_blank" rel="noopener">https://medium.com/@afun/ubuntu-16-04-%E5%AE%89%E8%A3%9D-cuda-cudnn-nvidia-driver-%E7%9A%84%E8%B8%A9%E9%9B%B7%E5%BF%83%E5%BE%97-%E9%9D%9E%E5%AE%89%E8%A3%9D%E6%AD%A5%E9%A9%9F%E8%A9%B3%E8%A7%A3-b13121d95025</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/10/02/Install-CUDA-10-0-with-cuDNN-7-3-1-on-Ubuntu-18-04-bionic/" data-id="ckd913efr000ps0jhicqn53l0" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CUDA/">CUDA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/P100/">P100</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bionic/">bionic</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cuDNN/">cuDNN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nvidia/">nvidia</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pytorch/">pytorch</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-如何刪除-mac-大頭貼照片" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/09/03/如何刪除-mac-大頭貼照片/" class="article-date">
-  <time datetime="2018-09-03T09:01:43.000Z" itemprop="datePublished">Sep 3 2018</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/09/03/如何刪除-mac-大頭貼照片/">如何刪除 mac 大頭貼照片</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>前幾天有位朋友來求救，使用多年的 mac 大頭貼裡面還有前女友照片怎麼辦啊～～<br>完全找不到地方刪除感覺會死人ＲＲＲＲＲＲ</p>
-<p>於是平常正經的本 blog 就來寫一篇這個好了</p>
-<h3 id="作法"><a href="#作法" class="headerlink" title="作法"></a>作法</h3><p>因為 mac 會把你用過的大頭貼圖片暫存在一個位置，以方便你下次又要用用過的圖片當圖示</p>
-<p>通常系統會放在這個位置<br>~/Library/Containers/com.apple.ImageKit.RecentPictureService/Data/Library/Images/Recent Pictures/</p>
-<p>但是因為這是隱藏資料夾<br>所以除非你會使用 command line<br>不然還是乖乖打開 finder 好了</p>
-<p>打開後按下 cmd + shift + G<br>複製上面路徑貼上去 enter 就可以直達那個位置啦</p>
-<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>誠心建議各位還是找位不會計較你過去的女友比較好XD</p>
-<h3 id="The-One-More-Thing"><a href="#The-One-More-Thing" class="headerlink" title="The One More Thing"></a>The One More Thing</h3><p>刪完記得要清空垃圾桶…</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/09/03/如何刪除-mac-大頭貼照片/" data-id="ckd913egi0016s0jhand8smp5" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/macosx/">macosx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前女友照片刪不掉/">前女友照片刪不掉</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/救命/">救命</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Error-after-upgrading-pip-cannot-import-name-main" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/" class="article-date">
-  <time datetime="2018-08-15T04:03:36.000Z" itemprop="datePublished">Aug 15 2018</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/">Error after upgrading pip: cannot import name main</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h3><p>平常都習慣 mac 上面做事，這幾天在某台新的 ubuntu 上面裝 pgcli 的時候遇到一個問題<br>用 pip 裝完 pgcli 之後跳出一個提示，意思是說你現在這個 pip v8.1.1 已經過時囉，現在最新的是 v18，建議你快點更新喔，後面還送你一串更新用的指令<br>用它送的指令更新下去…直接幫你把你的 pip 送上西天，會噴以下的訊息</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"/usr/bin/pip"</span>, line 9, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    from pip import main</span><br><span class="line">ImportError: cannot import name <span class="string">'main'</span></span><br></pre></td></tr></table></figure>
-<h3 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h3><p>查了一輪大致上是因為新版的 pip v18，只支援 python3，python2 只能更新到 v9 的樣子<br>這真的蠢到我醉了，自己跳訊息出來炸掉自己是哪招…</p>
-<p>以下一行解決</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo python -m pip uninstall pip &amp;&amp; sudo apt install python3-pip --reinstall</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/" data-id="ckd913eet0000s0jh5bzsj4es" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pip/">pip</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pip3/">pip3</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python3/">python3</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-How-to-do-multi-row-insert-with-postgres-by-nodejs" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" class="article-date">
-  <time datetime="2018-08-13T17:03:22.000Z" itemprop="datePublished">Aug 14 2018</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/">How to do multi-row insert with postgres by nodejs</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>最近有一個案子必須先透過 API 取得資料後把資料經過重組塞進 local database<br>環境上使用的是 nodejs + postgres</p>
-<h3 id="過程"><a href="#過程" class="headerlink" title="過程"></a>過程</h3><p>經過了兩次重構之後整理一下最後的做法</p>
-<ol>
-<li><p>Using <a href="https://github.com/request/request-promise" target="_blank" rel="noopener">request-promise</a> lib</p>
-</li>
-<li><p>Using <a href="https://github.com/vitaly-t/pg-promise" target="_blank" rel="noopener">pg-promise</a> lib</p>
-</li>
-</ol>
-<p>作者本人有在 <a href="https://stackoverflow.com/questions/37300997/multi-row-insert-with-pg-promise" target="_blank" rel="noopener">stackoverflow</a> 提供一段範例可以參考<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pgp = <span class="built_in">require</span>(<span class="string">'pg-promise'</span>)(&#123;</span><br><span class="line">    <span class="comment">/* initialization options */</span></span><br><span class="line">    capSQL: <span class="literal">true</span> <span class="comment">// capitalize all generated SQL</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">const</span> db = pgp(<span class="comment">/*connection*/</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// our set of columns, to be created only once, and then shared/reused,</span></span><br><span class="line"><span class="comment">// to let it cache up its formatting templates for high performance:</span></span><br><span class="line"><span class="keyword">const</span> cs = <span class="keyword">new</span> pgp.helpers.ColumnSet([<span class="string">'col_a'</span>, <span class="string">'col_b'</span>], &#123;<span class="attr">table</span>: <span class="string">'tmp'</span>&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// data input values:</span></span><br><span class="line"><span class="keyword">const</span> values = [&#123;<span class="attr">col_a</span>: <span class="string">'a1'</span>, <span class="attr">col_b</span>: <span class="string">'b1'</span>&#125;, &#123;<span class="attr">col_a</span>: <span class="string">'a2'</span>, <span class="attr">col_b</span>: <span class="string">'b2'</span>&#125;];</span><br><span class="line"></span><br><span class="line"><span class="comment">// generating a multi-row insert query:</span></span><br><span class="line"><span class="keyword">const</span> query = pgp.helpers.insert(values, cs);</span><br><span class="line"><span class="comment">//=&gt; INSERT INTO "tmp"("col_a","col_b") VALUES('a1','b1'),('a2','b2')</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// executing the query:</span></span><br><span class="line">db.none(query)</span><br><span class="line">    .then(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// success;</span></span><br><span class="line">    &#125;)</span><br><span class="line">    .catch(<span class="function"><span class="params">error</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// error;</span></span><br></pre></td></tr></table></figure></p>
-<ol start="3">
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map#Using_map_to_reformat_objects_in_an_array" target="_blank" rel="noopener">Using map to reformat objects in an array</a></li>
-</ol>
-<p>這篇裡面的範例也可以參考一下，當然 var 在 es7 裡面已經被棄用，但以 map 來做集合操作仍然是相當實用</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> kvArray = [&#123;<span class="attr">key</span>: <span class="number">1</span>, <span class="attr">value</span>: <span class="number">10</span>&#125;, </span><br><span class="line">               &#123;<span class="attr">key</span>: <span class="number">2</span>, <span class="attr">value</span>: <span class="number">20</span>&#125;, </span><br><span class="line">               &#123;<span class="attr">key</span>: <span class="number">3</span>, <span class="attr">value</span>: <span class="number">30</span>&#125;];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> reformattedArray = kvArray.map(<span class="function"><span class="params">obj</span> =&gt;</span>&#123; </span><br><span class="line">   <span class="keyword">var</span> rObj = &#123;&#125;;</span><br><span class="line">   rObj[obj.key] = obj.value;</span><br><span class="line">   <span class="keyword">return</span> rObj;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// reformattedArray is now [&#123;1: 10&#125;, &#123;2: 20&#125;, &#123;3: 30&#125;], </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// kvArray is still: </span></span><br><span class="line"><span class="comment">// [&#123;key: 1, value: 10&#125;, </span></span><br><span class="line"><span class="comment">//  &#123;key: 2, value: 20&#125;, </span></span><br><span class="line"><span class="comment">//  &#123;key: 3, value: 30&#125;]</span></span><br></pre></td></tr></table></figure>
-<h3 id="One-more-thing"><a href="#One-more-thing" class="headerlink" title="One more thing"></a>One more thing</h3><p>程式結束記得補上<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pgp.end()</span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" data-id="ckd913efd000ds0jhu3sgli1a" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/express/">express</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pg-promise/">pg-promise</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/postgres/">postgres</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-在-Linux-系統使用-ssh-key-登入" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/06/05/在-Linux-系統使用-ssh-key-登入/" class="article-date">
-  <time datetime="2018-06-05T07:12:17.000Z" itemprop="datePublished">Jun 5 2018</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/05/在-Linux-系統使用-ssh-key-登入/">在 Linux 系統使用 ssh key 登入</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h3><p>我們登入遠端伺服器每次都要打密碼其實又麻煩又不安全，有人提倡常常換密碼可以解決，但…這個在實質上的有用程度在這裡就不好說了。</p>
-<h3 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h3><p>言歸正傳，這邊要介紹一下如何使用 ssh key 來登入遠端伺服器</p>
-<p>通常我們會透過指令產生 ssh key<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure></p>
-<p>產生出來的 key 通常會在<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure></p>
-<p>只要把我們的 key 加入到伺服器的下面這個檔案裡面就能達成用 key 登入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure></p>
-<p>所以我們可以用這個指令直接把 local 端的 ssh key 加進去 server 端的登入名單裡面<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub | ssh [user]@[server-host] <span class="string">"cat &gt;&gt; ~/.ssh/authorized_keys"</span></span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.lpchen.me/2018/06/05/在-Linux-系統使用-ssh-key-登入/" data-id="ckd913egc0012s0jhuo7utzs8" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/key/">key</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ssh/">ssh</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sshkey/">sshkey</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-  
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/">Next &raquo;</a>
-    </nav>
-  
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CUDA/">CUDA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSX/">OSX</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/P100/">P100</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/alpine/">alpine</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache2-4/">apache2.4</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/backup/">backup</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bionic/">bionic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cargo/">cargo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/client/">client</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cuDNN/">cuDNN</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/express/">express</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages/">github pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/">gitlab</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-ci/">gitlab-ci</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-devops/">gitlab-devops</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-runner/">gitlab-runner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hostname/">hostname</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/key/">key</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linode/">linode</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/">log</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macosx/">macosx</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myisam/">myisam</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nvidia/">nvidia</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/percona/">percona</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pg-promise/">pg-promise</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpunit/">phpunit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip/">pip</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip3/">pip3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgres/">postgres</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python3/">python3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytorch/">pytorch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/recovery/">recovery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rescue/">rescue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rotation/">rotation</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rust/">rust</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rustup/">rustup</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/security/">security</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/">ssh</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sshkey/">sshkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/telnet/">telnet</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vpn/">vpn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-server/">web server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wireguard/">wireguard</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前女友照片刪不掉/">前女友照片刪不掉</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/救命/">救命</a><span class="tag-list-count">1</span></li></ul>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/EI-Capitan/" style="font-size: 10px;">EI Capitan</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/P100/" style="font-size: 10px;">P100</a> <a href="/tags/alpine/" style="font-size: 10px;">alpine</a> <a href="/tags/apache2-4/" style="font-size: 10px;">apache2.4</a> <a href="/tags/backup/" style="font-size: 10px;">backup</a> <a href="/tags/bionic/" style="font-size: 10px;">bionic</a> <a href="/tags/cargo/" style="font-size: 10px;">cargo</a> <a href="/tags/client/" style="font-size: 10px;">client</a> <a href="/tags/cuDNN/" style="font-size: 10px;">cuDNN</a> <a href="/tags/docker/" style="font-size: 12.5px;">docker</a> <a href="/tags/express/" style="font-size: 10px;">express</a> <a href="/tags/git/" style="font-size: 12.5px;">git</a> <a href="/tags/github-pages/" style="font-size: 10px;">github pages</a> <a href="/tags/gitlab/" style="font-size: 12.5px;">gitlab</a> <a href="/tags/gitlab-ci/" style="font-size: 10px;">gitlab-ci</a> <a href="/tags/gitlab-devops/" style="font-size: 10px;">gitlab-devops</a> <a href="/tags/gitlab-runner/" style="font-size: 10px;">gitlab-runner</a> <a href="/tags/hexo/" style="font-size: 12.5px;">hexo</a> <a href="/tags/hostname/" style="font-size: 10px;">hostname</a> <a href="/tags/key/" style="font-size: 10px;">key</a> <a href="/tags/linode/" style="font-size: 12.5px;">linode</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/log/" style="font-size: 10px;">log</a> <a href="/tags/mac/" style="font-size: 17.5px;">mac</a> <a href="/tags/macosx/" style="font-size: 12.5px;">macosx</a> <a href="/tags/myisam/" style="font-size: 10px;">myisam</a> <a href="/tags/mysql/" style="font-size: 12.5px;">mysql</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/tags/nvidia/" style="font-size: 10px;">nvidia</a> <a href="/tags/percona/" style="font-size: 10px;">percona</a> <a href="/tags/pg-promise/" style="font-size: 10px;">pg-promise</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/phpunit/" style="font-size: 10px;">phpunit</a> <a href="/tags/pip/" style="font-size: 10px;">pip</a> <a href="/tags/pip3/" style="font-size: 10px;">pip3</a> <a href="/tags/postgres/" style="font-size: 10px;">postgres</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/python3/" style="font-size: 10px;">python3</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/recovery/" style="font-size: 10px;">recovery</a> <a href="/tags/rescue/" style="font-size: 10px;">rescue</a> <a href="/tags/rotation/" style="font-size: 10px;">rotation</a> <a href="/tags/rust/" style="font-size: 10px;">rust</a> <a href="/tags/rustup/" style="font-size: 10px;">rustup</a> <a href="/tags/security/" style="font-size: 10px;">security</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/sshkey/" style="font-size: 10px;">sshkey</a> <a href="/tags/telnet/" style="font-size: 10px;">telnet</a> <a href="/tags/ubuntu/" style="font-size: 20px;">ubuntu</a> <a href="/tags/vpn/" style="font-size: 10px;">vpn</a> <a href="/tags/web-server/" style="font-size: 10px;">web server</a> <a href="/tags/wireguard/" style="font-size: 10px;">wireguard</a> <a href="/tags/前女友照片刪不掉/" style="font-size: 10px;">前女友照片刪不掉</a> <a href="/tags/救命/" style="font-size: 10px;">救命</a>
-    </div>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">SOMEHOW</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
   </div>
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">November 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">2</span></li></ul>
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
+</div>
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recents</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2020/07/31/How-to-telnet-in-alpine-docker-container/">How to telnet in alpine docker container</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/19/Cannot-boot-after-restored-backup-images-in-Linode/">Cannot boot after restored backup images in Linode</a>
-          </li>
-        
-          <li>
-            <a href="/2020/01/06/How-to-rotate-docker-log-json-files/">How to rotate docker log json files</a>
-          </li>
-        
-          <li>
-            <a href="/2019/07/23/Install-Rust-language-on-your-mac/">Install Rust language on your mac.</a>
-          </li>
-        
-          <li>
-            <a href="/2019/07/23/Build-a-WireGuard-VPN-server-on-Linode/">Build a WireGuard VPN server on Linode.</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2020 Jayson LP Chen<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
 </nav>
-    
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
 
-
-<script src="/js/script.js"></script>
-
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
   </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content archive">
+            
+
+  
+  
+  
+  <div class="post-block">
+    <div class="posts-collapse">
+      <div class="collection-title">
+        <span class="collection-header">Um..! 26 posts in total. Keep on posting.</span>
+      </div>
+
+      
+    <div class="collection-year">
+      <span class="collection-header">2020</span>
+    </div>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2020-07-31T00:35:09+08:00"
+              content="7月 31 2020">
+          07-31
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2020/07/31/How-to-telnet-in-alpine-docker-container/" itemprop="url">
+            <span itemprop="name">How to telnet in alpine docker container</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2020-07-19T21:01:33+08:00"
+              content="7月 19 2020">
+          07-19
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2020/07/19/Cannot-boot-after-restored-backup-images-in-Linode/" itemprop="url">
+            <span itemprop="name">Cannot boot after restored backup images in Linode</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2020-01-06T00:30:00+08:00"
+              content="1月 6 2020">
+          01-06
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2020/01/06/How-to-rotate-docker-log-json-files/" itemprop="url">
+            <span itemprop="name">How to rotate docker log json files</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+    <div class="collection-year">
+      <span class="collection-header">2019</span>
+    </div>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2019-07-23T18:33:48+08:00"
+              content="7月 23 2019">
+          07-23
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2019/07/23/Install-Rust-language-on-your-mac/" itemprop="url">
+            <span itemprop="name">Install Rust language on your mac.</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2019-07-23T18:25:16+08:00"
+              content="7月 23 2019">
+          07-23
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2019/07/23/Build-a-WireGuard-VPN-server-on-Linode/" itemprop="url">
+            <span itemprop="name">Build a WireGuard VPN server on Linode.</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+    <div class="collection-year">
+      <span class="collection-header">2018</span>
+    </div>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2018-10-02T15:56:10+08:00"
+              content="10月 2 2018">
+          10-02
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2018/10/02/Install-CUDA-10-0-with-cuDNN-7-3-1-on-Ubuntu-18-04-bionic/" itemprop="url">
+            <span itemprop="name">Install CUDA 10.0 with cuDNN 7.3.1 on Ubuntu 18.04 bionic</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2018-09-03T17:01:43+08:00"
+              content="9月 3 2018">
+          09-03
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2018/09/03/如何刪除-mac-大頭貼照片/" itemprop="url">
+            <span itemprop="name">如何刪除 mac 大頭貼照片</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2018-08-15T12:03:36+08:00"
+              content="8月 15 2018">
+          08-15
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/" itemprop="url">
+            <span itemprop="name">Error after upgrading pip: cannot import name main</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2018-08-14T01:03:22+08:00"
+              content="8月 14 2018">
+          08-14
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" itemprop="url">
+            <span itemprop="name">How to do multi-row insert with postgres by nodejs</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2018-06-05T15:12:17+08:00"
+              content="6月 5 2018">
+          06-05
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2018/06/05/在-Linux-系統使用-ssh-key-登入/" itemprop="url">
+            <span itemprop="name">在 Linux 系統使用 ssh key 登入</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+
+    </div>
+  </div>
+  
+  
+  
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jayson LP Chen</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">58</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eit" title="GitHub → https://github.com/eit" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:eit@lpchen.me" title="E-Mail → mailto:eit@lpchen.me" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/eiteight" title="Twitter → https://twitter.com/eiteight" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JAYSON LP CHEN</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
 </body>
 </html>

@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Cannot boot after restored backup images in Linode</title>
+    <url>/2020/07/19/Cannot-boot-after-restored-backup-images-in-Linode/</url>
+    <content><![CDATA[<h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>前幾天 Linode 的 vps 忽然無法寫入硬碟，重開機之後直接找不到硬碟，出現 segmentation fault 之類的錯誤，於是開始了救援的任務。</p>
+<h3 id="嘗試步驟"><a href="#嘗試步驟" class="headerlink" title="嘗試步驟"></a>嘗試步驟</h3><p>一開始想說使用自動備份的 image 進行 restore 之後可能可以恢復正常，所以就先進行 restore，等了一陣後來開機後出現找不到硬碟的狀況，訊息如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ALERT!  UUID=&lt;UUID&gt; does not exist. Dropping to !</span><br></pre></td></tr></table></figure>
+<p>看到這訊息多半是因為是 VM 的關係，硬碟的區塊改變了 uuid 也跟著變了，所以 /etc/fstab 裡面記錄的還是原來的 uuid 造成 mount 不上去的關係<br>查了一下之後找到了這篇 <a href="https://www.linode.com/community/questions/18789/i-cant-boot-from-my-restored-backup-seeing-uuid-does-not-exist" target="_blank" rel="noopener">點我</a>，剩下就照抄他的吧</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mount -o <span class="built_in">exec</span>,barrier=0 /dev/sda</span><br><span class="line"><span class="built_in">cd</span> /media/sda</span><br><span class="line">mount -t proc proc proc/</span><br><span class="line">mount -t sysfs sys sys/</span><br><span class="line">mount -o <span class="built_in">bind</span> /dev dev/</span><br><span class="line">mount -t devpts pts dev/pts/</span><br><span class="line">chroot /media/sda /bin/bash</span><br><span class="line">mdadm --detail --scan &gt;&gt; /etc/mdadm.conf</span><br><span class="line">update-initramfs -u</span><br><span class="line">update-grub</span><br></pre></td></tr></table></figure>
+<p>其中 mdadm 那行卡到，因為沒安裝過這個套件，所以多加了下面一個指令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install mdadm</span><br></pre></td></tr></table></figure>
+<p>操作完重開機就沒問題了！</p>
+]]></content>
+      <tags>
+        <tag>linode</tag>
+        <tag>ubuntu</tag>
+        <tag>backup</tag>
+        <tag>rescue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Build a WireGuard VPN server on Linode.</title>
+    <url>/2019/07/23/Build-a-WireGuard-VPN-server-on-Linode/</url>
+    <content><![CDATA[<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo add-apt-repository ppa:wireguard/wireguard</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install wireguard</span><br></pre></td></tr></table></figure>
+<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h3><ol>
+<li>確認 kernel 版本非客制<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">uname --kernel-release</span><br><span class="line">// check your kernel name without linode</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果執行完上面指令看到有其他非正規字眼像是 xxxxxx-linde152 之類的，你必須去 linode boot settings 的後台設定裡面去把改成 GRUB 2，不然會造成 wireguard 無法確認 kernel 版本會安裝執行失敗<br><a href="https://github.com/StreisandEffect/streisand/issues/500#issuecomment-290158361" target="_blank" rel="noopener">參考這邊</a></p>
+<p>改完重開之後會像再執行一次會變成像這樣 4.15.0-54-generic</p>
+<ol start="2">
+<li>按照正常安裝流程</li>
+<li>Key Generation</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wg genkey | tee privatekey | wg pubkey &gt; publickey</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>新建 server 端設定檔<br>在這個位置建立一個檔案 /etc/wireguard/wg0.conf</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Interface]</span><br><span class="line">Address = 10.66.66.1/24  // 通道連上之後的內網 ipv4 ip</span><br><span class="line">Address = fd42:42:42::1/64  // 通道連上之後的內網 ipv6 ip</span><br><span class="line">SaveConfig = <span class="literal">true</span></span><br><span class="line">PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE; ip6tables -A FORWARD -i wg0 -j ACCEPT; ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE; ip6tables -D FORWARD -i wg0 -j ACCEPT; ip6tables -t nat -D POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">ListenPort = 51820  // vpn listen port</span><br><span class="line">PrivateKey = &lt;server private key&gt;  // 填上前一個步驟產生的 private key</span><br><span class="line"></span><br><span class="line">[Peer] // 設定可以連入的 client 資訊</span><br><span class="line">PublicKey = &lt;client public key&gt;</span><br><span class="line">AllowedIPs = 10.66.66.2/32, fd42:42:42::2/128  // client 會取到的 ip</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>client 端設定檔</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Interface]</span><br><span class="line">PrivateKey = &lt;client private key&gt;</span><br><span class="line">Address = 10.66.66.2/24, fd42:42:42::2/64</span><br><span class="line">DNS = 8.8.8.8, 1.1.1.1</span><br><span class="line"></span><br><span class="line">[Peer]</span><br><span class="line">PublicKey = &lt;server public key&gt;</span><br><span class="line">AllowedIPs = 0.0.0.0/0, ::/0</span><br><span class="line">Endpoint = &lt;server ip&gt;:&lt;listenPort&gt; // xxx.xxx.xxx.xxx:51820</span><br><span class="line">PersistentKeepalive = 25</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>Set Up Firewall Rules</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo ufw allow 22/tcp</span><br><span class="line">sudo ufw allow 51820/udp</span><br><span class="line">sudo ufw <span class="built_in">enable</span></span><br><span class="line"></span><br><span class="line">sudo ufw status verbose // <span class="keyword">for</span> <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>Start the Wireguard Service</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wg-quick up wg0</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> wg-quick@wg0 //設定開機自動執行</span><br><span class="line">sudo wg show</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>linode</tag>
+        <tag>ubuntu</tag>
+        <tag>wireguard</tag>
+        <tag>vpn</tag>
+        <tag>server</tag>
+        <tag>client</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Enable localhost on mac</title>
+    <url>/2014/10/03/Enable-localhost-on-mac/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>localhost 對於有在做任何網頁開發的朋友一定不陌生，但最近突然發現一個一直以來被我忽略掉的問題，那就是在 mac 上面的時候我竟然只能使用 127.0.0.1 來當網址，而不能使用 localhost，這想當然爾是因為 hostname 沒有設定將 localhost 對應到 127.0.0.1，所以找了一下設定的方法，分享一下。</p>
+<h3 id="直接指令下去就不多解釋了"><a href="#直接指令下去就不多解釋了" class="headerlink" title="直接指令下去就不多解釋了"></a>直接指令下去就不多解釋了</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo vim /private/etc/hosts</span><br></pre></td></tr></table></figure>
+<p>找到裡面有一行是<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#127.0.0.1 localhost</span></span><br></pre></td></tr></table></figure></p>
+<p>把註解拿掉存檔離開就大功告成了</p>
+]]></content>
+      <tags>
+        <tag>mac</tag>
+        <tag>web server</tag>
+        <tag>hostname</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Fixed gitlab CI via ssh executor error</title>
+    <url>/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>用 gitlab ci 也是一段時間，如果只是要進行一些簡單 test or deploy 之類的工作，用這個會比其他外部工具平台簡單一點，但是在版本不斷推進的同時會遇到了底下的問題</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Running with gitlab-runner 10.5.0 (xxxxxxxx)</span><br><span class="line">  on ssh-xxxxxxxx (xxxxxxxxx)</span><br><span class="line">Using SSH executor...</span><br><span class="line">Running on xxxxxxxxxx via xxxxxxxxxx...</span><br><span class="line">ERROR: Job failed: Process exited with: 1. Reason was:  ()</span><br></pre></td></tr></table></figure>
+<p>看了很多文章，早期有一部分建議降版本到 gitlab-runner v1.8.6，的確是可以順利運行，但是到了 gitlab v10 之後似乎又炸裂了，於是這次好好想來解決一番。</p>
+<h3 id="解決方法"><a href="#解決方法" class="headerlink" title="解決方法"></a>解決方法</h3><p>直接進入結論<br>用以下這行就可以解決</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chsh username /bin/bash</span><br></pre></td></tr></table></figure>
+<p>就是讓這個 gitlab-runner 登入的帳號，預設要改成 bash (zsh 確定不行，其餘沒試過)</p>
+<p>到這邊以為事件就這樣結束了，不過節外總會生枝</p>
+<h3 id="事件二"><a href="#事件二" class="headerlink" title="事件二"></a>事件二</h3><p>pipeline job 畫面又跑出這個東西</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">fatal: unable to access 'https://gitlab-ci-token:xxxxxxxxxxxxxxxxxxxx@git.example.com/group/project.git/': SSL certificate problem: self signed certificate</span><br><span class="line">ERROR: Job failed: exit code 1</span><br></pre></td></tr></table></figure>
+<p>SSL certificate failing 似乎是 gitlab-runner 和 gitlab 到了某版之後出現的 bug，大致上建議的做法是先關掉 SSL 的驗證，等版本修復之後再打開了，解決方法是在 config.toml 裡面 runners 裡面加上這行</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">environment = ["GIT_SSL_NO_VERIFY=true"]</span><br><span class="line">or</span><br><span class="line">environment = ["GIT_SSL_NO_VERIFY=1"]</span><br></pre></td></tr></table></figure>
+<p>All set…</p>
+]]></content>
+      <tags>
+        <tag>gitlab</tag>
+        <tag>gitlab-ci</tag>
+        <tag>gitlab-runner</tag>
+        <tag>gitlab-devops</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to build nginx on localhost in Mac OSX</title>
+    <url>/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>談到 web server 大家第一個想到的大概是老大哥 apache，而且 mac osx 裡面其實已經內建了，方便性不用多說。<br>但近年來 nginx 不論是效能上或是體積上基本上都已經取代 apache 的地位，當然就成為大家的新寵，頂多在使用上有一點點的不方便，這篇文章記錄一下在 mac osx 上面安裝 nginx 的步驟。</p>
+<h3 id="前置作業"><a href="#前置作業" class="headerlink" title="前置作業"></a>前置作業</h3><p>首先你要將 homebrew 裝起來，使用 mac 同時又有在做開發的人應該都有裝吧？<br>好吧，沒有的話先去 <a href="http://brew.sh/" target="_blank" rel="noopener">homebrew</a> 網站看看。</p>
+<h3 id="安裝與設置"><a href="#安裝與設置" class="headerlink" title="安裝與設置"></a>安裝與設置</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install nginx</span><br></pre></td></tr></table></figure>
+<p>裝好的 nginx 會在路徑 /usr/local/etc/nginx/<br>所謂的設定檔也在這 /usr/local/etc/nginx/nginx.conf<br>打開之後大致上跟一般的 nginx 沒什麼兩樣</p>
+<p>但是最需要注意的就是在 FastCGI pass 那段<br>這裡先放上我的給大家參考一下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">    fastcgi_index  index.php;</span><br><span class="line">    fastcgi_param  SCRIPT_FILENAME <span class="variable">$document_root</span><span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">    <span class="comment">#fastcgi_param SCRIPT_FILENAME /scripts$fastcgi_script_name;</span></span><br><span class="line">    include        /usr/<span class="built_in">local</span>/etc/nginx/fastcgi_params;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>註解掉的第四行是原本預設的內容，必須改成第三行才能運作，不然你會跑不起來然後在 log 裡面看到<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">fastcgi sent in stderr: "primary script unknown"</span><br></pre></td></tr></table></figure></p>
+<p>既然說到 log，順便提一下 log 的位置在 /usr/local/var/log/nginx/ 裡面<br>預設網頁目錄在 /usr/local/nginx/html</p>
+<h3 id="運行與-nginx-指令"><a href="#運行與-nginx-指令" class="headerlink" title="運行與 nginx 指令"></a>運行與 nginx 指令</h3><p>最後這邊簡單列一下可能比較會用到的 nginx 相關指令</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo nginx // 啟動 nginx</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo nginx -s reload // 重新載入設定</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo nginx -s restart // 重新啟動 nginx</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo php-fpm // 啟動 php-fpm</span></span><br></pre></td></tr></table></figure>
+<p>Enjoy it!</p>
+]]></content>
+      <tags>
+        <tag>mac</tag>
+        <tag>nginx</tag>
+        <tag>OSX</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to deploy github pages with hexo</title>
+    <url>/2014/09/24/How-to-deploy-github-pages-with-hexo/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>身為一位自以為專業的技客，自然要有一個自己的 github 帳號<br>然後有了帳號以後下一步至少要有一個 github pages 的 blog<br>於是花了點時間摸了一下如何利用 hexo 這個套件來部屬，未免忘記在這邊記錄一下。</p>
+<h3 id="前置作業"><a href="#前置作業" class="headerlink" title="前置作業"></a>前置作業</h3><p>先去你的 github 開一個新的 repo<br>名稱要是你的 <username>.github.io，其他都預設即可</username></p>
+<h3 id="Update-homebrew-and-install-node-and-npm"><a href="#Update-homebrew-and-install-node-and-npm" class="headerlink" title="Update homebrew and install node (and npm)"></a>Update homebrew and install node (and npm)</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install node</span><br></pre></td></tr></table></figure>
+<h3 id="Install-hexo-by-npm"><a href="#Install-hexo-by-npm" class="headerlink" title="Install hexo by npm"></a>Install hexo by npm</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm install -g hexo</span><br></pre></td></tr></table></figure>
+<h3 id="Initialize-a-folder-by-hexo"><a href="#Initialize-a-folder-by-hexo" class="headerlink" title="Initialize a folder by hexo"></a>Initialize a folder by hexo</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ <span class="built_in">cd</span> &lt;folder&gt;</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+<p>這個時候應該會看到資料夾底下多了一堆東西，其中有一個檔案是 _config.yml</p>
+<p>打開它之後拉到最下面在 deploy 的位置改成下面這樣</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">    <span class="built_in">type</span>: github</span><br><span class="line">    repo: &lt;repo uri&gt; (可使用 ssh or https)</span><br><span class="line">    branch: master</span><br></pre></td></tr></table></figure>
+<h3 id="Deploy-your-pages"><a href="#Deploy-your-pages" class="headerlink" title="Deploy your pages"></a>Deploy your pages</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>打開你的 <a href="http://username.github.io" target="_blank" rel="noopener">http://username.github.io</a> 應該就會看到一切已經佈署完成了</p>
+<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>之後要編寫文章可以使用以下指令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new &lt;title name&gt;</span><br></pre></td></tr></table></figure>
+<p>會在 source/_post/ 出現一個檔名為 <title name>.md 的檔案，請直接對該檔案進行編修<br>這是 markdown 格式的檔案，撰寫方式可以參考 <a href="http://markdown.tw/" target="_blank" rel="noopener">markdown.tw</a></title></p>
+<p>更新並且發佈如下<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate -d</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>mac</tag>
+        <tag>hexo</tag>
+        <tag>github pages</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to do multi-row insert with postgres by nodejs</title>
+    <url>/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>最近有一個案子必須先透過 API 取得資料後把資料經過重組塞進 local database<br>環境上使用的是 nodejs + postgres</p>
+<h3 id="過程"><a href="#過程" class="headerlink" title="過程"></a>過程</h3><p>經過了兩次重構之後整理一下最後的做法</p>
+<ol>
+<li><p>Using <a href="https://github.com/request/request-promise" target="_blank" rel="noopener">request-promise</a> lib</p>
+</li>
+<li><p>Using <a href="https://github.com/vitaly-t/pg-promise" target="_blank" rel="noopener">pg-promise</a> lib</p>
+</li>
+</ol>
+<p>作者本人有在 <a href="https://stackoverflow.com/questions/37300997/multi-row-insert-with-pg-promise" target="_blank" rel="noopener">stackoverflow</a> 提供一段範例可以參考<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> pgp = <span class="built_in">require</span>(<span class="string">'pg-promise'</span>)(&#123;</span><br><span class="line">    <span class="comment">/* initialization options */</span></span><br><span class="line">    capSQL: <span class="literal">true</span> <span class="comment">// capitalize all generated SQL</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">const</span> db = pgp(<span class="comment">/*connection*/</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// our set of columns, to be created only once, and then shared/reused,</span></span><br><span class="line"><span class="comment">// to let it cache up its formatting templates for high performance:</span></span><br><span class="line"><span class="keyword">const</span> cs = <span class="keyword">new</span> pgp.helpers.ColumnSet([<span class="string">'col_a'</span>, <span class="string">'col_b'</span>], &#123;<span class="attr">table</span>: <span class="string">'tmp'</span>&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// data input values:</span></span><br><span class="line"><span class="keyword">const</span> values = [&#123;<span class="attr">col_a</span>: <span class="string">'a1'</span>, <span class="attr">col_b</span>: <span class="string">'b1'</span>&#125;, &#123;<span class="attr">col_a</span>: <span class="string">'a2'</span>, <span class="attr">col_b</span>: <span class="string">'b2'</span>&#125;];</span><br><span class="line"></span><br><span class="line"><span class="comment">// generating a multi-row insert query:</span></span><br><span class="line"><span class="keyword">const</span> query = pgp.helpers.insert(values, cs);</span><br><span class="line"><span class="comment">//=&gt; INSERT INTO "tmp"("col_a","col_b") VALUES('a1','b1'),('a2','b2')</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// executing the query:</span></span><br><span class="line">db.none(query)</span><br><span class="line">    .then(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// success;</span></span><br><span class="line">    &#125;)</span><br><span class="line">    .catch(<span class="function"><span class="params">error</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// error;</span></span><br></pre></td></tr></table></figure></p>
+<ol start="3">
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map#Using_map_to_reformat_objects_in_an_array" target="_blank" rel="noopener">Using map to reformat objects in an array</a></li>
+</ol>
+<p>這篇裡面的範例也可以參考一下，當然 var 在 es7 裡面已經被棄用，但以 map 來做集合操作仍然是相當實用</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> kvArray = [&#123;<span class="attr">key</span>: <span class="number">1</span>, <span class="attr">value</span>: <span class="number">10</span>&#125;, </span><br><span class="line">               &#123;<span class="attr">key</span>: <span class="number">2</span>, <span class="attr">value</span>: <span class="number">20</span>&#125;, </span><br><span class="line">               &#123;<span class="attr">key</span>: <span class="number">3</span>, <span class="attr">value</span>: <span class="number">30</span>&#125;];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> reformattedArray = kvArray.map(<span class="function"><span class="params">obj</span> =&gt;</span>&#123; </span><br><span class="line">   <span class="keyword">var</span> rObj = &#123;&#125;;</span><br><span class="line">   rObj[obj.key] = obj.value;</span><br><span class="line">   <span class="keyword">return</span> rObj;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// reformattedArray is now [&#123;1: 10&#125;, &#123;2: 20&#125;, &#123;3: 30&#125;], </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// kvArray is still: </span></span><br><span class="line"><span class="comment">// [&#123;key: 1, value: 10&#125;, </span></span><br><span class="line"><span class="comment">//  &#123;key: 2, value: 20&#125;, </span></span><br><span class="line"><span class="comment">//  &#123;key: 3, value: 30&#125;]</span></span><br></pre></td></tr></table></figure>
+<h3 id="One-more-thing"><a href="#One-more-thing" class="headerlink" title="One more thing"></a>One more thing</h3><p>程式結束記得補上<br><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">pgp.end()</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>nodejs</tag>
+        <tag>express</tag>
+        <tag>postgres</tag>
+        <tag>pg-promise</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to find the path of device on your mac</title>
+    <url>/2015/08/31/How-to-find-the-path-of-device-on-your-mac/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>當你在終端機想要找尋你所插在電腦的裝置的真實路徑的時候<br>你可能無從下手，okay 現在把下面這個指令勇敢地敲下去</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ls -1 /dev/tty.*</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>mac</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to install Gitlab on Ubuntu 14.04 LTS</title>
+    <url>/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>其實使用 <a href="https://about.gitlab.com/" target="_blank" rel="noopener">GitLab</a> 也是有好一段時間了，但是早期的 GitLab 安裝麻煩又囉唆，使用起來也常常聽說有不穩定的問題，但發展也好一段時間了。<br>目前在規模上面也是到達一定程度，而且已經被包成一個 deb 檔案，所以只要一個 dpkg -i 就可以把所有需要的套件裝完，簡便性大增。<br>在 7.9.2 之後 GitLab 也進行版本切割，一般人會用到的比較多應該還是社群版(CE版)，這邊來稍微紀錄一下我的整個安裝過程。</p>
+<p>而這篇主要是參考了 Gaod 大神的大作<br><a href="http://blog.hychen.org/archives/2014/05/13/165/gitlab-on-ubuntu-12-04-lts/" target="_blank" rel="noopener">GitLab on Ubuntu 12.04 LTS，在 Ubuntu 12.04 上安裝 GitLab</a></p>
+<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo wget &lt;檔案連結url&gt; # 連結在 https://www.gitlab.com/downloads/</span><br><span class="line">sudo dpkg -i &lt;檔案名稱&gt;</span><br><span class="line">sudo apt-get install python-docutils</span><br></pre></td></tr></table></figure>
+<h3 id="如何重跑-GitLab-服務"><a href="#如何重跑-GitLab-服務" class="headerlink" title="如何重跑 GitLab 服務"></a>如何重跑 GitLab 服務</h3><p>假設要重跑 GitLab 相關的所有服務</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo gitlab-ctl restart</span><br></pre></td></tr></table></figure>
+<p>當然，也可以重跑特定服務就好，例如只想單純重跑 nginx<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo gitlab-ctl restart nginx</span><br></pre></td></tr></table></figure></p>
+<h3 id="如何從備份還原-GitLab-資料"><a href="#如何從備份還原-GitLab-資料" class="headerlink" title="如何從備份還原 GitLab 資料"></a>如何從備份還原 GitLab 資料</h3><p>這邊是假設備份檔放在 /net/gitlab_backup，檔名是 ${timestamp}_gitlab_backup.tar</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo gitlab-rake gitlab:backup:restore RAILS_ENV=production gitlab:backup:restore BACKUP=/net/gitlab_backup/$&#123;timestamp&#125;_gitlab_backup.tar</span><br><span class="line">or</span><br><span class="line">sudo gitlab-rake gitlab:backup:restore BACKUP=$&#123;timestamp&#125; force=yes</span><br></pre></td></tr></table></figure>
+<h3 id="如何更新-GitLab-版本"><a href="#如何更新-GitLab-版本" class="headerlink" title="如何更新 GitLab 版本"></a>如何更新 GitLab 版本</h3><p>假設要從舊版封裝升到 GitLab 新版本（請注意，未來可能會有些版本需要額外的手動介入，更新前最好還是看一下官方文件並且先備份）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo wget &lt;檔案連結&gt;</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl stop unicorn</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl stop sidekiq</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo dpkg -i &lt;檔案名稱&gt;</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl reconfigure</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl start</span></span><br></pre></td></tr></table></figure>
+<h3 id="備註"><a href="#備註" class="headerlink" title="備註"></a>備註</h3><p>其他設定可以參考一下原文</p>
+]]></content>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>gitlab</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to install the latest git on mac</title>
+    <url>/2014/09/27/How-to-install-latest-git-on-Mac/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>因為長期使用 mac 所以經常仰賴 <a href="http://brew.sh/" target="_blank" rel="noopener">homebrew</a> 來補足 mac 本身內建套件的不足，一直以來也得到很多便利性。<br>但自從開始大量嘗試玩新東西之後，對於很多套件的版本問題開始重視，然而 apple 本身提供的套件其實相當的過時，此篇文章記錄一下如何使用 homebrew 安裝的套件來取代原本內建於電腦的相同套件，本文以 git 為例，其他套件如 vim 也能夠使用相同的作法來操作。</p>
+<h3 id="首先先確認一下目前電腦中-git-的版本"><a href="#首先先確認一下目前電腦中-git-的版本" class="headerlink" title="首先先確認一下目前電腦中 git 的版本"></a>首先先確認一下目前電腦中 git 的版本</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git --version</span><br><span class="line">git version 1.9.3 (Apple Git-50)</span><br></pre></td></tr></table></figure>
+<h3 id="可以使用以下指令看到目前-git-位在內建的資料夾底下-原生的檔案大多都在-usr-bin-底下"><a href="#可以使用以下指令看到目前-git-位在內建的資料夾底下-原生的檔案大多都在-usr-bin-底下" class="headerlink" title="可以使用以下指令看到目前 git 位在內建的資料夾底下(原生的檔案大多都在 /usr/bin/ 底下)"></a>可以使用以下指令看到目前 git 位在內建的資料夾底下(原生的檔案大多都在 /usr/bin/ 底下)</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">which</span> git</span><br><span class="line">/usr/bin/git</span><br></pre></td></tr></table></figure>
+<h3 id="利用-homebrew-安裝-git，並且將內建的-git-進行更名（這樣系統在內建的資料夾找不到-git-會自動轉往-homebrew-的-usr-local-bin-底下找）"><a href="#利用-homebrew-安裝-git，並且將內建的-git-進行更名（這樣系統在內建的資料夾找不到-git-會自動轉往-homebrew-的-usr-local-bin-底下找）" class="headerlink" title="利用 homebrew 安裝 git，並且將內建的 git 進行更名（這樣系統在內建的資料夾找不到 git 會自動轉往 homebrew 的 /usr/local/bin/ 底下找）"></a>利用 homebrew 安裝 git，並且將內建的 git 進行更名（這樣系統在內建的資料夾找不到 git 會自動轉往 homebrew 的 /usr/local/bin/ 底下找）</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install git</span><br><span class="line">$ sudo mv /usr/bin/git /usr/bin/git48</span><br></pre></td></tr></table></figure>
+<h3 id="這邊可以確認-git-目前連結到的位置已經變更，版本也已經更新"><a href="#這邊可以確認-git-目前連結到的位置已經變更，版本也已經更新" class="headerlink" title="這邊可以確認 git 目前連結到的位置已經變更，版本也已經更新"></a>這邊可以確認 git 目前連結到的位置已經變更，版本也已經更新</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">which</span> git</span><br><span class="line">/usr/<span class="built_in">local</span>/bin/git</span><br><span class="line"></span><br><span class="line">$ git --version</span><br><span class="line">git version 2.1.1</span><br></pre></td></tr></table></figure>
+<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>如果想要使用舊版的朋友可以直接打改過的檔名（在這邊就是 git48）依然可以使用內建的版本。<br>如果想要還原的話可以把指令反過來執行如下：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo mv /usr/bin/git48 /usr/bin/git</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>mac</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Error after upgrading pip: cannot import name main</title>
+    <url>/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/</url>
+    <content><![CDATA[<h3 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h3><p>平常都習慣 mac 上面做事，這幾天在某台新的 ubuntu 上面裝 pgcli 的時候遇到一個問題<br>用 pip 裝完 pgcli 之後跳出一個提示，意思是說你現在這個 pip v8.1.1 已經過時囉，現在最新的是 v18，建議你快點更新喔，後面還送你一串更新用的指令<br>用它送的指令更新下去…直接幫你把你的 pip 送上西天，會噴以下的訊息</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"/usr/bin/pip"</span>, line 9, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    from pip import main</span><br><span class="line">ImportError: cannot import name <span class="string">'main'</span></span><br></pre></td></tr></table></figure>
+<h3 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h3><p>查了一輪大致上是因為新版的 pip v18，只支援 python3，python2 只能更新到 v9 的樣子<br>這真的蠢到我醉了，自己跳訊息出來炸掉自己是哪招…</p>
+<p>以下一行解決</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo python -m pip uninstall pip &amp;&amp; sudo apt install python3-pip --reinstall</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>python</tag>
+        <tag>pip</tag>
+        <tag>python3</tag>
+        <tag>pip3</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to mitigate Slow HTTP Dos Attack on Apache 2.4 in Ubuntu</title>
+    <url>/2016/08/19/How-to-mitigate-Slow-HTTP-Dos-Attack-on-Apache-2-4-in-Ubuntu/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>最近接到一個任務，是要把對外網站的一些安全漏洞補起來，而其中我拿到兩個 issue 要解：  </p>
+<ol>
+<li>disable website directory listing</li>
+<li>mitigate Slow HTTP Dos Attack</li>
+</ol>
+<p>拜請 Google 大神之後大致上看起來應該是不太難<br>主要參考了這兩篇：</p>
+<ol>
+<li><a href="http://stackoverflow.com/questions/2530372/how-do-i-disable-directory-browsing" target="_blank" rel="noopener">How do I disable directory browsing</a></li>
+<li><a href="http://ssorc.tw/5744" target="_blank" rel="noopener">Apache 如何防護 Slow HTTP DOS 攻擊</a></li>
+</ol>
+<h3 id="實作第一個問題"><a href="#實作第一個問題" class="headerlink" title="實作第一個問題"></a>實作第一個問題</h3><p>基本上在 Apache 的環境下面就是兩個做法最普遍</p>
+<ol>
+<li><p>在 .htaccess 裡面加上</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">Options -Indexes</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 virtualhost 資訊裡拿掉 Indexes</p>
+</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># before</span></span><br><span class="line">&lt;Directory /var/www/&gt;</span><br><span class="line">        Options Indexes FollowSymLinks</span><br><span class="line">        AllowOverride None</span><br><span class="line">        Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># after</span></span><br><span class="line">&lt;Directory /var/www/&gt;</span><br><span class="line">        Options FollowSymLinks</span><br><span class="line">        AllowOverride None</span><br><span class="line">        Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure>
+<p>然後重啟 Apache 就搞定了</p>
+<h3 id="實作第二個問題"><a href="#實作第二個問題" class="headerlink" title="實作第二個問題"></a>實作第二個問題</h3><p>在上面的文章裡面提供了三種方法</p>
+<ol>
+<li>mod_reqtimeout</li>
+<li>mod_qos</li>
+<li>mod_security</li>
+</ol>
+<p>這三種我都試了一輪<br>1 最簡單<br>在 virtualhost 裡面直接加上去就行了<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">&lt;IfModule mod_reqtimeout.c&gt;</span><br><span class="line">  RequestReadTimeout header=20-40,MinRate=500 body=20-40,MinRate=500</span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure></p>
+<p>2 mod_qos 在 Apache 2.4 已經不支援了，所以不用玩了</p>
+<p>3 的部分功能最多，做起來也最麻煩</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt-get install libapache2-mod-security2</span><br></pre></td></tr></table></figure>
+<p>（如果你在這邊沒有遇到其他問題的話，事情其實也不難搞定，但是我在這邊遇到一連串問題搞了我非常多時間，解決的過程因為文獻被我搞丟了，所以請大家自求多福了XD）</p>
+<p>弄好之後一樣把下面加進去 virtualhost 設定檔裡面重啟 Apache 就搞定</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">&lt;IfModule mod_security2.c&gt;</span><br><span class="line">SecRule RESPONSE_STATUS <span class="string">"@streq 408"</span> <span class="string">"phase:5,t:none,nolog,pass, setvar:ip.slow_dos_counter=+1, expirevar:ip.slow_dos_counter=60, id:'1234123456'"</span></span><br><span class="line"></span><br><span class="line">SecRule IP:SLOW_DOS_COUNTER <span class="string">"@gt 5"</span> <span class="string">"phase:1,t:none,log,drop, msg:'Client Connection Dropped due to high number of slow DoS alerts', id:'1234123457'"</span></span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="備註"><a href="#備註" class="headerlink" title="備註"></a>備註</h3><p>最後附上一個測試 slow http dos attack 的工具<br><a href="https://github.com/shekyan/slowhttptest" target="_blank" rel="noopener">SlowHTTPTest</a></p>
+]]></content>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>apache2.4</tag>
+        <tag>security</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Fix hexo with Error: Module version mismatch.</title>
+    <url>/2016/05/03/Fix-hexo-with-Error-Module-version-mismatch/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>更新了 hexo 之後一執行就噴下面這三行訊息</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[Error: Module version mismatch. Expected 46, got 14.]</span><br><span class="line">&#123; [Error: Cannot find module './build/default/DTraceProviderBindings'] code: 'MODULE_NOT_FOUND' &#125;</span><br><span class="line">&#123; [Error: Cannot find module './build/Debug/DTraceProviderBindings'] code: 'MODULE_NOT_FOUND' &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="解決方法"><a href="#解決方法" class="headerlink" title="解決方法"></a>解決方法</h3><p>用以下這兩行就可以解決<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm install hexo --no-optional</span><br><span class="line">$ npm install --unsafe-perm --verbose -g hexo</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to upgrade PHP version on your mac</title>
+    <url>/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>最近為了發揮 laravel 5.1 完整的功能，而在研究裡面包好的各種阿里布達套件，弄著弄著弄到了 <a href="https://phpunit.de/" target="_blank" rel="noopener">phpunit</a> 但在安裝 phpunit 遇到了一個問題，就是 mac 不知道跟 php 有仇還是怎樣，幾乎各種版本 cli 都更新了就是 php 還停留在 5.5 不知道是哪招(老闆聽說 php7 都已經 RC2 啦～)，導致於新版 phpunit 無法執行(目前穩定版需要配合 php 5.6)，於是乎很多人會想到了使用 homebrew 來作安裝，但無奈的是 homebrew 也沒有把 php 納入，所以要安裝的話必須另外用一些方法。</p>
+<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><p>在安裝的部分可以參考 <a href="https://github.com/Homebrew/homebrew-php" target="_blank" rel="noopener">homebrew-php</a> 的說明<br>這裡使用的是 homebrew 的隱藏指令 tap，據悉是用來安裝擴充套件的</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ brew tap homebrew/dupes</span><br><span class="line">$ brew tap homebrew/versions</span><br><span class="line">$ brew tap homebrew/homebrew-php</span><br></pre></td></tr></table></figure>
+<p>前置做完之後就可以進行安裝</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 安裝 php5.6 , 如果你想安裝 7.0 也可以改成 php70</span><br><span class="line">$ brew install php56</span><br></pre></td></tr></table></figure>
+<p>裝好之後應該就搞定啦！</p>
+<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>這裡有一點很詭異的地方是，Mac OSX 10.11(EI Capitan)裡面的 whereis 根本是錯的，不管你怎麼設定，他幫你找到的位置永遠是 /usr/bin/*</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ whereis php</span><br><span class="line">/usr/bin/php</span><br><span class="line"></span><br><span class="line">$ php --version</span><br><span class="line">PHP 5.6.14 (cli)</span><br><span class="line"></span><br><span class="line">$ /usr/bin/php --version</span><br><span class="line">PHP 5.5.27 (cli)</span><br></pre></td></tr></table></figure>
+<p>可見 whereis 在現在這版本根本壞了<br>下次更新不知道會不會修回來</p>
+<p>另外關於隱藏指令可以稍微參考一下這篇<br><a href="http://icyleaf.com/2014/01/homebrew-hidden-commands/" target="_blank" rel="noopener">隱藏指令</a></p>
+]]></content>
+      <tags>
+        <tag>mac</tag>
+        <tag>EI Capitan</tag>
+        <tag>php</tag>
+        <tag>phpunit</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to rotate docker log json files</title>
+    <url>/2020/01/06/How-to-rotate-docker-log-json-files/</url>
+    <content><![CDATA[<h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>docker 在運作的時候會記錄每一筆 stdout 還有 stderr，寫在一個 log file 裡面，通常是長這樣<br>/var/lib/docker/containers/[container-id]/[container-id]-json.log<br>然後久了之後，這檔案會超級大，到某一天發現硬碟快爆了的時候你就會發現</p>
+<p>所以可以透過官方給的文件做一些 rotation 的設定<br><a href="https://docs.docker.com/config/containers/logging/configure/" target="_blank" rel="noopener">https://docs.docker.com/config/containers/logging/configure/</a></p>
+<h3 id="實際操作"><a href="#實際操作" class="headerlink" title="實際操作"></a>實際操作</h3><p>如果要手動刪除那個檔案可以用這個指令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo truncate -s 0 &lt;logfile&gt;</span><br></pre></td></tr></table></figure>
+<p>建立一個 /etc/docker/daemon.json<br>內容用以下即可</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"log-driver"</span>: <span class="string">"json-file"</span>,</span><br><span class="line">  <span class="attr">"log-opts"</span>: &#123;</span><br><span class="line">    <span class="attr">"max-size"</span>: <span class="string">"10m"</span>,</span><br><span class="line">    <span class="attr">"max-file"</span>: <span class="string">"10"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重新吃一下設定檔還有重新啟動 docker service</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ systemctl daemon-reload</span><br><span class="line">$ systemctl restart docker</span><br></pre></td></tr></table></figure>
+<p>這樣應該就行了</p>
+]]></content>
+      <tags>
+        <tag>docker</tag>
+        <tag>log</tag>
+        <tag>rotation</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Install CUDA 10.0 with cuDNN 7.3.1 on Ubuntu 18.04 bionic</title>
+    <url>/2018/10/02/Install-CUDA-10-0-with-cuDNN-7-3-1-on-Ubuntu-18-04-bionic/</url>
+    <content><![CDATA[<h3 id="Introdution"><a href="#Introdution" class="headerlink" title="Introdution"></a>Introdution</h3><p>This is helping you to install the latest CUDA 10.0 which released Sept. 2018 on Ubuntu 18.04 bionic</p>
+<h3 id="Step-by-step"><a href="#Step-by-step" class="headerlink" title="Step by step"></a>Step by step</h3><p>At first you need a bionic ubuntu server and lets start it</p>
+<ol>
+<li><p>Install driver</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo add-apt-repository ppa:graphics-drivers/ppa</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install nvidia-396</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Install CUDA 10.0<br><a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="noopener">Download here</a></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dpkg -i <span class="string">'cuda10.0.deb'</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install cuda</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Test CUDA</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/cuda/samples/1_Utilities/deviceQuery</span><br><span class="line">sudo make </span><br><span class="line">./deviceQuery</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Install cuDNN 7.3.1<br><a href="https://developer.nvidia.com/rdp/cudnn-download" target="_blank" rel="noopener">Download here</a><br>(You need to register if you don’t have account)</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dpkg -i <span class="string">'Your Runtime Library.deb'</span></span><br><span class="line">sudo dpkg -i <span class="string">'Your Developer Library.deb'</span></span><br><span class="line">sudo dpkg -i <span class="string">'Your Code Sample.deb'</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Test cdDNN</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/src/cudnn_samples_v7/mnistCUDNN</span><br><span class="line">sudo make </span><br><span class="line">./mnistCuDNN</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>I got a error during “sudo make”</p>
+<ol start="6">
+<li>One more thing<br>There is a bug in cdDNN package</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /usr/include/cudnn.h</span><br><span class="line"></span><br><span class="line">//change this</span><br><span class="line"><span class="comment">#include "driver_types.h"</span></span><br><span class="line"></span><br><span class="line">//to:</span><br><span class="line"><span class="comment">#include &lt;driver_types.h&gt;</span></span><br></pre></td></tr></table></figure>
+<p>And now you can repeat step 5.</p>
+<p>All set!</p>
+<p>BTW<br>It works on pytorch 0.4.1 with stable/linux/py3.6/cuda9.2<br><a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener">Download here</a><br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip3 install http://download.pytorch.org/whl/cu92/torch-0.4.1-cp36-cp36m-linux_x86_64.whl</span><br><span class="line">pip3 install torchvision</span><br></pre></td></tr></table></figure></p>
+<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><p><a href="https://blog.csdn.net/junzia/article/details/80871145" target="_blank" rel="noopener">https://blog.csdn.net/junzia/article/details/80871145</a><br><a href="https://medium.com/@afun/ubuntu-16-04-%E5%AE%89%E8%A3%9D-cuda-cudnn-nvidia-driver-%E7%9A%84%E8%B8%A9%E9%9B%B7%E5%BF%83%E5%BE%97-%E9%9D%9E%E5%AE%89%E8%A3%9D%E6%AD%A5%E9%A9%9F%E8%A9%B3%E8%A7%A3-b13121d95025" target="_blank" rel="noopener">https://medium.com/@afun/ubuntu-16-04-%E5%AE%89%E8%A3%9D-cuda-cudnn-nvidia-driver-%E7%9A%84%E8%B8%A9%E9%9B%B7%E5%BF%83%E5%BE%97-%E9%9D%9E%E5%AE%89%E8%A3%9D%E6%AD%A5%E9%A9%9F%E8%A9%B3%E8%A7%A3-b13121d95025</a></p>
+]]></content>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>CUDA</tag>
+        <tag>bionic</tag>
+        <tag>cuDNN</tag>
+        <tag>pytorch</tag>
+        <tag>linux</tag>
+        <tag>nvidia</tag>
+        <tag>P100</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Repair myisam table by myisamchk</title>
+    <url>/2014/11/15/Repair-myisam-table-by-myisamchk/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>最近遇到了一個因為在 db 運作時 磁碟容量寫滿了，然後 db 直接 crash 後自動重開而且失敗，造成大量存取中的 table 毀損，稍微研究了一下如何把那些壞掉的 table 修復起來，以下做個分享</p>
+<h3 id="首先先用以下指令檢查壞掉的情況"><a href="#首先先用以下指令檢查壞掉的情況" class="headerlink" title="首先先用以下指令檢查壞掉的情況"></a>首先先用以下指令檢查壞掉的情況</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ myisamchk &lt;table_name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="若要修復的話加上參數-r"><a href="#若要修復的話加上參數-r" class="headerlink" title="若要修復的話加上參數 -r"></a>若要修復的話加上參數 -r</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ myisamchk -r &lt;table_name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="若要修的數量太多太大可以再加上-q-快速模式"><a href="#若要修的數量太多太大可以再加上-q-快速模式" class="headerlink" title="若要修的數量太多太大可以再加上 -q (快速模式)"></a>若要修的數量太多太大可以再加上 -q (快速模式)</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ myisamchk -r -q &lt;table_name&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="若修復過程遇到問題可以改成-o-安全模式-，但是更慢"><a href="#若修復過程遇到問題可以改成-o-安全模式-，但是更慢" class="headerlink" title="若修復過程遇到問題可以改成 -o (安全模式)，但是更慢"></a>若修復過程遇到問題可以改成 -o (安全模式)，但是更慢</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ myisamchk -o &lt;table_name&gt;</span><br></pre></td></tr></table></figure>
+<p>全部修完之後可以再做一次 chk，另外如果要進行 mysqldump 遇到 LOCK TABLES 的情形可以使用–skip-lock-tables<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ mysqldump -uroot -p<span class="variable">$PASSWORD</span> -q --skip-lock-tables &lt;db_name&gt; &gt; xxxx.sql</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>mysql</tag>
+        <tag>myisam</tag>
+        <tag>recovery</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Update date on Ubuntu</title>
+    <url>/2014/10/22/Update-date-on-Ubuntu/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>有時候或許會發現 OS 作業系統的時間不準的情況，如果是在 ubuntu 上面，其實只需要兩個指令就能夠更新設定</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo ntpdate time.stdtime.gov.tw // 更新系統時間</span><br><span class="line">$ sudo hwclock -w // 將新的時間寫入 blos</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>ubuntu</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>git pull 強制設定至 origin/master branch</title>
+    <url>/2015/05/22/git-pull-%E5%BC%B7%E5%88%B6%E8%A8%AD%E5%AE%9A%E8%87%B3-origin-master-branch/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>因為多人進行開發的時候會有版本控管問題，因此大多人會使用一些版本控制工具，時下最熱門的當然屬 git 為主流<br>有時候因為我們改了些東西而別人也改了同樣的東西導致有些衝突在，最後亂成一團的時候一發不可收拾，於是乎我們會想乾脆 reset 至現在 server 上面的最新版本重來，這個時候我們可以用下面這兩行來進行 reset</p>
+<h3 id="直接指令下去就不多解釋了"><a href="#直接指令下去就不多解釋了" class="headerlink" title="直接指令下去就不多解釋了"></a>直接指令下去就不多解釋了</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git fetch --all  </span><br><span class="line">$ git reset --hard origin/master</span><br></pre></td></tr></table></figure>
+<p>這個時候再重新 git pull 就大功告成了</p>
+]]></content>
+      <tags>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在 Linux 系統使用 ssh key 登入</title>
+    <url>/2018/06/05/%E5%9C%A8-Linux-%E7%B3%BB%E7%B5%B1%E4%BD%BF%E7%94%A8-ssh-key-%E7%99%BB%E5%85%A5/</url>
+    <content><![CDATA[<h3 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h3><p>我們登入遠端伺服器每次都要打密碼其實又麻煩又不安全，有人提倡常常換密碼可以解決，但…這個在實質上的有用程度在這裡就不好說了。</p>
+<h3 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h3><p>言歸正傳，這邊要介紹一下如何使用 ssh key 來登入遠端伺服器</p>
+<p>通常我們會透過指令產生 ssh key<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure></p>
+<p>產生出來的 key 通常會在<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure></p>
+<p>只要把我們的 key 加入到伺服器的下面這個檔案裡面就能達成用 key 登入<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure></p>
+<p>所以我們可以用這個指令直接把 local 端的 ssh key 加進去 server 端的登入名單裡面<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub | ssh [user]@[server-host] <span class="string">"cat &gt;&gt; ~/.ssh/authorized_keys"</span></span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>linux</tag>
+        <tag>sshkey</tag>
+        <tag>ssh</tag>
+        <tag>key</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>some problem with percona-mysql-server upgrade from 5.6 to 5.7</title>
+    <url>/2016/08/24/some-problem-with-percona-mysql-server-upgrade-from-5-6-to-5-7/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>mysql 5.7 在功能與性能上都比 5.6 出色不少，但基於 percona 一直沒有更新的情況下我也沒有貿然升級，隨著前陣子 percona 釋出了 5.7 剛好最近又有了要使用 mysql 的機會，就想藉由這次機會順便升級 5.7</p>
+<h3 id="過程"><a href="#過程" class="headerlink" title="過程"></a>過程</h3><p>在 OS 上面這台使用的是 Ubuntu 14.04，使用下面指令就能完成升級</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo service mysql stop</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install percona-server-server-5.7</span><br></pre></td></tr></table></figure>
+<p>等到跑完之後重啟 mysql 即可…</p>
+<p>但是大家都知道事情通常都不會這麼順利，所以我在這邊發生了 mysql 啟動不了的悲劇ＧＧ</p>
+<h3 id="問題解決"><a href="#問題解決" class="headerlink" title="問題解決"></a>問題解決</h3><p>因為重啟的時候有看到如下的訊息<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">no directory logging <span class="keyword">in</span> with home=/ mysql</span><br></pre></td></tr></table></figure></p>
+<p>於是先使用這樣的做法<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo usermod -d /var/lib/mysql/ mysql <span class="comment">#這裡舉例使用預設路徑，有改路徑的記得跟著改</span></span><br></pre></td></tr></table></figure></p>
+<p>上面的作法等同於去修改 /etc/passwd 裡面 mysql 這個 user 的第六項資料，大致上是設定 mysql 這個 user 的家目錄的意思<br>想了解更多也可以參看一下這篇<a href="https://iyaozhen.com/ubuntu-upgrade-mysql-to-5-7.html" target="_blank" rel="noopener">Ubuntu 平滑升级 MySQL 到 5.7</a></p>
+<p>再重啟訊息不見了，但是依然失敗</p>
+<p>再去 /etc/mysql/my.cnf 裡面確定一下</p>
+<ol>
+<li>datadir = (資料路徑)</li>
+<li>log_error= /var/log/mysql/error.log (log 有正確被寫入到預設位置)</li>
+</ol>
+<p>檢查一下 log 之後發現錯誤訊息是<br>‘innodb_buffer_pool_populate’ 這個參數找不到</p>
+<p>Google 查一下找到下面這篇說明<br><a href="https://www.percona.com/doc/percona-server/5.7/changed_in_57.html" target="_blank" rel="noopener">Changed in Percona Server 5.7</a><br>innodb_buffer_pool_populate server option and numa_interleave mysql_safe.sh option have been replaced by innodb_numa_interleave server option. Note that flush_caches option still remains.</p>
+<p>於是乎把 innodb_buffer_pool_populate 取代成 innodb_numa_interleave 重啟 mysql 就成功啟動了，謝天謝地。</p>
+<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>最後執行一下<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo mysql_upgrade -u root -p <span class="comment">#更新一下數據</span></span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>mysql</tag>
+        <tag>percona</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在 ubuntu 中找出大檔案</title>
+    <url>/2018/03/28/%E5%9C%A8-ubuntu-%E4%B8%AD%E6%89%BE%E5%87%BA%E5%A4%A7%E6%AA%94%E6%A1%88/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>伺服器硬碟快爆掉了，所以找想找一下指令來做這件事，於是找到了這篇<br><a href="http://www.arthurtoday.com/2014/12/ubuntu-find-out-large-size-files-by-du-and-sort.html" target="_blank" rel="noopener">Ubuntu 用 du 和 sort 指令找出大檔案</a></p>
+<h3 id="指令直接下"><a href="#指令直接下" class="headerlink" title="指令直接下"></a>指令直接下</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo du -h / | sort -h -r | more</span><br></pre></td></tr></table></figure>
+<p>/ 代表開始掃描的起點，如果想改變掃描的位置可以改這邊</p>
+<p>其他大致上沒什麼需要修改的</p>
+<p>all set</p>
+]]></content>
+      <tags>
+        <tag>ubuntu</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何刪除 mac 大頭貼照片</title>
+    <url>/2018/09/03/%E5%A6%82%E4%BD%95%E5%88%AA%E9%99%A4-mac-%E5%A4%A7%E9%A0%AD%E8%B2%BC%E7%85%A7%E7%89%87/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>前幾天有位朋友來求救，使用多年的 mac 大頭貼裡面還有前女友照片怎麼辦啊～～<br>完全找不到地方刪除感覺會死人ＲＲＲＲＲＲ</p>
+<p>於是平常正經的本 blog 就來寫一篇這個好了</p>
+<h3 id="作法"><a href="#作法" class="headerlink" title="作法"></a>作法</h3><p>因為 mac 會把你用過的大頭貼圖片暫存在一個位置，以方便你下次又要用用過的圖片當圖示</p>
+<p>通常系統會放在這個位置<br>~/Library/Containers/com.apple.ImageKit.RecentPictureService/Data/Library/Images/Recent Pictures/</p>
+<p>但是因為這是隱藏資料夾<br>所以除非你會使用 command line<br>不然還是乖乖打開 finder 好了</p>
+<p>打開後按下 cmd + shift + G<br>複製上面路徑貼上去 enter 就可以直達那個位置啦</p>
+<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>誠心建議各位還是找位不會計較你過去的女友比較好XD</p>
+<h3 id="The-One-More-Thing"><a href="#The-One-More-Thing" class="headerlink" title="The One More Thing"></a>The One More Thing</h3><p>刪完記得要清空垃圾桶…</p>
+]]></content>
+      <tags>
+        <tag>mac</tag>
+        <tag>macosx</tag>
+        <tag>救命</tag>
+        <tag>前女友照片刪不掉</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何取得昨天的日期</title>
+    <url>/2015/11/19/%E5%A6%82%E4%BD%95%E5%8F%96%E5%BE%97%E6%98%A8%E5%A4%A9%E7%9A%84%E6%97%A5%E6%9C%9F/</url>
+    <content><![CDATA[<h2 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h2><p>在 linux 中要以 shell 指令取得系統日期、時間算是基本語法(大概是像下面這樣)<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> date</span></span><br><span class="line">Fri Nov 20 15:28:05 CST 2015</span><br></pre></td></tr></table></figure></p>
+<p>如果想要擷取部份或是自己的型式可以用<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> date <span class="string">'+%Y%m%d%H%M%S'</span></span></span><br><span class="line">20151120152959</span><br><span class="line"><span class="meta">$</span><span class="bash"> date <span class="string">'+%Y%m%d'</span></span></span><br><span class="line">20151120</span><br></pre></td></tr></table></figure></p>
+<p>但如果要擷取的非今天的日期，在傳統 unix 上面可就有點麻煩了，可能必須用些工具或是自己寫程式來運算。而在 linux 版本的 date 中可以運用一些指令來對於結果做一些簡單的運算</p>
+<h2 id="直接看範例了"><a href="#直接看範例了" class="headerlink" title="直接看範例了"></a>直接看範例了</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">取得昨天的日期時間</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> date -d<span class="string">'-1 day'</span> <span class="comment">#或 date -d'1 day ago'</span></span></span><br><span class="line">Thu Nov 19 15:35:26 CST 2015</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">取得明天的日期</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> date -d<span class="string">'1 day'</span></span></span><br><span class="line">Sat Nov 21 15:36:59 CST 2015</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">取得上個月的日期</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> date -d<span class="string">'-1 month'</span></span></span><br><span class="line">Tue Oct 20 15:37:41 CST 2015</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">取得上星期的日期</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> date -d<span class="string">'-1 week'</span></span></span><br><span class="line">Fri Nov 13 15:37:56 CST 2015</span><br></pre></td></tr></table></figure>
+<h2 id="但這時候如果想要移動同時又要自訂格式"><a href="#但這時候如果想要移動同時又要自訂格式" class="headerlink" title="但這時候如果想要移動同時又要自訂格式"></a>但這時候如果想要移動同時又要自訂格式</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 取得昨天的自訂格式日期</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> date -d <span class="string">'-1 day'</span> <span class="string">'+%Y%m%d'</span></span></span><br><span class="line">20151119</span><br></pre></td></tr></table></figure>
+<p>其他的依此類推囉</p>
+<h2 id="本篇參考"><a href="#本篇參考" class="headerlink" title="本篇參考"></a>本篇參考</h2><p><a href="http://eit.tw/IomMPP" target="_blank" rel="noopener">http://eit.tw/IomMPP</a></p>
+]]></content>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Install Rust language on your mac.</title>
+    <url>/2019/07/23/Install-Rust-language-on-your-mac/</url>
+    <content><![CDATA[<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl https://sh.rustup.rs -sSf | sh</span><br><span class="line"></span><br><span class="line">sudo vim /private/etc/paths</span><br><span class="line">// add <span class="variable">$HOME</span>/.cargo/bin to a new line</span><br></pre></td></tr></table></figure>
+<h3 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cargo</span><br><span class="line">rustc</span><br><span class="line">rustup</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>mac</tag>
+        <tag>macosx</tag>
+        <tag>rust</tag>
+        <tag>rustup</tag>
+        <tag>cargo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to telnet in alpine docker container</title>
+    <url>/2020/07/31/How-to-telnet-in-alpine-docker-container/</url>
+    <content><![CDATA[<h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>由於想要在 container 裡面測試此 container 與某服務連線有通，但通常 container 裡面的軟體都極度精簡，所以來記錄一下在 alpine 的容器裡面該怎麽操作</p>
+<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>首先進入到容器內<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it &lt;CONTAINERID&gt; sh</span><br><span class="line">or</span><br><span class="line">$ docker-compose <span class="built_in">exec</span> &lt;containerName&gt; sh</span><br></pre></td></tr></table></figure></p>
+<p>進入到容器內後開始進行安裝和使用<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ apk update</span><br><span class="line">$ apk add busybox-extras</span><br><span class="line">$ busybox-extras telnet localhost 5432</span><br></pre></td></tr></table></figure></p>
+<p>收工</p>
+]]></content>
+      <tags>
+        <tag>docker</tag>
+        <tag>alpine</tag>
+        <tag>telnet</tag>
+      </tags>
+  </entry>
+</search>
