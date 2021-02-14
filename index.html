@@ -192,6 +192,74 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="http://blog.lpchen.me/2020/08/24/Drone-CI-CD-with-Github-and-ssh-and-docker-pipeline/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jayson LP Chen">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SOMEHOW">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/24/Drone-CI-CD-with-Github-and-ssh-and-docker-pipeline/" class="post-title-link" itemprop="url">Drone CI/CD with Github and ssh and docker pipeline</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 8月 24 2020 17:41:04" itemprop="dateCreated datePublished" datetime="2020-08-24T17:41:04+08:00">8月 24 2020</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2月 15 2021 1:15:28" itemprop="dateModified" datetime="2021-02-15T01:15:28+08:00">2月 15 2021</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>因為專案太多了，想簡單製作 CI/CD 的機制，至少把 git push 後的 auto deploy 建置起來，個人之前還有些 gitlab-ci 的經驗，於是就看上了最近兩年比較紅的 drone ci，過程中遇到了不少問題，官方文件也不盡詳細，最後順利解決了在這邊記錄分享一下。</p>
+<h3 id="過程"><a href="#過程" class="headerlink" title="過程"></a>過程</h3><p>官網上面或是網路上面有一堆教學文件應該大家都看過不少，我直接提供我這邊遇到的狀況，因為我想要在 git push 之後讓平台直接透過 ssh 工具去進行 auto deploy，同時又想要使用一些 docker image 工具，但官網上面是分開去撰寫的，並沒有特別寫說並用的時候怎麼處理。</p>
+<p>我在了解過 drone 運作原理之後摸索出解法，其實很簡單，就是同時起 ssh 和 docker 兩種類型的 runner，然後串在同一包就可以了，下面直接分享我最後的 docker-compose.yml</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">  drone-server:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">drone/drone:1</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">80</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">./:/data</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_SERVER_HOST=$&#123;DRONE_SERVER_HOST&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_SERVER_PROTO=$&#123;DRONE_SERVER_PROTO&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_SECRET=$&#123;DRONE_RPC_SECRET&#125;</span></span><br><span class="line"></span><br><span class="line">      <span class="comment"># GitHub Config</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_GITHUB_SERVER=https://github.com</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_GITHUB_CLIENT_ID=$&#123;DRONE_GITHUB_CLIENT_ID&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_GITHUB_CLIENT_SECRET=$&#123;DRONE_GITHUB_CLIENT_SECRET&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_LOGS_DEBUG=true</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_LOGS_PRETTY=true</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_LOGS_COLOR=true</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">      -</span> <span class="string">VIRTUAL_HOST=&lt;your_domain&gt;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">VIRTUAL_PORT=80</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">LETSENCRYPT_HOST=&lt;your_domain&gt;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">LETSENCRYPT_EMAIL=&lt;your_mail&gt;</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">public</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># runner for docker version</span></span><br><span class="line"><span class="attr">  drone-runner-docker:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">drone/drone-runner-docker:1</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">    depends_on:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">drone-server</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/var/run/docker.sock:/var/run/docker.sock</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_HOST=$&#123;DRONE_RPC_HOST&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_PROTO=$&#123;DRONE_RPC_PROTO&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_SECRET=$&#123;DRONE_RPC_SECRET&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RUNNER_CAPACITY=1</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">public</span></span><br><span class="line"><span class="attr">  drone-runner-ssh:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">drone/drone-runner-ssh:1</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">    depends_on:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">drone-server</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/var/run/docker.sock:/var/run/docker.sock</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_HOST=$&#123;DRONE_RPC_HOST&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_PROTO=$&#123;DRONE_RPC_PROTO&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_SECRET=$&#123;DRONE_RPC_SECRET&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RUNNER_CAPACITY=1</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">public</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line"><span class="attr">  public:</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-tw">
     <link itemprop="mainEntityOfPage" href="http://blog.lpchen.me/2020/08/18/How-to-clean-docker-images-every-day/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -803,79 +871,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-tw">
-    <link itemprop="mainEntityOfPage" href="http://blog.lpchen.me/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jayson LP Chen">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SOMEHOW">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/" class="post-title-link" itemprop="url">How to do multi-row insert with postgres by nodejs</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 8月 14 2018 1:03:22 / Modified: 1:28:01" itemprop="dateCreated datePublished" datetime="2018-08-14T01:03:22+08:00">8月 14 2018</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>最近有一個案子必須先透過 API 取得資料後把資料經過重組塞進 local database<br>環境上使用的是 nodejs + postgres</p>
-<h3 id="過程"><a href="#過程" class="headerlink" title="過程"></a>過程</h3><p>經過了兩次重構之後整理一下最後的做法</p>
-<ol>
-<li><p>Using <a href="https://github.com/request/request-promise" target="_blank" rel="noopener">request-promise</a> lib</p>
-</li>
-<li><p>Using <a href="https://github.com/vitaly-t/pg-promise" target="_blank" rel="noopener">pg-promise</a> lib</p>
-</li>
-</ol>
-<p>作者本人有在 <a href="https://stackoverflow.com/questions/37300997/multi-row-insert-with-pg-promise" target="_blank" rel="noopener">stackoverflow</a> 提供一段範例可以參考<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pgp = <span class="built_in">require</span>(<span class="string">'pg-promise'</span>)(&#123;</span><br><span class="line">    <span class="comment">/* initialization options */</span></span><br><span class="line">    capSQL: <span class="literal">true</span> <span class="comment">// capitalize all generated SQL</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">const</span> db = pgp(<span class="comment">/*connection*/</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// our set of columns, to be created only once, and then shared/reused,</span></span><br><span class="line"><span class="comment">// to let it cache up its formatting templates for high performance:</span></span><br><span class="line"><span class="keyword">const</span> cs = <span class="keyword">new</span> pgp.helpers.ColumnSet([<span class="string">'col_a'</span>, <span class="string">'col_b'</span>], &#123;<span class="attr">table</span>: <span class="string">'tmp'</span>&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// data input values:</span></span><br><span class="line"><span class="keyword">const</span> values = [&#123;<span class="attr">col_a</span>: <span class="string">'a1'</span>, <span class="attr">col_b</span>: <span class="string">'b1'</span>&#125;, &#123;<span class="attr">col_a</span>: <span class="string">'a2'</span>, <span class="attr">col_b</span>: <span class="string">'b2'</span>&#125;];</span><br><span class="line"></span><br><span class="line"><span class="comment">// generating a multi-row insert query:</span></span><br><span class="line"><span class="keyword">const</span> query = pgp.helpers.insert(values, cs);</span><br><span class="line"><span class="comment">//=&gt; INSERT INTO "tmp"("col_a","col_b") VALUES('a1','b1'),('a2','b2')</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// executing the query:</span></span><br><span class="line">db.none(query)</span><br><span class="line">    .then(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// success;</span></span><br><span class="line">    &#125;)</span><br><span class="line">    .catch(<span class="function"><span class="params">error</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// error;</span></span><br></pre></td></tr></table></figure></p>
-<ol start="3">
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map#Using_map_to_reformat_objects_in_an_array" target="_blank" rel="noopener">Using map to reformat objects in an array</a></li>
-</ol>
-<p>這篇裡面的範例也可以參考一下，當然 var 在 es7 裡面已經被棄用，但以 map 來做集合操作仍然是相當實用</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> kvArray = [&#123;<span class="attr">key</span>: <span class="number">1</span>, <span class="attr">value</span>: <span class="number">10</span>&#125;, </span><br><span class="line">               &#123;<span class="attr">key</span>: <span class="number">2</span>, <span class="attr">value</span>: <span class="number">20</span>&#125;, </span><br><span class="line">               &#123;<span class="attr">key</span>: <span class="number">3</span>, <span class="attr">value</span>: <span class="number">30</span>&#125;];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> reformattedArray = kvArray.map(<span class="function"><span class="params">obj</span> =&gt;</span>&#123; </span><br><span class="line">   <span class="keyword">var</span> rObj = &#123;&#125;;</span><br><span class="line">   rObj[obj.key] = obj.value;</span><br><span class="line">   <span class="keyword">return</span> rObj;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// reformattedArray is now [&#123;1: 10&#125;, &#123;2: 20&#125;, &#123;3: 30&#125;], </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// kvArray is still: </span></span><br><span class="line"><span class="comment">// [&#123;key: 1, value: 10&#125;, </span></span><br><span class="line"><span class="comment">//  &#123;key: 2, value: 20&#125;, </span></span><br><span class="line"><span class="comment">//  &#123;key: 3, value: 30&#125;]</span></span><br></pre></td></tr></table></figure>
-<h3 id="One-more-thing"><a href="#One-more-thing" class="headerlink" title="One more thing"></a>One more thing</h3><p>程式結束記得補上<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pgp.end()</span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -945,12 +940,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">60</span>
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -978,7 +973,7 @@
           <h3 class="widget-title">Tag Cloud</h3>
           <div id="myCanvasContainer" class="widget tagcloud">
             <canvas width="250" height="250" id="resCanvas" style="width:100%">
-              <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CUDA/">CUDA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSX/">OSX</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/P100/">P100</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/alpine/">alpine</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache2-4/">apache2.4</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/backup/">backup</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bionic/">bionic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cargo/">cargo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/client/">client</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cron/">cron</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cuDNN/">cuDNN</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/droneci/">droneci</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/express/">express</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages/">github pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/">gitlab</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-ci/">gitlab-ci</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-devops/">gitlab-devops</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-runner/">gitlab-runner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hostname/">hostname</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/key/">key</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linode/">linode</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/">log</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macosx/">macosx</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myisam/">myisam</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nvidia/">nvidia</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/percona/">percona</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pg-promise/">pg-promise</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpunit/">phpunit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip/">pip</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip3/">pip3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgres/">postgres</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python3/">python3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytorch/">pytorch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/recovery/">recovery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rescue/">rescue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rotation/">rotation</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rust/">rust</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rustup/">rustup</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/security/">security</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/">ssh</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sshkey/">sshkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/telnet/">telnet</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vpn/">vpn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-server/">web server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wireguard/">wireguard</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前女友照片刪不掉/">前女友照片刪不掉</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/救命/">救命</a><span class="tag-list-count">1</span></li></ul>
+              <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CI-CD/">CI/CD</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CUDA/">CUDA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/EI-Capitan/">EI Capitan</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSX/">OSX</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/P100/">P100</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/alpine/">alpine</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache2-4/">apache2.4</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/backup/">backup</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bionic/">bionic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cargo/">cargo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/client/">client</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cron/">cron</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cuDNN/">cuDNN</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drone/">drone</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/droneci/">droneci</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/express/">express</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages/">github pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/">gitlab</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-ci/">gitlab-ci</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-devops/">gitlab-devops</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab-runner/">gitlab-runner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hostname/">hostname</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/key/">key</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linode/">linode</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/log/">log</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/macosx/">macosx</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myisam/">myisam</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nvidia/">nvidia</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/percona/">percona</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pg-promise/">pg-promise</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpunit/">phpunit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip/">pip</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip3/">pip3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pipeline/">pipeline</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/postgres/">postgres</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python3/">python3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytorch/">pytorch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/recovery/">recovery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rescue/">rescue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rotation/">rotation</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rust/">rust</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rustup/">rustup</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/security/">security</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/server/">server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/">ssh</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sshkey/">sshkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/telnet/">telnet</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a><span class="tag-list-count">12</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vpn/">vpn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-server/">web server</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wireguard/">wireguard</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前女友照片刪不掉/">前女友照片刪不掉</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/救命/">救命</a><span class="tag-list-count">1</span></li></ul>
             </canvas>
           </div>
         </div>
@@ -1000,7 +995,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
