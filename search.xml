@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Cannot boot after restored backup images in Linode</title>
+    <url>/2020/07/19/Cannot-boot-after-restored-backup-images-in-Linode/</url>
+    <content><![CDATA[<h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>前幾天 Linode 的 vps 忽然無法寫入硬碟，重開機之後直接找不到硬碟，出現 segmentation fault 之類的錯誤，於是開始了救援的任務。</p>
+<h3 id="嘗試步驟"><a href="#嘗試步驟" class="headerlink" title="嘗試步驟"></a>嘗試步驟</h3><p>一開始想說使用自動備份的 image 進行 restore 之後可能可以恢復正常，所以就先進行 restore，等了一陣後來開機後出現找不到硬碟的狀況，訊息如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ALERT!  UUID=&lt;UUID&gt; does not exist. Dropping to !</span><br></pre></td></tr></table></figure>
+<p>看到這訊息多半是因為是 VM 的關係，硬碟的區塊改變了 uuid 也跟著變了，所以 /etc/fstab 裡面記錄的還是原來的 uuid 造成 mount 不上去的關係<br>查了一下之後找到了這篇 <a href="https://www.linode.com/community/questions/18789/i-cant-boot-from-my-restored-backup-seeing-uuid-does-not-exist" target="_blank" rel="noopener">點我</a>，剩下就照抄他的吧</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mount -o <span class="built_in">exec</span>,barrier=0 /dev/sda</span><br><span class="line"><span class="built_in">cd</span> /media/sda</span><br><span class="line">mount -t proc proc proc/</span><br><span class="line">mount -t sysfs sys sys/</span><br><span class="line">mount -o <span class="built_in">bind</span> /dev dev/</span><br><span class="line">mount -t devpts pts dev/pts/</span><br><span class="line">chroot /media/sda /bin/bash</span><br><span class="line">mdadm --detail --scan &gt;&gt; /etc/mdadm.conf</span><br><span class="line">update-initramfs -u</span><br><span class="line">update-grub</span><br></pre></td></tr></table></figure>
+<p>其中 mdadm 那行卡到，因為沒安裝過這個套件，所以多加了下面一個指令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install mdadm</span><br></pre></td></tr></table></figure>
+<p>操作完重開機就沒問題了！</p>
+]]></content>
+      <tags>
+        <tag>linode</tag>
+        <tag>ubuntu</tag>
+        <tag>backup</tag>
+        <tag>rescue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Drone CI/CD with Github and ssh and docker pipeline</title>
+    <url>/2020/08/24/Drone-CI-CD-with-Github-and-ssh-and-docker-pipeline/</url>
+    <content><![CDATA[<h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>因為專案太多了，想簡單製作 CI/CD 的機制，至少把 git push 後的 auto deploy 建置起來，個人之前還有些 gitlab-ci 的經驗，於是就看上了最近兩年比較紅的 drone ci，過程中遇到了不少問題，官方文件也不盡詳細，最後順利解決了在這邊記錄分享一下。</p>
+<h3 id="過程"><a href="#過程" class="headerlink" title="過程"></a>過程</h3><p>官網上面或是網路上面有一堆教學文件應該大家都看過不少，我直接提供我這邊遇到的狀況，因為我想要在 git push 之後讓平台直接透過 ssh 工具去進行 auto deploy，同時又想要使用一些 docker image 工具，但官網上面是分開去撰寫的，並沒有特別寫說並用的時候怎麼處理。</p>
+<p>我在了解過 drone 運作原理之後摸索出解法，其實很簡單，就是同時起 ssh 和 docker 兩種類型的 runner，然後串在同一包就可以了，下面直接分享我最後的 docker-compose.yml</p>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">  drone-server:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">drone/drone:1</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">80</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">./:/data</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_SERVER_HOST=$&#123;DRONE_SERVER_HOST&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_SERVER_PROTO=$&#123;DRONE_SERVER_PROTO&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_SECRET=$&#123;DRONE_RPC_SECRET&#125;</span></span><br><span class="line"></span><br><span class="line">      <span class="comment"># GitHub Config</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_GITHUB_SERVER=https://github.com</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_GITHUB_CLIENT_ID=$&#123;DRONE_GITHUB_CLIENT_ID&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_GITHUB_CLIENT_SECRET=$&#123;DRONE_GITHUB_CLIENT_SECRET&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_LOGS_DEBUG=true</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_LOGS_PRETTY=true</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_LOGS_COLOR=true</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">      -</span> <span class="string">VIRTUAL_HOST=&lt;your_domain&gt;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">VIRTUAL_PORT=80</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">LETSENCRYPT_HOST=&lt;your_domain&gt;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">LETSENCRYPT_EMAIL=&lt;your_mail&gt;</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">public</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># runner for docker version</span></span><br><span class="line"><span class="attr">  drone-runner-docker:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">drone/drone-runner-docker:1</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">    depends_on:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">drone-server</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/var/run/docker.sock:/var/run/docker.sock</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_HOST=$&#123;DRONE_RPC_HOST&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_PROTO=$&#123;DRONE_RPC_PROTO&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_SECRET=$&#123;DRONE_RPC_SECRET&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RUNNER_CAPACITY=1</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">public</span></span><br><span class="line"><span class="attr">  drone-runner-ssh:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">drone/drone-runner-ssh:1</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">    depends_on:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">drone-server</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/var/run/docker.sock:/var/run/docker.sock</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_HOST=$&#123;DRONE_RPC_HOST&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_PROTO=$&#123;DRONE_RPC_PROTO&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_SECRET=$&#123;DRONE_RPC_SECRET&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RUNNER_CAPACITY=1</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">public</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line"><span class="attr">  public:</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>drone</tag>
+        <tag>ssh</tag>
+        <tag>docker</tag>
+        <tag>CI/CD</tag>
+        <tag>github</tag>
+        <tag>pipeline</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Build a WireGuard VPN server on Linode.</title>
     <url>/2019/07/23/Build-a-WireGuard-VPN-server-on-Linode/</url>
     <content><![CDATA[<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo add-apt-repository ppa:wireguard/wireguard</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install wireguard</span><br></pre></td></tr></table></figure>
@@ -32,30 +69,12 @@
 </ol>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wg-quick up wg0</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> wg-quick@wg0 //設定開機自動執行</span><br><span class="line">sudo wg show</span><br></pre></td></tr></table></figure>]]></content>
       <tags>
-        <tag>wireguard</tag>
-        <tag>vpn</tag>
         <tag>linode</tag>
         <tag>ubuntu</tag>
+        <tag>wireguard</tag>
+        <tag>vpn</tag>
         <tag>server</tag>
         <tag>client</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Drone CI/CD with Github and ssh and docker pipeline</title>
-    <url>/2020/08/24/Drone-CI-CD-with-Github-and-ssh-and-docker-pipeline/</url>
-    <content><![CDATA[<h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>因為專案太多了，想簡單製作 CI/CD 的機制，至少把 git push 後的 auto deploy 建置起來，個人之前還有些 gitlab-ci 的經驗，於是就看上了最近兩年比較紅的 drone ci，過程中遇到了不少問題，官方文件也不盡詳細，最後順利解決了在這邊記錄分享一下。</p>
-<h3 id="過程"><a href="#過程" class="headerlink" title="過程"></a>過程</h3><p>官網上面或是網路上面有一堆教學文件應該大家都看過不少，我直接提供我這邊遇到的狀況，因為我想要在 git push 之後讓平台直接透過 ssh 工具去進行 auto deploy，同時又想要使用一些 docker image 工具，但官網上面是分開去撰寫的，並沒有特別寫說並用的時候怎麼處理。</p>
-<p>我在了解過 drone 運作原理之後摸索出解法，其實很簡單，就是同時起 ssh 和 docker 兩種類型的 runner，然後串在同一包就可以了，下面直接分享我最後的 docker-compose.yml</p>
-<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">  drone-server:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">drone/drone:1</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">80</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">./:/data</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_SERVER_HOST=$&#123;DRONE_SERVER_HOST&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_SERVER_PROTO=$&#123;DRONE_SERVER_PROTO&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_SECRET=$&#123;DRONE_RPC_SECRET&#125;</span></span><br><span class="line"></span><br><span class="line">      <span class="comment"># GitHub Config</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_GITHUB_SERVER=https://github.com</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_GITHUB_CLIENT_ID=$&#123;DRONE_GITHUB_CLIENT_ID&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_GITHUB_CLIENT_SECRET=$&#123;DRONE_GITHUB_CLIENT_SECRET&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_LOGS_DEBUG=true</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_LOGS_PRETTY=true</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_LOGS_COLOR=true</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">      -</span> <span class="string">VIRTUAL_HOST=&lt;your_domain&gt;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">VIRTUAL_PORT=80</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">LETSENCRYPT_HOST=&lt;your_domain&gt;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">LETSENCRYPT_EMAIL=&lt;your_mail&gt;</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">public</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># runner for docker version</span></span><br><span class="line"><span class="attr">  drone-runner-docker:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">drone/drone-runner-docker:1</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">    depends_on:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">drone-server</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/var/run/docker.sock:/var/run/docker.sock</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_HOST=$&#123;DRONE_RPC_HOST&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_PROTO=$&#123;DRONE_RPC_PROTO&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_SECRET=$&#123;DRONE_RPC_SECRET&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RUNNER_CAPACITY=1</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">public</span></span><br><span class="line"><span class="attr">  drone-runner-ssh:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">drone/drone-runner-ssh:1</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">    depends_on:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">drone-server</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/var/run/docker.sock:/var/run/docker.sock</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_HOST=$&#123;DRONE_RPC_HOST&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_PROTO=$&#123;DRONE_RPC_PROTO&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RPC_SECRET=$&#123;DRONE_RPC_SECRET&#125;</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">DRONE_RUNNER_CAPACITY=1</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">public</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line"><span class="attr">  public:</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>drone</tag>
-        <tag>ssh</tag>
-        <tag>docker</tag>
-        <tag>CI/CD</tag>
-        <tag>github</tag>
-        <tag>pipeline</tag>
       </tags>
   </entry>
   <entry>
@@ -99,48 +118,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Cannot boot after restored backup images in Linode</title>
-    <url>/2020/07/19/Cannot-boot-after-restored-backup-images-in-Linode/</url>
-    <content><![CDATA[<h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>前幾天 Linode 的 vps 忽然無法寫入硬碟，重開機之後直接找不到硬碟，出現 segmentation fault 之類的錯誤，於是開始了救援的任務。</p>
-<h3 id="嘗試步驟"><a href="#嘗試步驟" class="headerlink" title="嘗試步驟"></a>嘗試步驟</h3><p>一開始想說使用自動備份的 image 進行 restore 之後可能可以恢復正常，所以就先進行 restore，等了一陣後來開機後出現找不到硬碟的狀況，訊息如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ALERT!  UUID=&lt;UUID&gt; does not exist. Dropping to !</span><br></pre></td></tr></table></figure>
-<p>看到這訊息多半是因為是 VM 的關係，硬碟的區塊改變了 uuid 也跟著變了，所以 /etc/fstab 裡面記錄的還是原來的 uuid 造成 mount 不上去的關係<br>查了一下之後找到了這篇 <a href="https://www.linode.com/community/questions/18789/i-cant-boot-from-my-restored-backup-seeing-uuid-does-not-exist" target="_blank" rel="noopener">點我</a>，剩下就照抄他的吧</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mount -o <span class="built_in">exec</span>,barrier=0 /dev/sda</span><br><span class="line"><span class="built_in">cd</span> /media/sda</span><br><span class="line">mount -t proc proc proc/</span><br><span class="line">mount -t sysfs sys sys/</span><br><span class="line">mount -o <span class="built_in">bind</span> /dev dev/</span><br><span class="line">mount -t devpts pts dev/pts/</span><br><span class="line">chroot /media/sda /bin/bash</span><br><span class="line">mdadm --detail --scan &gt;&gt; /etc/mdadm.conf</span><br><span class="line">update-initramfs -u</span><br><span class="line">update-grub</span><br></pre></td></tr></table></figure>
-<p>其中 mdadm 那行卡到，因為沒安裝過這個套件，所以多加了下面一個指令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install mdadm</span><br></pre></td></tr></table></figure>
-<p>操作完重開機就沒問題了！</p>
-]]></content>
-      <tags>
-        <tag>linode</tag>
-        <tag>ubuntu</tag>
-        <tag>backup</tag>
-        <tag>rescue</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Fixed gitlab CI via ssh executor error</title>
-    <url>/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/</url>
-    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>用 gitlab ci 也是一段時間，如果只是要進行一些簡單 test or deploy 之類的工作，用這個會比其他外部工具平台簡單一點，但是在版本不斷推進的同時會遇到了底下的問題</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Running with gitlab-runner 10.5.0 (xxxxxxxx)</span><br><span class="line">  on ssh-xxxxxxxx (xxxxxxxxx)</span><br><span class="line">Using SSH executor...</span><br><span class="line">Running on xxxxxxxxxx via xxxxxxxxxx...</span><br><span class="line">ERROR: Job failed: Process exited with: 1. Reason was:  ()</span><br></pre></td></tr></table></figure>
-<p>看了很多文章，早期有一部分建議降版本到 gitlab-runner v1.8.6，的確是可以順利運行，但是到了 gitlab v10 之後似乎又炸裂了，於是這次好好想來解決一番。</p>
-<h3 id="解決方法"><a href="#解決方法" class="headerlink" title="解決方法"></a>解決方法</h3><p>直接進入結論<br>用以下這行就可以解決</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chsh username /bin/bash</span><br></pre></td></tr></table></figure>
-<p>就是讓這個 gitlab-runner 登入的帳號，預設要改成 bash (zsh 確定不行，其餘沒試過)</p>
-<p>到這邊以為事件就這樣結束了，不過節外總會生枝</p>
-<h3 id="事件二"><a href="#事件二" class="headerlink" title="事件二"></a>事件二</h3><p>pipeline job 畫面又跑出這個東西</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">fatal: unable to access 'https://gitlab-ci-token:xxxxxxxxxxxxxxxxxxxx@git.example.com/group/project.git/': SSL certificate problem: self signed certificate</span><br><span class="line">ERROR: Job failed: exit code 1</span><br></pre></td></tr></table></figure>
-<p>SSL certificate failing 似乎是 gitlab-runner 和 gitlab 到了某版之後出現的 bug，大致上建議的做法是先關掉 SSL 的驗證，等版本修復之後再打開了，解決方法是在 config.toml 裡面 runners 裡面加上這行</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">environment = ["GIT_SSL_NO_VERIFY=true"]</span><br><span class="line">or</span><br><span class="line">environment = ["GIT_SSL_NO_VERIFY=1"]</span><br></pre></td></tr></table></figure>
-<p>All set…</p>
-]]></content>
-      <tags>
-        <tag>gitlab</tag>
-        <tag>gitlab-ci</tag>
-        <tag>gitlab-runner</tag>
-        <tag>gitlab-devops</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>How to build nginx on localhost in Mac OSX</title>
     <url>/2016/05/03/How-to-build-nginx-on-localhost-in-Mac-OSX/</url>
     <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>談到 web server 大家第一個想到的大概是老大哥 apache，而且 mac osx 裡面其實已經內建了，方便性不用多說。<br>但近年來 nginx 不論是效能上或是體積上基本上都已經取代 apache 的地位，當然就成為大家的新寵，頂多在使用上有一點點的不方便，這篇文章記錄一下在 mac osx 上面安裝 nginx 的步驟。</p>
@@ -177,27 +154,36 @@
       </tags>
   </entry>
   <entry>
-    <title>How to deploy github pages with hexo</title>
-    <url>/2014/09/24/How-to-deploy-github-pages-with-hexo/</url>
-    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>身為一位自以為專業的技客，自然要有一個自己的 github 帳號<br>然後有了帳號以後下一步至少要有一個 github pages 的 blog<br>於是花了點時間摸了一下如何利用 hexo 這個套件來部屬，未免忘記在這邊記錄一下。</p>
-<h3 id="前置作業"><a href="#前置作業" class="headerlink" title="前置作業"></a>前置作業</h3><p>先去你的 github 開一個新的 repo<br>名稱要是你的 <username>.github.io，其他都預設即可</username></p>
-<h3 id="Update-homebrew-and-install-node-and-npm"><a href="#Update-homebrew-and-install-node-and-npm" class="headerlink" title="Update homebrew and install node (and npm)"></a>Update homebrew and install node (and npm)</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install node</span><br></pre></td></tr></table></figure>
-<h3 id="Install-hexo-by-npm"><a href="#Install-hexo-by-npm" class="headerlink" title="Install hexo by npm"></a>Install hexo by npm</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm install -g hexo</span><br></pre></td></tr></table></figure>
-<h3 id="Initialize-a-folder-by-hexo"><a href="#Initialize-a-folder-by-hexo" class="headerlink" title="Initialize a folder by hexo"></a>Initialize a folder by hexo</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ <span class="built_in">cd</span> &lt;folder&gt;</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
-<p>這個時候應該會看到資料夾底下多了一堆東西，其中有一個檔案是 _config.yml</p>
-<p>打開它之後拉到最下面在 deploy 的位置改成下面這樣</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">    <span class="built_in">type</span>: github</span><br><span class="line">    repo: &lt;repo uri&gt; (可使用 ssh or https)</span><br><span class="line">    branch: master</span><br></pre></td></tr></table></figure>
-<h3 id="Deploy-your-pages"><a href="#Deploy-your-pages" class="headerlink" title="Deploy your pages"></a>Deploy your pages</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>打開你的 <a href="http://username.github.io" target="_blank" rel="noopener">http://username.github.io</a> 應該就會看到一切已經佈署完成了</p>
-<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>之後要編寫文章可以使用以下指令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new &lt;title name&gt;</span><br></pre></td></tr></table></figure>
-<p>會在 source/_post/ 出現一個檔名為 <title name>.md 的檔案，請直接對該檔案進行編修<br>這是 markdown 格式的檔案，撰寫方式可以參考 <a href="http://markdown.tw/" target="_blank" rel="noopener">markdown.tw</a></title></p>
-<p>更新並且發佈如下<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate -d</span><br></pre></td></tr></table></figure></p>
+    <title>How to find the path of device on your mac</title>
+    <url>/2015/08/31/How-to-find-the-path-of-device-on-your-mac/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>當你在終端機想要找尋你所插在電腦的裝置的真實路徑的時候<br>你可能無從下手，okay 現在把下面這個指令勇敢地敲下去</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ls -1 /dev/tty.*</span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
         <tag>mac</tag>
-        <tag>hexo</tag>
-        <tag>github pages</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Fixed gitlab CI via ssh executor error</title>
+    <url>/2018/03/20/Fixed-gitlab-CI-via-ssh-executor-error/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>用 gitlab ci 也是一段時間，如果只是要進行一些簡單 test or deploy 之類的工作，用這個會比其他外部工具平台簡單一點，但是在版本不斷推進的同時會遇到了底下的問題</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Running with gitlab-runner 10.5.0 (xxxxxxxx)</span><br><span class="line">  on ssh-xxxxxxxx (xxxxxxxxx)</span><br><span class="line">Using SSH executor...</span><br><span class="line">Running on xxxxxxxxxx via xxxxxxxxxx...</span><br><span class="line">ERROR: Job failed: Process exited with: 1. Reason was:  ()</span><br></pre></td></tr></table></figure>
+<p>看了很多文章，早期有一部分建議降版本到 gitlab-runner v1.8.6，的確是可以順利運行，但是到了 gitlab v10 之後似乎又炸裂了，於是這次好好想來解決一番。</p>
+<h3 id="解決方法"><a href="#解決方法" class="headerlink" title="解決方法"></a>解決方法</h3><p>直接進入結論<br>用以下這行就可以解決</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chsh username /bin/bash</span><br></pre></td></tr></table></figure>
+<p>就是讓這個 gitlab-runner 登入的帳號，預設要改成 bash (zsh 確定不行，其餘沒試過)</p>
+<p>到這邊以為事件就這樣結束了，不過節外總會生枝</p>
+<h3 id="事件二"><a href="#事件二" class="headerlink" title="事件二"></a>事件二</h3><p>pipeline job 畫面又跑出這個東西</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">fatal: unable to access 'https://gitlab-ci-token:xxxxxxxxxxxxxxxxxxxx@git.example.com/group/project.git/': SSL certificate problem: self signed certificate</span><br><span class="line">ERROR: Job failed: exit code 1</span><br></pre></td></tr></table></figure>
+<p>SSL certificate failing 似乎是 gitlab-runner 和 gitlab 到了某版之後出現的 bug，大致上建議的做法是先關掉 SSL 的驗證，等版本修復之後再打開了，解決方法是在 config.toml 裡面 runners 裡面加上這行</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">environment = ["GIT_SSL_NO_VERIFY=true"]</span><br><span class="line">or</span><br><span class="line">environment = ["GIT_SSL_NO_VERIFY=1"]</span><br></pre></td></tr></table></figure>
+<p>All set…</p>
+]]></content>
+      <tags>
+        <tag>gitlab</tag>
+        <tag>gitlab-ci</tag>
+        <tag>gitlab-runner</tag>
+        <tag>gitlab-devops</tag>
       </tags>
   </entry>
   <entry>
@@ -227,48 +213,27 @@
       </tags>
   </entry>
   <entry>
-    <title>How to find the path of device on your mac</title>
-    <url>/2015/08/31/How-to-find-the-path-of-device-on-your-mac/</url>
-    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>當你在終端機想要找尋你所插在電腦的裝置的真實路徑的時候<br>你可能無從下手，okay 現在把下面這個指令勇敢地敲下去</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ls -1 /dev/tty.*</span><br></pre></td></tr></table></figure>
+    <title>How to deploy github pages with hexo</title>
+    <url>/2014/09/24/How-to-deploy-github-pages-with-hexo/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>身為一位自以為專業的技客，自然要有一個自己的 github 帳號<br>然後有了帳號以後下一步至少要有一個 github pages 的 blog<br>於是花了點時間摸了一下如何利用 hexo 這個套件來部屬，未免忘記在這邊記錄一下。</p>
+<h3 id="前置作業"><a href="#前置作業" class="headerlink" title="前置作業"></a>前置作業</h3><p>先去你的 github 開一個新的 repo<br>名稱要是你的 <username>.github.io，其他都預設即可</username></p>
+<h3 id="Update-homebrew-and-install-node-and-npm"><a href="#Update-homebrew-and-install-node-and-npm" class="headerlink" title="Update homebrew and install node (and npm)"></a>Update homebrew and install node (and npm)</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install node</span><br></pre></td></tr></table></figure>
+<h3 id="Install-hexo-by-npm"><a href="#Install-hexo-by-npm" class="headerlink" title="Install hexo by npm"></a>Install hexo by npm</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm install -g hexo</span><br></pre></td></tr></table></figure>
+<h3 id="Initialize-a-folder-by-hexo"><a href="#Initialize-a-folder-by-hexo" class="headerlink" title="Initialize a folder by hexo"></a>Initialize a folder by hexo</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ <span class="built_in">cd</span> &lt;folder&gt;</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+<p>這個時候應該會看到資料夾底下多了一堆東西，其中有一個檔案是 _config.yml</p>
+<p>打開它之後拉到最下面在 deploy 的位置改成下面這樣</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">    <span class="built_in">type</span>: github</span><br><span class="line">    repo: &lt;repo uri&gt; (可使用 ssh or https)</span><br><span class="line">    branch: master</span><br></pre></td></tr></table></figure>
+<h3 id="Deploy-your-pages"><a href="#Deploy-your-pages" class="headerlink" title="Deploy your pages"></a>Deploy your pages</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>打開你的 <a href="http://username.github.io" target="_blank" rel="noopener">http://username.github.io</a> 應該就會看到一切已經佈署完成了</p>
+<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>之後要編寫文章可以使用以下指令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new &lt;title name&gt;</span><br></pre></td></tr></table></figure>
+<p>會在 source/_post/ 出現一個檔名為 <title name>.md 的檔案，請直接對該檔案進行編修<br>這是 markdown 格式的檔案，撰寫方式可以參考 <a href="http://markdown.tw/" target="_blank" rel="noopener">markdown.tw</a></title></p>
+<p>更新並且發佈如下<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate -d</span><br></pre></td></tr></table></figure></p>
 ]]></content>
       <tags>
         <tag>mac</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>How to install Gitlab on Ubuntu 14.04 LTS</title>
-    <url>/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/</url>
-    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>其實使用 <a href="https://about.gitlab.com/" target="_blank" rel="noopener">GitLab</a> 也是有好一段時間了，但是早期的 GitLab 安裝麻煩又囉唆，使用起來也常常聽說有不穩定的問題，但發展也好一段時間了。<br>目前在規模上面也是到達一定程度，而且已經被包成一個 deb 檔案，所以只要一個 dpkg -i 就可以把所有需要的套件裝完，簡便性大增。<br>在 7.9.2 之後 GitLab 也進行版本切割，一般人會用到的比較多應該還是社群版(CE版)，這邊來稍微紀錄一下我的整個安裝過程。</p>
-<p>而這篇主要是參考了 Gaod 大神的大作<br><a href="http://blog.hychen.org/archives/2014/05/13/165/gitlab-on-ubuntu-12-04-lts/" target="_blank" rel="noopener">GitLab on Ubuntu 12.04 LTS，在 Ubuntu 12.04 上安裝 GitLab</a></p>
-<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo wget &lt;檔案連結url&gt; # 連結在 https://www.gitlab.com/downloads/</span><br><span class="line">sudo dpkg -i &lt;檔案名稱&gt;</span><br><span class="line">sudo apt-get install python-docutils</span><br></pre></td></tr></table></figure>
-<h3 id="如何重跑-GitLab-服務"><a href="#如何重跑-GitLab-服務" class="headerlink" title="如何重跑 GitLab 服務"></a>如何重跑 GitLab 服務</h3><p>假設要重跑 GitLab 相關的所有服務</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo gitlab-ctl restart</span><br></pre></td></tr></table></figure>
-<p>當然，也可以重跑特定服務就好，例如只想單純重跑 nginx<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo gitlab-ctl restart nginx</span><br></pre></td></tr></table></figure></p>
-<h3 id="如何從備份還原-GitLab-資料"><a href="#如何從備份還原-GitLab-資料" class="headerlink" title="如何從備份還原 GitLab 資料"></a>如何從備份還原 GitLab 資料</h3><p>這邊是假設備份檔放在 /net/gitlab_backup，檔名是 ${timestamp}_gitlab_backup.tar</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo gitlab-rake gitlab:backup:restore RAILS_ENV=production gitlab:backup:restore BACKUP=/net/gitlab_backup/$&#123;timestamp&#125;_gitlab_backup.tar</span><br><span class="line">or</span><br><span class="line">sudo gitlab-rake gitlab:backup:restore BACKUP=$&#123;timestamp&#125; force=yes</span><br></pre></td></tr></table></figure>
-<h3 id="如何更新-GitLab-版本"><a href="#如何更新-GitLab-版本" class="headerlink" title="如何更新 GitLab 版本"></a>如何更新 GitLab 版本</h3><p>假設要從舊版封裝升到 GitLab 新版本（請注意，未來可能會有些版本需要額外的手動介入，更新前最好還是看一下官方文件並且先備份）</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo wget &lt;檔案連結&gt;</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl stop unicorn</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl stop sidekiq</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo dpkg -i &lt;檔案名稱&gt;</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl reconfigure</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl start</span></span><br></pre></td></tr></table></figure>
-<h3 id="備註"><a href="#備註" class="headerlink" title="備註"></a>備註</h3><p>其他設定可以參考一下原文</p>
-]]></content>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>gitlab</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>How to install the latest git on mac</title>
-    <url>/2014/09/27/How-to-install-latest-git-on-Mac/</url>
-    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>因為長期使用 mac 所以經常仰賴 <a href="http://brew.sh/" target="_blank" rel="noopener">homebrew</a> 來補足 mac 本身內建套件的不足，一直以來也得到很多便利性。<br>但自從開始大量嘗試玩新東西之後，對於很多套件的版本問題開始重視，然而 apple 本身提供的套件其實相當的過時，此篇文章記錄一下如何使用 homebrew 安裝的套件來取代原本內建於電腦的相同套件，本文以 git 為例，其他套件如 vim 也能夠使用相同的作法來操作。</p>
-<h3 id="首先先確認一下目前電腦中-git-的版本"><a href="#首先先確認一下目前電腦中-git-的版本" class="headerlink" title="首先先確認一下目前電腦中 git 的版本"></a>首先先確認一下目前電腦中 git 的版本</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git --version</span><br><span class="line">git version 1.9.3 (Apple Git-50)</span><br></pre></td></tr></table></figure>
-<h3 id="可以使用以下指令看到目前-git-位在內建的資料夾底下-原生的檔案大多都在-usr-bin-底下"><a href="#可以使用以下指令看到目前-git-位在內建的資料夾底下-原生的檔案大多都在-usr-bin-底下" class="headerlink" title="可以使用以下指令看到目前 git 位在內建的資料夾底下(原生的檔案大多都在 /usr/bin/ 底下)"></a>可以使用以下指令看到目前 git 位在內建的資料夾底下(原生的檔案大多都在 /usr/bin/ 底下)</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">which</span> git</span><br><span class="line">/usr/bin/git</span><br></pre></td></tr></table></figure>
-<h3 id="利用-homebrew-安裝-git，並且將內建的-git-進行更名（這樣系統在內建的資料夾找不到-git-會自動轉往-homebrew-的-usr-local-bin-底下找）"><a href="#利用-homebrew-安裝-git，並且將內建的-git-進行更名（這樣系統在內建的資料夾找不到-git-會自動轉往-homebrew-的-usr-local-bin-底下找）" class="headerlink" title="利用 homebrew 安裝 git，並且將內建的 git 進行更名（這樣系統在內建的資料夾找不到 git 會自動轉往 homebrew 的 /usr/local/bin/ 底下找）"></a>利用 homebrew 安裝 git，並且將內建的 git 進行更名（這樣系統在內建的資料夾找不到 git 會自動轉往 homebrew 的 /usr/local/bin/ 底下找）</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install git</span><br><span class="line">$ sudo mv /usr/bin/git /usr/bin/git48</span><br></pre></td></tr></table></figure>
-<h3 id="這邊可以確認-git-目前連結到的位置已經變更，版本也已經更新"><a href="#這邊可以確認-git-目前連結到的位置已經變更，版本也已經更新" class="headerlink" title="這邊可以確認 git 目前連結到的位置已經變更，版本也已經更新"></a>這邊可以確認 git 目前連結到的位置已經變更，版本也已經更新</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">which</span> git</span><br><span class="line">/usr/<span class="built_in">local</span>/bin/git</span><br><span class="line"></span><br><span class="line">$ git --version</span><br><span class="line">git version 2.1.1</span><br></pre></td></tr></table></figure>
-<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>如果想要使用舊版的朋友可以直接打改過的檔名（在這邊就是 git48）依然可以使用內建的版本。<br>如果想要還原的話可以把指令反過來執行如下：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo mv /usr/bin/git48 /usr/bin/git</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <tags>
-        <tag>mac</tag>
-        <tag>git</tag>
+        <tag>hexo</tag>
+        <tag>github pages</tag>
       </tags>
   </entry>
   <entry>
@@ -316,6 +281,21 @@
       </tags>
   </entry>
   <entry>
+    <title>How to install the latest git on mac</title>
+    <url>/2014/09/27/How-to-install-latest-git-on-Mac/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>因為長期使用 mac 所以經常仰賴 <a href="http://brew.sh/" target="_blank" rel="noopener">homebrew</a> 來補足 mac 本身內建套件的不足，一直以來也得到很多便利性。<br>但自從開始大量嘗試玩新東西之後，對於很多套件的版本問題開始重視，然而 apple 本身提供的套件其實相當的過時，此篇文章記錄一下如何使用 homebrew 安裝的套件來取代原本內建於電腦的相同套件，本文以 git 為例，其他套件如 vim 也能夠使用相同的作法來操作。</p>
+<h3 id="首先先確認一下目前電腦中-git-的版本"><a href="#首先先確認一下目前電腦中-git-的版本" class="headerlink" title="首先先確認一下目前電腦中 git 的版本"></a>首先先確認一下目前電腦中 git 的版本</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git --version</span><br><span class="line">git version 1.9.3 (Apple Git-50)</span><br></pre></td></tr></table></figure>
+<h3 id="可以使用以下指令看到目前-git-位在內建的資料夾底下-原生的檔案大多都在-usr-bin-底下"><a href="#可以使用以下指令看到目前-git-位在內建的資料夾底下-原生的檔案大多都在-usr-bin-底下" class="headerlink" title="可以使用以下指令看到目前 git 位在內建的資料夾底下(原生的檔案大多都在 /usr/bin/ 底下)"></a>可以使用以下指令看到目前 git 位在內建的資料夾底下(原生的檔案大多都在 /usr/bin/ 底下)</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">which</span> git</span><br><span class="line">/usr/bin/git</span><br></pre></td></tr></table></figure>
+<h3 id="利用-homebrew-安裝-git，並且將內建的-git-進行更名（這樣系統在內建的資料夾找不到-git-會自動轉往-homebrew-的-usr-local-bin-底下找）"><a href="#利用-homebrew-安裝-git，並且將內建的-git-進行更名（這樣系統在內建的資料夾找不到-git-會自動轉往-homebrew-的-usr-local-bin-底下找）" class="headerlink" title="利用 homebrew 安裝 git，並且將內建的 git 進行更名（這樣系統在內建的資料夾找不到 git 會自動轉往 homebrew 的 /usr/local/bin/ 底下找）"></a>利用 homebrew 安裝 git，並且將內建的 git 進行更名（這樣系統在內建的資料夾找不到 git 會自動轉往 homebrew 的 /usr/local/bin/ 底下找）</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ brew update</span><br><span class="line">$ brew install git</span><br><span class="line">$ sudo mv /usr/bin/git /usr/bin/git48</span><br></pre></td></tr></table></figure>
+<h3 id="這邊可以確認-git-目前連結到的位置已經變更，版本也已經更新"><a href="#這邊可以確認-git-目前連結到的位置已經變更，版本也已經更新" class="headerlink" title="這邊可以確認 git 目前連結到的位置已經變更，版本也已經更新"></a>這邊可以確認 git 目前連結到的位置已經變更，版本也已經更新</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">which</span> git</span><br><span class="line">/usr/<span class="built_in">local</span>/bin/git</span><br><span class="line"></span><br><span class="line">$ git --version</span><br><span class="line">git version 2.1.1</span><br></pre></td></tr></table></figure>
+<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>如果想要使用舊版的朋友可以直接打改過的檔名（在這邊就是 git48）依然可以使用內建的版本。<br>如果想要還原的話可以把指令反過來執行如下：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo mv /usr/bin/git48 /usr/bin/git</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>mac</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>How to rotate docker log json files</title>
     <url>/2020/01/06/How-to-rotate-docker-log-json-files/</url>
     <content><![CDATA[<h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>docker 在運作的時候會記錄每一筆 stdout 還有 stderr，寫在一個 log file 裡面，通常是長這樣<br>/var/lib/docker/containers/[container-id]/[container-id]-json.log<br>然後久了之後，這檔案會超級大，到某一天發現硬碟快爆了的時候你就會發現</p>
@@ -335,24 +315,37 @@
       </tags>
   </entry>
   <entry>
-    <title>How to upgrade PHP version on your mac</title>
-    <url>/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/</url>
-    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>最近為了發揮 laravel 5.1 完整的功能，而在研究裡面包好的各種阿里布達套件，弄著弄著弄到了 <a href="https://phpunit.de/" target="_blank" rel="noopener">phpunit</a> 但在安裝 phpunit 遇到了一個問題，就是 mac 不知道跟 php 有仇還是怎樣，幾乎各種版本 cli 都更新了就是 php 還停留在 5.5 不知道是哪招(老闆聽說 php7 都已經 RC2 啦～)，導致於新版 phpunit 無法執行(目前穩定版需要配合 php 5.6)，於是乎很多人會想到了使用 homebrew 來作安裝，但無奈的是 homebrew 也沒有把 php 納入，所以要安裝的話必須另外用一些方法。</p>
-<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><p>在安裝的部分可以參考 <a href="https://github.com/Homebrew/homebrew-php" target="_blank" rel="noopener">homebrew-php</a> 的說明<br>這裡使用的是 homebrew 的隱藏指令 tap，據悉是用來安裝擴充套件的</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ brew tap homebrew/dupes</span><br><span class="line">$ brew tap homebrew/versions</span><br><span class="line">$ brew tap homebrew/homebrew-php</span><br></pre></td></tr></table></figure>
-<p>前置做完之後就可以進行安裝</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 安裝 php5.6 , 如果你想安裝 7.0 也可以改成 php70</span><br><span class="line">$ brew install php56</span><br></pre></td></tr></table></figure>
-<p>裝好之後應該就搞定啦！</p>
-<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>這裡有一點很詭異的地方是，Mac OSX 10.11(EI Capitan)裡面的 whereis 根本是錯的，不管你怎麼設定，他幫你找到的位置永遠是 /usr/bin/*</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ whereis php</span><br><span class="line">/usr/bin/php</span><br><span class="line"></span><br><span class="line">$ php --version</span><br><span class="line">PHP 5.6.14 (cli)</span><br><span class="line"></span><br><span class="line">$ /usr/bin/php --version</span><br><span class="line">PHP 5.5.27 (cli)</span><br></pre></td></tr></table></figure>
-<p>可見 whereis 在現在這版本根本壞了<br>下次更新不知道會不會修回來</p>
-<p>另外關於隱藏指令可以稍微參考一下這篇<br><a href="http://icyleaf.com/2014/01/homebrew-hidden-commands/" target="_blank" rel="noopener">隱藏指令</a></p>
+    <title>How to install Gitlab on Ubuntu 14.04 LTS</title>
+    <url>/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>其實使用 <a href="https://about.gitlab.com/" target="_blank" rel="noopener">GitLab</a> 也是有好一段時間了，但是早期的 GitLab 安裝麻煩又囉唆，使用起來也常常聽說有不穩定的問題，但發展也好一段時間了。<br>目前在規模上面也是到達一定程度，而且已經被包成一個 deb 檔案，所以只要一個 dpkg -i 就可以把所有需要的套件裝完，簡便性大增。<br>在 7.9.2 之後 GitLab 也進行版本切割，一般人會用到的比較多應該還是社群版(CE版)，這邊來稍微紀錄一下我的整個安裝過程。</p>
+<p>而這篇主要是參考了 Gaod 大神的大作<br><a href="http://blog.hychen.org/archives/2014/05/13/165/gitlab-on-ubuntu-12-04-lts/" target="_blank" rel="noopener">GitLab on Ubuntu 12.04 LTS，在 Ubuntu 12.04 上安裝 GitLab</a></p>
+<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo wget &lt;檔案連結url&gt; # 連結在 https://www.gitlab.com/downloads/</span><br><span class="line">sudo dpkg -i &lt;檔案名稱&gt;</span><br><span class="line">sudo apt-get install python-docutils</span><br></pre></td></tr></table></figure>
+<h3 id="如何重跑-GitLab-服務"><a href="#如何重跑-GitLab-服務" class="headerlink" title="如何重跑 GitLab 服務"></a>如何重跑 GitLab 服務</h3><p>假設要重跑 GitLab 相關的所有服務</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo gitlab-ctl restart</span><br></pre></td></tr></table></figure>
+<p>當然，也可以重跑特定服務就好，例如只想單純重跑 nginx<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo gitlab-ctl restart nginx</span><br></pre></td></tr></table></figure></p>
+<h3 id="如何從備份還原-GitLab-資料"><a href="#如何從備份還原-GitLab-資料" class="headerlink" title="如何從備份還原 GitLab 資料"></a>如何從備份還原 GitLab 資料</h3><p>這邊是假設備份檔放在 /net/gitlab_backup，檔名是 ${timestamp}_gitlab_backup.tar</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo gitlab-rake gitlab:backup:restore RAILS_ENV=production gitlab:backup:restore BACKUP=/net/gitlab_backup/$&#123;timestamp&#125;_gitlab_backup.tar</span><br><span class="line">or</span><br><span class="line">sudo gitlab-rake gitlab:backup:restore BACKUP=$&#123;timestamp&#125; force=yes</span><br></pre></td></tr></table></figure>
+<h3 id="如何更新-GitLab-版本"><a href="#如何更新-GitLab-版本" class="headerlink" title="如何更新 GitLab 版本"></a>如何更新 GitLab 版本</h3><p>假設要從舊版封裝升到 GitLab 新版本（請注意，未來可能會有些版本需要額外的手動介入，更新前最好還是看一下官方文件並且先備份）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo wget &lt;檔案連結&gt;</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl stop unicorn</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl stop sidekiq</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo dpkg -i &lt;檔案名稱&gt;</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl reconfigure</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl start</span></span><br></pre></td></tr></table></figure>
+<h3 id="備註"><a href="#備註" class="headerlink" title="備註"></a>備註</h3><p>其他設定可以參考一下原文</p>
 ]]></content>
       <tags>
-        <tag>mac</tag>
-        <tag>EI Capitan</tag>
-        <tag>php</tag>
-        <tag>phpunit</tag>
+        <tag>ubuntu</tag>
+        <tag>gitlab</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to telnet in alpine docker container</title>
+    <url>/2020/07/31/How-to-telnet-in-alpine-docker-container/</url>
+    <content><![CDATA[<h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>由於想要在 container 裡面測試此 container 與某服務連線有通，但通常 container 裡面的軟體都極度精簡，所以來記錄一下在 alpine 的容器裡面該怎麽操作</p>
+<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>首先進入到容器內<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it &lt;CONTAINERID&gt; sh</span><br><span class="line">or</span><br><span class="line">$ docker-compose <span class="built_in">exec</span> &lt;containerName&gt; sh</span><br></pre></td></tr></table></figure></p>
+<p>進入到容器內後開始進行安裝和使用<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ apk update</span><br><span class="line">$ apk add busybox-extras</span><br><span class="line">$ busybox-extras telnet localhost 5432</span><br></pre></td></tr></table></figure></p>
+<p>收工</p>
+]]></content>
+      <tags>
+        <tag>docker</tag>
+        <tag>alpine</tag>
+        <tag>telnet</tag>
       </tags>
   </entry>
   <entry>
@@ -399,17 +392,24 @@
       </tags>
   </entry>
   <entry>
-    <title>How to telnet in alpine docker container</title>
-    <url>/2020/07/31/How-to-telnet-in-alpine-docker-container/</url>
-    <content><![CDATA[<h3 id="緣由"><a href="#緣由" class="headerlink" title="緣由"></a>緣由</h3><p>由於想要在 container 裡面測試此 container 與某服務連線有通，但通常 container 裡面的軟體都極度精簡，所以來記錄一下在 alpine 的容器裡面該怎麽操作</p>
-<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>首先進入到容器內<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it &lt;CONTAINERID&gt; sh</span><br><span class="line">or</span><br><span class="line">$ docker-compose <span class="built_in">exec</span> &lt;containerName&gt; sh</span><br></pre></td></tr></table></figure></p>
-<p>進入到容器內後開始進行安裝和使用<br><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ apk update</span><br><span class="line">$ apk add busybox-extras</span><br><span class="line">$ busybox-extras telnet localhost 5432</span><br></pre></td></tr></table></figure></p>
-<p>收工</p>
+    <title>How to upgrade PHP version on your mac</title>
+    <url>/2015/10/07/How-to-upgrade-PHP-version-on-your-mac/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>最近為了發揮 laravel 5.1 完整的功能，而在研究裡面包好的各種阿里布達套件，弄著弄著弄到了 <a href="https://phpunit.de/" target="_blank" rel="noopener">phpunit</a> 但在安裝 phpunit 遇到了一個問題，就是 mac 不知道跟 php 有仇還是怎樣，幾乎各種版本 cli 都更新了就是 php 還停留在 5.5 不知道是哪招(老闆聽說 php7 都已經 RC2 啦～)，導致於新版 phpunit 無法執行(目前穩定版需要配合 php 5.6)，於是乎很多人會想到了使用 homebrew 來作安裝，但無奈的是 homebrew 也沒有把 php 納入，所以要安裝的話必須另外用一些方法。</p>
+<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><p>在安裝的部分可以參考 <a href="https://github.com/Homebrew/homebrew-php" target="_blank" rel="noopener">homebrew-php</a> 的說明<br>這裡使用的是 homebrew 的隱藏指令 tap，據悉是用來安裝擴充套件的</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ brew tap homebrew/dupes</span><br><span class="line">$ brew tap homebrew/versions</span><br><span class="line">$ brew tap homebrew/homebrew-php</span><br></pre></td></tr></table></figure>
+<p>前置做完之後就可以進行安裝</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 安裝 php5.6 , 如果你想安裝 7.0 也可以改成 php70</span><br><span class="line">$ brew install php56</span><br></pre></td></tr></table></figure>
+<p>裝好之後應該就搞定啦！</p>
+<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>這裡有一點很詭異的地方是，Mac OSX 10.11(EI Capitan)裡面的 whereis 根本是錯的，不管你怎麼設定，他幫你找到的位置永遠是 /usr/bin/*</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ whereis php</span><br><span class="line">/usr/bin/php</span><br><span class="line"></span><br><span class="line">$ php --version</span><br><span class="line">PHP 5.6.14 (cli)</span><br><span class="line"></span><br><span class="line">$ /usr/bin/php --version</span><br><span class="line">PHP 5.5.27 (cli)</span><br></pre></td></tr></table></figure>
+<p>可見 whereis 在現在這版本根本壞了<br>下次更新不知道會不會修回來</p>
+<p>另外關於隱藏指令可以稍微參考一下這篇<br><a href="http://icyleaf.com/2014/01/homebrew-hidden-commands/" target="_blank" rel="noopener">隱藏指令</a></p>
 ]]></content>
       <tags>
-        <tag>docker</tag>
-        <tag>alpine</tag>
-        <tag>telnet</tag>
+        <tag>mac</tag>
+        <tag>EI Capitan</tag>
+        <tag>php</tag>
+        <tag>phpunit</tag>
       </tags>
   </entry>
   <entry>
@@ -424,6 +424,47 @@
         <tag>rustup</tag>
         <tag>cargo</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>about my experience</title>
+    <url>/2021/02/15/about-my-experience/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>最近一年零零星星斷斷續續的有在看些工作的機會，想說趁著這個機會稍微檢視一下經歷和自我介紹的部分。</p>
+<h3 id="研究所"><a href="#研究所" class="headerlink" title="研究所"></a>研究所</h3><p>研究所時期因為一些陰錯陽差，本來想念的學校沒拿到，又放棄了一些國立大學，最後因為地利的關係去了某私立前段，入了當時出初茅廬的一位現國內 AI 領域大咖老師門下；除了初期草創了實驗室，掌管實驗室所有大小事，同時倚靠著中研院的資源主要做過生物醫學類蛋白質交互作用、自然語言處理、跨語檢索等不同領域。</p>
+<p>在碩二下學期一般菸酒生準備衝刺畢業的前夕，我拿到了一個代表學校去韓國交流一個月的機會（但是是在暑假），我毅然決然就決定回來再來忙畢業的事情（就算到現在回想起來，我也沒後悔過，而韓國相關的事情又是另一段故事惹）。</p>
+<p>回國後因為有要事要在 12月前往美國，於是在滿短的時間內一陣能量爆發就完成研究也結束口試了。</p>
+<h3 id="畢業後的路"><a href="#畢業後的路" class="headerlink" title="畢業後的路"></a>畢業後的路</h3><p>回台灣差不多是一月底的事情，處理完學校的事情之後開始投入找研發替代役的準備，因為時間已經有點晚了，很多比較早開始的公司都結束了；但前前後後還是面了十多間，大約拿到了一半的 offer，屬意其中一間筆電代工大廠，當時他們想做智慧電視吧。</p>
+<p>然後當時真的太天真，在講好口頭協議之後，我就推掉了其他全部，直到某天接到一通電話，是打來道歉的，說他們拿不到名額，所以很抱歉同學你要被婊囉…，頓時我陷入一個進退兩難也沒有其他機會可以面試，也沒有其他地方可以去，一個很想死差點要被逼去當兵的狀態。</p>
+<p>又直到註冊前一週，信箱來了一封信，某間公司某主管問我找到了沒，他們的人落跑了（關於這個機會其實有個插曲可以說，是研究所其他系的某同學有天傳訊息給我，說有個公司在找人，那主管認識我老闆叫我去投看看，我寫信去問，但是他們說已經收滿了），於似乎我就在很快速的流程之下，三天內決定了之後三年落腳的地方。</p>
+<h3 id="研發替代役"><a href="#研發替代役" class="headerlink" title="研發替代役"></a>研發替代役</h3><p>關於這個單位呢，我只能說是屬於一個法人公司，網路資料裡面都會說是個涼爽的地方，但我待的部門算是公司的戰鬥單位，號稱整個公司大約兩千人裡面少數真的可以打的單位，但會選擇這邊一方面是領域和學校是有延伸，二方面是我們部門和我們中研院的體系有產學合作，不單只是沒得選擇了而已。</p>
+<p>由於四月到新訓入伍還有一段時間，我就提前進公司想說可以提早適應，這段時間我平均一週去個兩到三天，想說可以先打打雜練練功，殊不知這是一個小崩潰的開始。</p>
+<p>一進去被要求寫 java，同時開始獨立開發一個新的專案，但在此時 java 我一行也沒寫過？喔可能在學校寫過一點 jsp 但那真的很淺，但死拼活拼也差不多在一兩個月內完成了一套雛形，沒想到業務、小主管就開始帶著我出去找客戶兜售這個產品了，我也是差不多醉了…</p>
+<p>但這樣兜售兜售也是前前後後合作了不少間廠商，所以很多面試官都會問說你有獨立從無到有開發過一個產品的經驗嗎？我說打從頭開始就是，常常直接被給一個不屑的眼神…</p>
+<p>這專案持續了大概三年左右，技轉金額累計大約有 1200w+，也讓我幾乎以一個核心專案就待到可以退伍了</p>
+<h3 id="後替代役時期"><a href="#後替代役時期" class="headerlink" title="後替代役時期"></a>後替代役時期</h3><p>結束了這三年雖然沒有達成當初設定的目標，但是卻也達成了許多當初沒想過的成就，有很大一部分的替代役會考慮在這個時機點跳槽，而我當時因為業務穩定且也是單位主力栽培的對象就也暫時打算邊走邊看，但我主要負責的案子也因為公司政策不打算繼續發展（法人單位的悲哀）而慢慢走向後期，部門大約在這個時期到達如日中天的巔峰時期大約維持了兩年左右；在這個時期部門的政策將核心的研發方向從數位學習轉向了 AI，也因此在此時期做了很多不同類型的專案，但因為在這塊並沒有長期的將基礎打好，業務那邊也沒有兜售成功，大多數都只做了幾個月就被丟棄。</p>
+<p>在這段期間其實也有面了幾間公司和被人拉去做些創業專案題目，因為想去外商和創業一直是我想做的事，但最後都因為各種原因而不了了之，值得一提的大概是某跨國企業很想找我去當系統分析師，但考量到還不想太早完全脫離寫 code 生涯同時公司太遠上班時間又太早這件事，就沒有接受。</p>
+<p>這段時間大概持續兩年多大概是我在該單位最迷惘的時候，我覺得我的進步停滯了，這邊好像沒什麼可以學了，同時因為政策等等因素一直導致都在用錯誤的方法做錯的事，顯得自己很智障的感覺，我不知道是不是所有公司都這樣，但至少在這邊或甚至說我合作過的外頭的工程師，大多都會用很多不正規的方法來做事，導致要跟其他人和做的時候事情會事倍功半，這個現象在往後出去面試的時候曾經被不少工程師取笑「什麼叫做正確的方法做事，有人不是這樣做事嗎？」，但就我的經驗來說亂搞的人就是居多。</p>
+<h3 id="救火隊時期"><a href="#救火隊時期" class="headerlink" title="救火隊時期"></a>救火隊時期</h3><p>在這個時期差不多在公司了待了五六年了，credit 也累積到了一定，但當然就更想轉職了，但在這個時間點隨著組織結構變動，我算是有了自己建軍的機會，lead 一個大約 3~5人的小團隊，於是我終於可以有一定的權限決定處理問題的方式（不管需求是合理的還是蠢的，至少希望是用合理的方法）。</p>
+<p>但我們這團隊在短時間內變成了所有大團隊裡面最急、最難、最賽、最新、沒人會、最不合理的需求，都是丟過來我們這邊，反正我們這邊都有辦法解決，常常有今天開需求明天要、後天要之類的狀況，於是我們這團隊拿到工作時間極度彈性權利，主管也不會管我們幾點上下班，這點對我們而言還算不錯，公司沒重大的事的話，可以中午在家吃完飯下午再進辦公室或是直接在家上班了（我們應該算是台灣 WFH 先驅之一），但忙起來的時候也是很誇張，一週工作個一百小時，連續幾個禮拜睡公司等等。</p>
+<p>由於團隊成員組成正確、做事方法正確、工作方式自由這些因素，我又對這份工作有了動力；但此時是公司開始走下坡的開始，所以預算慢慢開始緊縮，加薪什麼的也開始變少，但最糟糕的是因為這樣公司慢慢變成一攤死水，人員只出不進，這就慢慢種下往後失敗的種子。</p>
+<h3 id="後救火隊時期"><a href="#後救火隊時期" class="headerlink" title="後救火隊時期"></a>後救火隊時期</h3><p>大約又過了一兩年，差不多滿七年或八年之後某年，我們的主管被拔擢上去當了大老闆的副手，升上去之後突然一個性情大變，時常丟出很多荒誕怪奇的想法以及行事作風，也常常很大聲的去對外承諾做不到的事情（也許就是所謂「將帥無能，累死三軍」），整個部門的方向又從 AI 相關轉去 FinTech，儘管實際上不是真正的 FinTech 但要建構整個平台也是要花不少心力，為了要結盟更多的廠商我們也花了非常非常非常（真的很多要講三次）多的時間，幫這堆廠商做了很多本來是他們應該要做的事情，而且這個業務量非常大也繁瑣，簡單說事情多又很蠢，但又沒辦法，不時也是要大加班。</p>
+<p>但這時期我們老闆不時被人問起我們為什麼這麼常加班，他總笑著跟他們說：「哦，他們習慣晚上工作！」，我其實一直不懂他說這什麼鬼話，也許是怕被人家說他是個害人加班的主管吧？但就是你三天兩頭今天開需求後天就要啊…</p>
+<p>反正後來花了幾個月總算也是把那個平台的雛形給弄的差不多了，然後那個案子因為牽扯到某開幕記者會，後來是順利完成，完成後還有慶功宴，慶功宴沒有列到我們團隊，對外也完全沒有提到這系統是誰做的，也完全沒人問，彷彿是在空氣間自己生出來的，在這個時間點我其實覺得這群人有那麼一點點可笑。</p>
+<p>然後沒多久又有新的規定頒佈了，開始要嚴格要求上下班時間，交代了一位同仁早上九點半要進行早點名，沒到沒請假的都算曠職，這一個舉動基本上徹底惹毛我們，擺明了就是針對我們團隊來的，從此開始我們團隊所剩的三人，一個開始找工作，另外兩個開始每天早上請假一到兩小時，另外拒絕所有的加班，反正我們一年 30天假，一天請一小時的話可以請個 240天…</p>
+<p>而在這個年初，前一年度的考績也出來了，我本人前面六年每年度都是 Top 10%，總算今年掉下去了，其實這也是做得很明顯了，不離不棄被當北七的常見案例，大約在五六月的時候，找了一陣子工作的那位拿到了國內某知名外商的 offer 準備轉職，因為我們三人的工作負擔很重的關係，因此提早了先知會了主管，希望盡快找人來做交接，需要的時間很長。</p>
+<p>而到了七月，是我們發前一年 bonus 的時候，這位拿到了一個很微妙的數字就是 0，會用微妙來形容是因為幾個原因，首先這是前一年的業績獎金，那當然以前一年的貢獻來評估，如果主管因為私心給的少，或許也可以以貢獻度低來做合理解釋，給了一個 0就如同挖了一個坑給自己；於是過了幾天這位就直接去找主管本人丟了個直球「請問我去年的貢獻如何，為什麼我是 0？」這主管也妙了，情急之下給了個天才般的答案「哦，因為我們七月的獎金是預先發的，其實是當年度 7~12月的獎金，跟 1月的農曆年獎金一樣，那是 1~6月的獎金，那你八月之後就不在了，當然就是 0！」</p>
+<p>因為這全程有錄音，因此這主管也就幫他老闆捅出個大簍子，事後直接去找人資單位來解釋「預發獎金」這個行為，後來人資單位直接下來介入，最後大老闆出來處理這件事，後來當然也是補了些錢息事寧人；但這事件也是徹底加深了剩下兩位要離開的決心。</p>
+<p>我們剩下的兩位是部門上系統的核心，從各項服務、軟硬體架構、對內對外各項系統幾乎都掌握在我們手上，要完全交接的話我們估計大約要五位 JR. 或是 三位 SR.，於是我們大約間隔一週先後提了離職，小主管希望我們撐久點給他點時間找人，這點忙本來也就在我們計算之中所以他待了兩個月、我待了三個月才離開。（儘管給了這麼長時間，最終還是沒有找到新人，所以只有把一些短期看起來比較重要的、還有用到的進行簡單交接，以及留下些文件好讓他們能有點眉目）</p>
+<p>以為開了大絕可以一路爽到離職日嗎？事情當然沒有這麼順利，FinTech 的案子還有些功能和服務要和外部廠商對接，然後又沒人搞得動，所以又呼叫 119…，搞到最後我離職前最後個週末的六日都還在加班整天搞到一肚子不爽，所以一直到離職日也幾乎沒閒過一天。（到此結束這邊約莫八年半的經歷）</p>
+<h3 id="休息期"><a href="#休息期" class="headerlink" title="休息期"></a>休息期</h3><p>被操了好陣子的我們也是想先休息一陣再看看下一步，但雖說是休息其實也不是真的沒事幹，除了專心去照顧投資的事業之外，另一邊去玩了點音樂，其實每天也是頗忙碌的，不時因為一些活動要跟媒體記者交涉、跟網紅網美打交道，到處經營一些人際關係，還要照顧員工的心理以及工作狀態其實也是要花非常多時間的。</p>
+<h3 id="重出江湖"><a href="#重出江湖" class="headerlink" title="重出江湖"></a>重出江湖</h3><p>日子過了大概持續了十個月到了隔年九月，經過朋友的介紹認識了某類似人力仲介手上有個案子，某小有名氣的國內電商想要開發個新功能，去聊了兩次之後覺得可以打個工賺點錢補貼一下，於是我們老同事的核心兩位以及又拉了一位前端一起進去幫忙。</p>
+<p>誰知道一進去就是一陣莫名，開發新功能為何要交接這麼多東西，原來他們技術部門全部要離職（唯一留下的一位前端在不久後也被火掉），結果我們就不小心掉入這個屎坑，花了兩週就開始接手這個電商的所有系統。（原有的技術頭還私下叫我們趕快閃超級賽XD）</p>
+<p>後來待了一陣子之後才了解到這地方最大的問題是政治問題，但我們一直維持著 Full-time remote 的工作模式倒也互不影響，每週花兩個下午去公司開會其餘時間大約是 24hr on call，以壓力來說其實很大，每天都是超過百萬的營業額，一有什麼閃失就會電話響，而舊有系統裡面有極多沒修好的漏洞，會造成訂單漏單以及送貨延遲等諸多問題，但身為專業救火隊員這點火還是可以撐的下來。</p>
+<p>直到某天發現人力仲介那邊和公司資方對於薪水認知有些問題，我們當然不可能白做工就斷然決定離開，前後待了大約五個月左右的地方，也大致摸了一輪電商的營運模式以及所需工作，也算是有點收穫，但薪水的恩怨情仇又是另外一段故事。</p>
+<h3 id="等待機會"><a href="#等待機會" class="headerlink" title="等待機會"></a>等待機會</h3><p>離開了電商之後，直接就遇到了歷史級恐怖的 2020，外面的工作開始緊縮，雖然也是有些小新創想要趁著這時間起步，但這年我們主要也以幾個外包案為主，並沒有拿到太多機會，在這年我不時會透過一些獵頭朋友去找些公司聊聊天，前後大概也接觸了七八間公司，就我的感覺現在外面的工作機會說是要找 Sr. 其實都是想要 Super Jr.，想要找開發能力高的黑手，一個人可以當兩三個用，而不是來幫忙解決一些新手菜鳥解決不了的問題，大多數面試自介完就是開始考實作或是刷題，基本上並不在乎你之前有過什麼樣的經歷或是你的經驗，說好聽是只要有實力人人平等，說難聽點大家都不缺高端人才，因為高端位置大多都被卡住了，或是都選擇先升本土栽培的員工；而現在最缺的就是可以快速動手開發的即戰力，整體來說國內的資訊業環境真的不太好，可能只有外商會真正比較尊重 Sr. 的職缺吧。</p>
+<h3 id="給後進一點建議"><a href="#給後進一點建議" class="headerlink" title="給後進一點建議"></a>給後進一點建議</h3><p>我喜歡那個理念「不是你不好，是你還沒遇到適合你可以看見你的好的機會」，的確每個人因為背景、成長過程不同都會有不一樣的特質，這世界總會有些機會就是絕佳的適合你，也總有主管完美的被你打中，在世界看的不夠多的時候還沒遇到罷了，還是隨時要保持信心與好奇心，持續學習，多看些機會總會有適合自己的。</p>
+<h3 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h3><p>不要委屈自己，我們在做任何選擇的時候都是有得有失的，失去了這邊也會得到其他的，所以不要害怕做決定，每個人都會因為選了不同道路變成不同特質的人，誰也沒辦法取代誰。</p>
+<h3 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h3><p>如果有些人好奇我之後要去哪間高就？現在的我只能跟你說我也還不知道。</p>
+]]></content>
   </entry>
   <entry>
     <title>Repair myisam table by myisamchk</title>
@@ -442,13 +483,14 @@
       </tags>
   </entry>
   <entry>
-    <title>Update date on Ubuntu</title>
-    <url>/2014/10/22/Update-date-on-Ubuntu/</url>
-    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>有時候或許會發現 OS 作業系統的時間不準的情況，如果是在 ubuntu 上面，其實只需要兩個指令就能夠更新設定</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo ntpdate time.stdtime.gov.tw // 更新系統時間</span><br><span class="line">$ sudo hwclock -w // 將新的時間寫入 blos</span><br></pre></td></tr></table></figure>
+    <title>git pull 強制設定至 origin/master branch</title>
+    <url>/2015/05/22/git-pull-%E5%BC%B7%E5%88%B6%E8%A8%AD%E5%AE%9A%E8%87%B3-origin-master-branch/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>因為多人進行開發的時候會有版本控管問題，因此大多人會使用一些版本控制工具，時下最熱門的當然屬 git 為主流<br>有時候因為我們改了些東西而別人也改了同樣的東西導致有些衝突在，最後亂成一團的時候一發不可收拾，於是乎我們會想乾脆 reset 至現在 server 上面的最新版本重來，這個時候我們可以用下面這兩行來進行 reset</p>
+<h3 id="直接指令下去就不多解釋了"><a href="#直接指令下去就不多解釋了" class="headerlink" title="直接指令下去就不多解釋了"></a>直接指令下去就不多解釋了</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git fetch --all  </span><br><span class="line">$ git reset --hard origin/master</span><br></pre></td></tr></table></figure>
+<p>這個時候再重新 git pull 就大功告成了</p>
 ]]></content>
       <tags>
-        <tag>ubuntu</tag>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -480,35 +522,6 @@
       </tags>
   </entry>
   <entry>
-    <title>在 Linux 系統使用 ssh key 登入</title>
-    <url>/2018/06/05/%E5%9C%A8-Linux-%E7%B3%BB%E7%B5%B1%E4%BD%BF%E7%94%A8-ssh-key-%E7%99%BB%E5%85%A5/</url>
-    <content><![CDATA[<h3 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h3><p>我們登入遠端伺服器每次都要打密碼其實又麻煩又不安全，有人提倡常常換密碼可以解決，但…這個在實質上的有用程度在這裡就不好說了。</p>
-<h3 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h3><p>言歸正傳，這邊要介紹一下如何使用 ssh key 來登入遠端伺服器</p>
-<p>通常我們會透過指令產生 ssh key<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure></p>
-<p>產生出來的 key 通常會在<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure></p>
-<p>只要把我們的 key 加入到伺服器的下面這個檔案裡面就能達成用 key 登入<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure></p>
-<p>所以我們可以用這個指令直接把 local 端的 ssh key 加進去 server 端的登入名單裡面<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub | ssh [user]@[server-host] <span class="string">"cat &gt;&gt; ~/.ssh/authorized_keys"</span></span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>ssh</tag>
-        <tag>linux</tag>
-        <tag>sshkey</tag>
-        <tag>key</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>git pull 強制設定至 origin/master branch</title>
-    <url>/2015/05/22/git-pull-%E5%BC%B7%E5%88%B6%E8%A8%AD%E5%AE%9A%E8%87%B3-origin-master-branch/</url>
-    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>因為多人進行開發的時候會有版本控管問題，因此大多人會使用一些版本控制工具，時下最熱門的當然屬 git 為主流<br>有時候因為我們改了些東西而別人也改了同樣的東西導致有些衝突在，最後亂成一團的時候一發不可收拾，於是乎我們會想乾脆 reset 至現在 server 上面的最新版本重來，這個時候我們可以用下面這兩行來進行 reset</p>
-<h3 id="直接指令下去就不多解釋了"><a href="#直接指令下去就不多解釋了" class="headerlink" title="直接指令下去就不多解釋了"></a>直接指令下去就不多解釋了</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git fetch --all  </span><br><span class="line">$ git reset --hard origin/master</span><br></pre></td></tr></table></figure>
-<p>這個時候再重新 git pull 就大功告成了</p>
-]]></content>
-      <tags>
-        <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>在 ubuntu 中找出大檔案</title>
     <url>/2018/03/28/%E5%9C%A8-ubuntu-%E4%B8%AD%E6%89%BE%E5%87%BA%E5%A4%A7%E6%AA%94%E6%A1%88/</url>
     <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>伺服器硬碟快爆掉了，所以找想找一下指令來做這件事，於是找到了這篇<br><a href="http://www.arthurtoday.com/2014/12/ubuntu-find-out-large-size-files-by-du-and-sort.html" target="_blank" rel="noopener">Ubuntu 用 du 和 sort 指令找出大檔案</a></p>
@@ -516,6 +529,16 @@
 <p>/ 代表開始掃描的起點，如果想改變掃描的位置可以改這邊</p>
 <p>其他大致上沒什麼需要修改的</p>
 <p>all set</p>
+]]></content>
+      <tags>
+        <tag>ubuntu</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Update date on Ubuntu</title>
+    <url>/2014/10/22/Update-date-on-Ubuntu/</url>
+    <content><![CDATA[<h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>有時候或許會發現 OS 作業系統的時間不準的情況，如果是在 ubuntu 上面，其實只需要兩個指令就能夠更新設定</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo ntpdate time.stdtime.gov.tw // 更新系統時間</span><br><span class="line">$ sudo hwclock -w // 將新的時間寫入 blos</span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
         <tag>ubuntu</tag>
@@ -554,6 +577,24 @@
       <tags>
         <tag>ubuntu</tag>
         <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在 Linux 系統使用 ssh key 登入</title>
+    <url>/2018/06/05/%E5%9C%A8-Linux-%E7%B3%BB%E7%B5%B1%E4%BD%BF%E7%94%A8-ssh-key-%E7%99%BB%E5%85%A5/</url>
+    <content><![CDATA[<h3 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h3><p>我們登入遠端伺服器每次都要打密碼其實又麻煩又不安全，有人提倡常常換密碼可以解決，但…這個在實質上的有用程度在這裡就不好說了。</p>
+<h3 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h3><p>言歸正傳，這邊要介紹一下如何使用 ssh key 來登入遠端伺服器</p>
+<p>通常我們會透過指令產生 ssh key<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure></p>
+<p>產生出來的 key 通常會在<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure></p>
+<p>只要把我們的 key 加入到伺服器的下面這個檔案裡面就能達成用 key 登入<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure></p>
+<p>所以我們可以用這個指令直接把 local 端的 ssh key 加進去 server 端的登入名單裡面<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub | ssh [user]@[server-host] <span class="string">"cat &gt;&gt; ~/.ssh/authorized_keys"</span></span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>ubuntu</tag>
+        <tag>ssh</tag>
+        <tag>linux</tag>
+        <tag>sshkey</tag>
+        <tag>key</tag>
       </tags>
   </entry>
 </search>

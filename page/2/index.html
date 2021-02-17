@@ -192,6 +192,68 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="http://blog.lpchen.me/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jayson LP Chen">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SOMEHOW">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/08/15/Error-after-upgrading-pip-cannot-import-name-main/" class="post-title-link" itemprop="url">Error after upgrading pip: cannot import name main</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 8月 15 2018 12:03:36 / Modified: 12:13:47" itemprop="dateCreated datePublished" datetime="2018-08-15T12:03:36+08:00">8月 15 2018</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h3><p>平常都習慣 mac 上面做事，這幾天在某台新的 ubuntu 上面裝 pgcli 的時候遇到一個問題<br>用 pip 裝完 pgcli 之後跳出一個提示，意思是說你現在這個 pip v8.1.1 已經過時囉，現在最新的是 v18，建議你快點更新喔，後面還送你一串更新用的指令<br>用它送的指令更新下去…直接幫你把你的 pip 送上西天，會噴以下的訊息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"/usr/bin/pip"</span>, line 9, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    from pip import main</span><br><span class="line">ImportError: cannot import name <span class="string">'main'</span></span><br></pre></td></tr></table></figure>
+<h3 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h3><p>查了一輪大致上是因為新版的 pip v18，只支援 python3，python2 只能更新到 v9 的樣子<br>這真的蠢到我醉了，自己跳訊息出來炸掉自己是哪招…</p>
+<p>以下一行解決</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo python -m pip uninstall pip &amp;&amp; sudo apt install python3-pip --reinstall</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-tw">
     <link itemprop="mainEntityOfPage" href="http://blog.lpchen.me/2018/08/14/How-to-do-multi-row-insert-with-postgres-by-nodejs/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -827,81 +889,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-tw">
-    <link itemprop="mainEntityOfPage" href="http://blog.lpchen.me/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jayson LP Chen">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SOMEHOW">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2015/10/14/How-to-install-Gitlab-on-Ubuntu-14-04-LTS/" class="post-title-link" itemprop="url">How to install Gitlab on Ubuntu 14.04 LTS</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 10月 14 2015 11:38:24" itemprop="dateCreated datePublished" datetime="2015-10-14T11:38:24+08:00">10月 14 2015</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 12月 6 2016 0:01:58" itemprop="dateModified" datetime="2016-12-06T00:01:58+08:00">12月 6 2016</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="緣起"><a href="#緣起" class="headerlink" title="緣起"></a>緣起</h3><p>其實使用 <a href="https://about.gitlab.com/" target="_blank" rel="noopener">GitLab</a> 也是有好一段時間了，但是早期的 GitLab 安裝麻煩又囉唆，使用起來也常常聽說有不穩定的問題，但發展也好一段時間了。<br>目前在規模上面也是到達一定程度，而且已經被包成一個 deb 檔案，所以只要一個 dpkg -i 就可以把所有需要的套件裝完，簡便性大增。<br>在 7.9.2 之後 GitLab 也進行版本切割，一般人會用到的比較多應該還是社群版(CE版)，這邊來稍微紀錄一下我的整個安裝過程。</p>
-<p>而這篇主要是參考了 Gaod 大神的大作<br><a href="http://blog.hychen.org/archives/2014/05/13/165/gitlab-on-ubuntu-12-04-lts/" target="_blank" rel="noopener">GitLab on Ubuntu 12.04 LTS，在 Ubuntu 12.04 上安裝 GitLab</a></p>
-<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo wget &lt;檔案連結url&gt; # 連結在 https://www.gitlab.com/downloads/</span><br><span class="line">sudo dpkg -i &lt;檔案名稱&gt;</span><br><span class="line">sudo apt-get install python-docutils</span><br></pre></td></tr></table></figure>
-<h3 id="如何重跑-GitLab-服務"><a href="#如何重跑-GitLab-服務" class="headerlink" title="如何重跑 GitLab 服務"></a>如何重跑 GitLab 服務</h3><p>假設要重跑 GitLab 相關的所有服務</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl restart</span><br></pre></td></tr></table></figure>
-<p>當然，也可以重跑特定服務就好，例如只想單純重跑 nginx<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl restart nginx</span><br></pre></td></tr></table></figure></p>
-<h3 id="如何從備份還原-GitLab-資料"><a href="#如何從備份還原-GitLab-資料" class="headerlink" title="如何從備份還原 GitLab 資料"></a>如何從備份還原 GitLab 資料</h3><p>這邊是假設備份檔放在 /net/gitlab_backup，檔名是 ${timestamp}_gitlab_backup.tar</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-rake gitlab:backup:restore RAILS_ENV=production gitlab:backup:restore BACKUP=/net/gitlab_backup/$&#123;timestamp&#125;_gitlab_backup.tar</span><br><span class="line">or</span><br><span class="line">sudo gitlab-rake gitlab:backup:restore BACKUP=$&#123;timestamp&#125; force=yes</span><br></pre></td></tr></table></figure>
-<h3 id="如何更新-GitLab-版本"><a href="#如何更新-GitLab-版本" class="headerlink" title="如何更新 GitLab 版本"></a>如何更新 GitLab 版本</h3><p>假設要從舊版封裝升到 GitLab 新版本（請注意，未來可能會有些版本需要額外的手動介入，更新前最好還是看一下官方文件並且先備份）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo wget &lt;檔案連結&gt;</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl stop unicorn</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl stop sidekiq</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo dpkg -i &lt;檔案名稱&gt;</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl reconfigure</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo gitlab-ctl start</span></span><br></pre></td></tr></table></figure>
-<h3 id="備註"><a href="#備註" class="headerlink" title="備註"></a>備註</h3><p>其他設定可以參考一下原文</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -971,7 +958,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
